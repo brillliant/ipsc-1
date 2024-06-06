@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using DefaultNamespace;
@@ -9,10 +8,14 @@ public class Main : MonoBehaviour {
     public GameObject previewPrefab;
     private GameObject currentPreview;
 
-    public List<ObjectData> objectDataList = new List<ObjectData>();
-    public List<GameObject> objectsToSave = new List<GameObject>();
+    public List<ObjectData> objectDataList;
+    public List<GameObject> установленныеМишени;
+    
+    //private bool needToLoadObjects = true;
     
     void Start() {
+        objectDataList = new List<ObjectData>();
+        установленныеМишени = new List<GameObject>();
         currentPreview = Instantiate(previewPrefab);
     }
 
@@ -29,12 +32,24 @@ public class Main : MonoBehaviour {
             currentPreview.transform.LookAt(new Vector3(cameraPosition.x, currentPreview.transform.position.y,
                 cameraPosition.z));
 
-            if (OVRInput.GetDown(OVRInput.Button.One)) {
-                Instantiate(prefab, hit.point, currentPreview.transform.rotation);
-                objectsToSave.Add(
+            if (
+                /*OVRInput.GetDown(OVRInput.Button.PrimaryThumbstick) ||
+                OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger) ||
+                OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger) ||
+                OVRInput.GetDown(OVRInput.Button.SecondaryThumbstick) ||
+                OVRInput.GetDown(OVRInput.Button.SecondaryHandTrigger) ||*/
+                OVRInput.GetDown(OVRInput.Button.SecondaryIndexTrigger)
+                ) {
+                
+                установленныеМишени.Add(
                 Instantiate(prefab, hit.point, currentPreview.transform.rotation)
                 );
             }
+        }
+
+        if (OVRInput.GetDown(OVRInput.Button.Two)) SaveObjects();
+        if (OVRInput.GetDown(OVRInput.Button.One)) {
+            LoadObjects();
         }
     }
 
@@ -42,7 +57,7 @@ public class Main : MonoBehaviour {
         objectDataList.Clear();
 
         // Добавьте ваши объекты в список
-        foreach (GameObject obj in objectsToSave) {
+        foreach (GameObject obj in установленныеМишени) {
             ObjectData data = new ObjectData(obj.name, obj.transform.position, obj.transform.rotation);
             objectDataList.Add(data);
         }
@@ -55,7 +70,19 @@ public class Main : MonoBehaviour {
         File.WriteAllText(Application.persistentDataPath + "/saveData.json", json);
     }
 
+    public void RemoveAllObjects() {
+        foreach (GameObject obj in установленныеМишени) {
+            // Проверяем, что это не объект самого скрипта, чтобы избежать его удаления
+            if (obj != gameObject) {
+                Destroy(obj);
+            }
+        }
+        установленныеМишени.Clear();
+    }
+    
     public void LoadObjects() {
+        RemoveAllObjects();
+ 
         string path = Application.persistentDataPath + "/saveData.json";
         if (File.Exists(path)) {
             string json = File.ReadAllText(path);
@@ -64,15 +91,17 @@ public class Main : MonoBehaviour {
             ObjectDataList wrapper = JsonUtility.FromJson<ObjectDataList>(json);
 
             // Извлеките список из объекта-обертки
-            objectDataList = wrapper.objectDataList;
-
+            if (wrapper.objectDataList != null) {
+                objectDataList = wrapper.objectDataList;
+            }
+ 
             // Восстановите объекты
             foreach (ObjectData data in objectDataList) {
-                GameObject prefab = Resources.Load<GameObject>(data.prefabName);
+                GameObject prefab = Resources.Load<GameObject>(/*"ipcs_target/" + */data.prefabName.Substring(0, data.prefabName.Length - 7));
                 if (prefab != null) {
-                    Instantiate(prefab, data.position, data.rotation);
+                  Instantiate(prefab, data.position, data.rotation);
                 } else {
-                    Debug.LogWarning("Prefab not found: " + data.prefabName);
+                  Debug.LogWarning("Prefab not found: " + data.prefabName);
                 }
             }
         }

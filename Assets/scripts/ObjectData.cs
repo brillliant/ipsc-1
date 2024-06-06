@@ -2,6 +2,7 @@
 using UnityEngine;
 
 namespace DefaultNamespace {
+    [System.Serializable]
     public class ObjectData {
         public string prefabName;
         public Vector3 position;
