@@ -335,7 +335,7 @@ GameObject:
   - component: {fileID: 1043981335}
   - component: {fileID: 1043981334}
   m_Layer: 0
-  m_Name: Simple Prefab Spawner
+  m_Name: code object
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -355,6 +355,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 1331760992598048564, guid: a2b893bdd171ec540b548e2ced0379d4, type: 3}
   previewPrefab: {fileID: 1331760992598048564, guid: d10567bb558b37341876cd59fa195141, type: 3}
+  objectsToSave: []
 --- !u!4 &1043981335
 Transform:
   m_ObjectHideFlags: 0
