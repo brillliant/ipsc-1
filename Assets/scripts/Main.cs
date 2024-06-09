@@ -33,11 +33,6 @@ public class Main : MonoBehaviour {
                 cameraPosition.z));
 
             if (
-                /*OVRInput.GetDown(OVRInput.Button.PrimaryThumbstick) ||
-                OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger) ||
-                OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger) ||
-                OVRInput.GetDown(OVRInput.Button.SecondaryThumbstick) ||
-                OVRInput.GetDown(OVRInput.Button.SecondaryHandTrigger) ||*/
                 OVRInput.GetDown(OVRInput.Button.SecondaryIndexTrigger)
                 ) {
                 
@@ -46,11 +41,16 @@ public class Main : MonoBehaviour {
                 );
             }
         }
-
+        
+        if (OVRInput.GetDown(OVRInput.Button.SecondaryHandTrigger)) CleanObjects();
         if (OVRInput.GetDown(OVRInput.Button.Two)) SaveObjects();
         if (OVRInput.GetDown(OVRInput.Button.One)) {
             LoadObjects();
         }
+    }
+
+    public void CleanObjects() {
+        RemoveAllObjects();
     }
 
     public void SaveObjects() {
