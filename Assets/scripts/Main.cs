@@ -34,6 +34,7 @@ public class Main : MonoBehaviour {
 
             if (
                 OVRInput.GetDown(OVRInput.Button.SecondaryIndexTrigger)
+                //OVRInput.GetDown(OVRInput.Button.SecondaryHandTrigger)
                 ) {
                 
                 установленныеМишени.Add(
