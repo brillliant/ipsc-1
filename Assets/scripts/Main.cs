@@ -38,26 +38,18 @@ public class Main : MonoBehaviour {
                 triggerPressed = false;
             }
             
-            //OVRInput.Update();
-            if (
-                //OVRInput.Get(OVRInput.Button.SecondaryIndexTrigger)
-                !triggerPressed && OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0.5
-                //OVRInput.GetDown(OVRInput.Button.SecondaryHandTrigger)
-                ) {
-                triggerPressed = true;
-                установленныеМишени.Add(
-                Instantiate(prefab, hit.point, currentPreview.transform.rotation)
-                );
-            }
+            if (!triggerPressed && OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0.5) placeATarget(hit);
         }
-        
-        //if (!triggerPressed && OVRInput.GetDown(OVRInput.Button.SecondaryHandTrigger)) CleanObjects();
         if (!triggerPressed && OVRInput.Get(OVRInput.RawAxis1D.RHandTrigger) > 0.5) CleanObjects();
-        
-        //if (!triggerPressed && OVRInput.GetDown(OVRInput.Button.Two)) SaveObjects();
         if (!triggerPressed && OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) SaveObjects();
-        
         if (!triggerPressed && OVRInput.GetDown(OVRInput.Button.One)) LoadObjects();
+    }
+
+    private void placeATarget(RaycastHit hit) {
+        triggerPressed = true;
+        установленныеМишени.Add(
+            Instantiate(prefab, hit.point, currentPreview.transform.rotation)
+        );
     }
 
     public void CleanObjects() {
