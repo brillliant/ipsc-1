@@ -28,11 +28,11 @@ public class ShootScript : MonoBehaviour {
     private OVRInput.HapticsAmplitudeEnvelopeVibration _vibration = new OVRInput.HapticsAmplitudeEnvelopeVibration();
 
     void Update() {
-        /*shootIfNeeded();
+        shootIfNeeded();
 
         if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Input.GetKeyUp(KeyCode.Space)) {
             triggerPressed = false;
-        }*/
+        }
     }
 
     void shootIfNeeded() {

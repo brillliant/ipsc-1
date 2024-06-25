@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using DefaultNamespace;
@@ -12,6 +13,7 @@ public class Main : MonoBehaviour {
     public List<GameObject> установленныеМишени;
     
     //private bool needToLoadObjects = true;
+    public Boolean triggerPressed = false;
     
     void Start() {
         objectDataList = new List<ObjectData>();
@@ -31,30 +33,40 @@ public class Main : MonoBehaviour {
             Vector3 cameraPosition = Camera.main.transform.position;
             currentPreview.transform.LookAt(new Vector3(cameraPosition.x, currentPreview.transform.position.y,
                 cameraPosition.z));
-
+            
+            if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Input.GetKeyUp(KeyCode.Space)) {
+                triggerPressed = false;
+            }
+            
+            //OVRInput.Update();
             if (
-                OVRInput.GetDown(OVRInput.Button.SecondaryIndexTrigger)
+                //OVRInput.Get(OVRInput.Button.SecondaryIndexTrigger)
+                !triggerPressed && OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0.5
                 //OVRInput.GetDown(OVRInput.Button.SecondaryHandTrigger)
                 ) {
-                
+                triggerPressed = true;
                 установленныеМишени.Add(
                 Instantiate(prefab, hit.point, currentPreview.transform.rotation)
                 );
             }
         }
         
-        if (OVRInput.GetDown(OVRInput.Button.SecondaryHandTrigger)) CleanObjects();
-        if (OVRInput.GetDown(OVRInput.Button.Two)) SaveObjects();
-        if (OVRInput.GetDown(OVRInput.Button.One)) {
-            LoadObjects();
-        }
+        //if (!triggerPressed && OVRInput.GetDown(OVRInput.Button.SecondaryHandTrigger)) CleanObjects();
+        if (!triggerPressed && OVRInput.Get(OVRInput.RawAxis1D.RHandTrigger) > 0.5) CleanObjects();
+        
+        //if (!triggerPressed && OVRInput.GetDown(OVRInput.Button.Two)) SaveObjects();
+        if (!triggerPressed && OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) SaveObjects();
+        
+        if (!triggerPressed && OVRInput.GetDown(OVRInput.Button.One)) LoadObjects();
     }
 
     public void CleanObjects() {
+        triggerPressed = true;
         RemoveAllObjects();
     }
 
     public void SaveObjects() {
+        triggerPressed = true;
         objectDataList.Clear();
 
         // Добавьте ваши объекты в список
@@ -82,6 +94,7 @@ public class Main : MonoBehaviour {
     }
     
     public void LoadObjects() {
+        triggerPressed = true;
         RemoveAllObjects();
  
         string path = Application.persistentDataPath + "/saveData.json";
@@ -100,7 +113,10 @@ public class Main : MonoBehaviour {
             foreach (ObjectData data in objectDataList) {
                 GameObject prefab = Resources.Load<GameObject>(/*"ipcs_target/" + */data.prefabName.Substring(0, data.prefabName.Length - 7));
                 if (prefab != null) {
-                  Instantiate(prefab, data.position, data.rotation);
+                    установленныеМишени.Add(
+                    Instantiate(prefab, data.position, data.rotation)
+                    );
+                  
                 } else {
                   Debug.LogWarning("Prefab not found: " + data.prefabName);
                 }
