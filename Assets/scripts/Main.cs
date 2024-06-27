@@ -20,8 +20,6 @@ public class Main : MonoBehaviour {
     
     private int currentIndex = 0;
     public Boolean isStageMenuActivated = true;
-    
-    //private bool needToLoadObjects = true;
     public Boolean triggerPressed = false;
     
     void Start() {
@@ -32,11 +30,12 @@ public class Main : MonoBehaviour {
         menuList = new List<TextMeshProUGUI>();
         menuList.Add(menuItem1_stage);
         menuList.Add(menuItem2_shoot);
-        
     }
 
     void Update() {
         if (isStageMenuActivated) {
+            if (!currentPreview.activeSelf) currentPreview.SetActive(true);
+            
             Ray ray = new Ray(OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch),
                 OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch) * Vector3.forward);
 
@@ -59,10 +58,11 @@ public class Main : MonoBehaviour {
             if (OVRInput.Get(OVRInput.RawAxis1D.RHandTrigger) > 0.5) RemoveAllObjects();
             if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) SaveObjects();
             if (OVRInput.GetDown(OVRInput.Button.One)) LoadObjects();
+        } else {
+            currentPreview.SetActive(false);
         }
         //menu change
-        if (OVRInput.GetDown(OVRInput.Button.SecondaryThumbstickUp) ||
-            OVRInput.GetDown(OVRInput.Button.SecondaryThumbstickDown)) changeMenu();
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickUp) || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickDown)) changeMenu();
     }
 
     private int getNextIndex() {
@@ -81,9 +81,11 @@ public class Main : MonoBehaviour {
             if (i == index) {
                 menuList[i].fontSize = 8;
                 menuList[i].fontStyle = FontStyles.Bold;
+                menuList[i].color = Color.red;
             } else {
                 menuList[i].fontSize = 5;
                 menuList[i].fontStyle = FontStyles.Normal;
+                menuList[i].color = Color.gray;
             }
         }
 
@@ -150,7 +152,6 @@ public class Main : MonoBehaviour {
                     установленныеМишени.Add(
                     Instantiate(prefab, data.position, data.rotation)
                     );
-                  
                 } else {
                   Debug.LogWarning("Prefab not found: " + data.prefabName);
                 }

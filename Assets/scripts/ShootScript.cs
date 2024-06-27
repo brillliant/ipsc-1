@@ -1,11 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
-
-//using UnityEngine.XR.Interaction.Toolkit;
 
 public class ShootScript : MonoBehaviour {
     [SerializeField] 
@@ -16,15 +10,12 @@ public class ShootScript : MonoBehaviour {
     [SerializeField] private Transform bulletPoint;
     public GameObject codeObject;
     private Main mainScript;
+    
     void Start() {
-        //XRGrabInteractable grabbable
-        //OVRInput.Get(OVRInput.Button.One);
-        //XRBaseInteractible 
-        _vibration.Duration = 0.1f;
+        _vibration.Duration = 0.15f;
         _vibration.Samples = new[] { 1f };
         _vibration.SamplesCount = 1;
-        
-        shotSound.volume = 0.3f;
+        shotSound.volume = 0.4f;
 
         mainScript = codeObject.GetComponent<Main>();
     }
