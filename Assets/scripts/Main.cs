@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using DefaultNamespace;
+using TMPro;
 using UnityEngine;
 
 public class Main : MonoBehaviour {
@@ -9,8 +10,16 @@ public class Main : MonoBehaviour {
     public GameObject previewPrefab;
     private GameObject currentPreview;
 
+    public TextMeshProUGUI menuItem1_stage;
+    public TextMeshProUGUI menuItem2_shoot;
+
     public List<ObjectData> objectDataList;
     public List<GameObject> установленныеМишени;
+
+    private List<TextMeshProUGUI> menuList; 
+    
+    private int currentIndex = 0;
+    public Boolean isStageMenuActivated = true;
     
     //private bool needToLoadObjects = true;
     public Boolean triggerPressed = false;
@@ -19,30 +28,70 @@ public class Main : MonoBehaviour {
         objectDataList = new List<ObjectData>();
         установленныеМишени = new List<GameObject>();
         currentPreview = Instantiate(previewPrefab);
+
+        menuList = new List<TextMeshProUGUI>();
+        menuList.Add(menuItem1_stage);
+        menuList.Add(menuItem2_shoot);
+        
     }
 
     void Update() {
-        Ray ray = new Ray(OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch),
-            OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch) * Vector3.forward);
+        if (isStageMenuActivated) {
+            Ray ray = new Ray(OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch),
+                OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch) * Vector3.forward);
 
-        if (Physics.Raycast(ray, out RaycastHit hit)) {
-            currentPreview.transform.position = hit.point;
-            currentPreview.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+            if (Physics.Raycast(ray, out RaycastHit hit)) {
+                currentPreview.transform.position = hit.point;
+                currentPreview.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
 
-            // Поворот модели лицом к камере
-            Vector3 cameraPosition = Camera.main.transform.position;
-            currentPreview.transform.LookAt(new Vector3(cameraPosition.x, currentPreview.transform.position.y,
-                cameraPosition.z));
-            
-            if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Input.GetKeyUp(KeyCode.Space)) {
-                triggerPressed = false;
+                // Поворот модели лицом к камере
+                Vector3 cameraPosition = Camera.main.transform.position;
+                currentPreview.transform.LookAt(new Vector3(cameraPosition.x, currentPreview.transform.position.y,
+                    cameraPosition.z));
+
+                if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Input.GetKeyUp(KeyCode.Space)) {
+                    triggerPressed = false;
+                }
+
+                if (!triggerPressed && OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0.5) placeATarget(hit);
             }
-            
-            if (!triggerPressed && OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0.5) placeATarget(hit);
+
+            if (OVRInput.Get(OVRInput.RawAxis1D.RHandTrigger) > 0.5) RemoveAllObjects();
+            if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) SaveObjects();
+            if (OVRInput.GetDown(OVRInput.Button.One)) LoadObjects();
         }
-        if (!triggerPressed && OVRInput.Get(OVRInput.RawAxis1D.RHandTrigger) > 0.5) CleanObjects();
-        if (!triggerPressed && OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) SaveObjects();
-        if (!triggerPressed && OVRInput.GetDown(OVRInput.Button.One)) LoadObjects();
+        //menu change
+        if (OVRInput.GetDown(OVRInput.Button.SecondaryThumbstickUp) ||
+            OVRInput.GetDown(OVRInput.Button.SecondaryThumbstickDown)) changeMenu();
+    }
+
+    private int getNextIndex() {
+        if (currentIndex + 1 <= menuList.Count - 1) {
+            currentIndex++;
+        } else {
+            currentIndex = 0;
+        }
+        return currentIndex;
+    }
+
+    private void changeMenu() {
+        int index = getNextIndex();
+
+        for (int i = 0; i < menuList.Count; i++) {
+            if (i == index) {
+                menuList[i].fontSize = 8;
+                menuList[i].fontStyle = FontStyles.Bold;
+            } else {
+                menuList[i].fontSize = 5;
+                menuList[i].fontStyle = FontStyles.Normal;
+            }
+        }
+
+        if (currentIndex == 0) {
+            isStageMenuActivated = true;
+        } else {
+            isStageMenuActivated = false;
+        }
     }
 
     private void placeATarget(RaycastHit hit) {
@@ -52,13 +101,7 @@ public class Main : MonoBehaviour {
         );
     }
 
-    public void CleanObjects() {
-        triggerPressed = true;
-        RemoveAllObjects();
-    }
-
     public void SaveObjects() {
-        triggerPressed = true;
         objectDataList.Clear();
 
         // Добавьте ваши объекты в список
@@ -86,7 +129,6 @@ public class Main : MonoBehaviour {
     }
     
     public void LoadObjects() {
-        triggerPressed = true;
         RemoveAllObjects();
  
         string path = Application.persistentDataPath + "/saveData.json";

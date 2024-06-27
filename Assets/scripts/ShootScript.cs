@@ -14,6 +14,8 @@ public class ShootScript : MonoBehaviour {
     public GameObject bulletPrefub;
     public AudioSource shotSound;
     [SerializeField] private Transform bulletPoint;
+    public GameObject codeObject;
+    private Main mainScript;
     void Start() {
         //XRGrabInteractable grabbable
         //OVRInput.Get(OVRInput.Button.One);
@@ -23,15 +25,18 @@ public class ShootScript : MonoBehaviour {
         _vibration.SamplesCount = 1;
         
         shotSound.volume = 0.3f;
+
+        mainScript = codeObject.GetComponent<Main>();
     }
 
     private OVRInput.HapticsAmplitudeEnvelopeVibration _vibration = new OVRInput.HapticsAmplitudeEnvelopeVibration();
 
     void Update() {
-        shootIfNeeded();
-
-        if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Input.GetKeyUp(KeyCode.Space)) {
-            triggerPressed = false;
+        if (!mainScript.isStageMenuActivated) {
+            shootIfNeeded();
+            if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Input.GetKeyUp(KeyCode.Space)) {
+                triggerPressed = false;
+            }
         }
     }
 
