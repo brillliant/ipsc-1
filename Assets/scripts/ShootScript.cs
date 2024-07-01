@@ -28,6 +28,8 @@ public class ShootScript : MonoBehaviour {
             if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Input.GetKeyUp(KeyCode.Space)) {
                 triggerPressed = false;
             }
+            
+            if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) mainScript.clearHoles();
         }
     }
 

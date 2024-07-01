@@ -15,6 +15,7 @@ public class Main : MonoBehaviour {
 
     public List<ObjectData> objectDataList;
     public List<GameObject> установленныеМишени;
+    public List<GameObject> пробоины;
 
     private List<TextMeshProUGUI> menuList; 
     
@@ -55,8 +56,8 @@ public class Main : MonoBehaviour {
                 if (!triggerPressed && OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0.5) placeATarget(hit);
             }
 
-            if (OVRInput.Get(OVRInput.RawAxis1D.RHandTrigger) > 0.5) RemoveAllObjects();
-            if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) SaveObjects();
+            if (OVRInput.Get(OVRInput.RawAxis1D.RHandTrigger) > 0.5) SaveObjects();
+            if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) RemoveAllObjects();
             if (OVRInput.GetDown(OVRInput.Button.One)) LoadObjects();
         } else {
             currentPreview.SetActive(false);
@@ -128,8 +129,20 @@ public class Main : MonoBehaviour {
             }
         }
         установленныеМишени.Clear();
+        
+        clearHoles();
     }
-    
+
+    public void clearHoles() {
+        foreach (GameObject пробоина in пробоины) {
+            if (пробоина != gameObject) {
+                Destroy(пробоина);
+            }
+        }
+
+        пробоины.Clear();
+    }
+
     public void LoadObjects() {
         RemoveAllObjects();
  

@@ -662,7 +662,7 @@ GameObject:
   - component: {fileID: 1043981335}
   - component: {fileID: 1043981334}
   m_Layer: 0
-  m_Name: code object
+  m_Name: codeObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -686,6 +686,7 @@ MonoBehaviour:
   menuItem2_shoot: {fileID: 585372784}
   objectDataList: []
   "\u0443\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043D\u044B\u0435\u041C\u0438\u0448\u0435\u043D\u0438": []
+  "\u043F\u0440\u043E\u0431\u043E\u0438\u043D\u044B": []
   isStageMenuActivated: 1
   triggerPressed: 0
 --- !u!4 &1043981335
