@@ -236,7 +236,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2c0038d699a344429dd34e88606e02a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletSpeed: 5
+  bulletSpeed: 450
   triggerPressed: 0
   bulletPrefub: {fileID: 3138812093838699374, guid: e0d6514f79534d34e8e01986688c4dda, type: 3}
   shotSound: {fileID: 1083574744}
@@ -680,7 +680,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcdd147bf4b34e7439c4d3216e4bb33d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 1331760992598048564, guid: a2b893bdd171ec540b548e2ced0379d4, type: 3}
+  prefab: {fileID: 6177415639674001883, guid: 5847aea319e2f66478e7bfcab82fb829, type: 3}
   previewPrefab: {fileID: 1331760992598048564, guid: 15ad2d59c491b454691adaf5c0d5065d, type: 3}
   menuItem1_stage: {fileID: 1521864574}
   menuItem2_shoot: {fileID: 585372784}
