@@ -6,6 +6,7 @@ public class ShootScript : MonoBehaviour {
     private float bulletSpeed = 0.03f;
     public Boolean triggerPressed = false;
     public GameObject bulletPrefub;
+    public GameObject magazine;
     public AudioSource shotSound;
     [SerializeField] private Transform bulletPoint;
     public GameObject codeObject;
@@ -30,7 +31,12 @@ public class ShootScript : MonoBehaviour {
             }
             
             if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) mainScript.clearHoles();
+            if (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.RTouch)) releaseMagazine();
         }
+    }
+
+    private void releaseMagazine() {
+        //magazine.
     }
 
     void shootIfNeeded() {
