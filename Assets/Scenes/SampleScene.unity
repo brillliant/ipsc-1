@@ -254,7 +254,7 @@ MonoBehaviour:
   magazine: {fileID: 3300749213520534039}
   shotSound: {fileID: 1083574744}
   emptyShotSound: {fileID: 1691104760}
-  magazineOutSound: {fileID: 0}
+  magazineOutSound: {fileID: 1189279821}
   bulletPoint: {fileID: 947667043}
   codeObject: {fileID: 1043981333}
 --- !u!54 &125967220
@@ -1625,9 +1625,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: fbba991e27c98e04a8fbaa73e045e22c, type: 3}
+  m_audioClip: {fileID: 8300000, guid: e061aac951693cf4f98bb2cf3d04ae64, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.5
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -1819,7 +1819,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: f5f70d1ca4c6d1246bf3f048363d797b, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -2174,7 +2174,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 313f5f7ae3917bf4892744565a9ff42a, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -2592,6 +2592,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 100004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2118623054}
+    - targetCorrespondingSourceObject: {fileID: 100004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2118623060}
   m_SourcePrefab: {fileID: 100100000, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
 --- !u!4 &2118623050 stripped
 Transform:
@@ -2688,6 +2691,14 @@ MonoBehaviour:
   edgeRenderingEnabled_: 0
   edgeColor_: {r: 1, g: 1, b: 1, a: 1}
   colorMapType: 0
+--- !u!81 &2118623060
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118623053}
+  m_Enabled: 1
 --- !u!4 &543450653607820420 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d083b4a358a65014eb2e8b42bdabf33c, type: 3}

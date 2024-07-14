@@ -733,6 +733,9 @@
     <Reference Include="System.Xml.Serialization">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.28f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Xml.Serialization.dll</HintPath>
     </Reference>
+    <Reference Include="Meta.XR.Editor.PlayCompanion">
+      <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Meta.XR.Editor.PlayCompanion.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.XR.Management">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Unity.XR.Management.dll</HintPath>
     </Reference>
@@ -763,11 +766,11 @@
     <Reference Include="Meta.XR.Editor.UserInterface">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Meta.XR.Editor.UserInterface.dll</HintPath>
     </Reference>
-    <Reference Include="Oculus.Interaction.Samples.Editor">
-      <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Oculus.Interaction.Samples.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.Rider.Editor">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Unity.Rider.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Oculus.Interaction.Samples.Editor">
+      <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Oculus.Interaction.Samples.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Formats.Fbx.Runtime">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Unity.Formats.Fbx.Runtime.dll</HintPath>
@@ -777,6 +780,9 @@
     </Reference>
     <Reference Include="VoiceSDK.Dictation.Editor">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\VoiceSDK.Dictation.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Meta.XR.Guides.Editor">
+      <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Meta.XR.Guides.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection.dll</HintPath>
@@ -841,11 +847,11 @@
     <Reference Include="Unity.XR.Oculus.Editor">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Unity.XR.Oculus.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Meta.XR.MultiplayerBlocks.Shared.Editor">
+      <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Meta.XR.MultiplayerBlocks.Shared.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="xr.sdk.sharedassets.runtime">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\xr.sdk.sharedassets.runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Oculus.Interaction">
-      <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Oculus.Interaction.dll</HintPath>
     </Reference>
     <Reference Include="Meta.XR.Editor.Callbacks">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Meta.XR.Editor.Callbacks.dll</HintPath>
@@ -853,8 +859,11 @@
     <Reference Include="Meta.XR.BuildingBlocks">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Meta.XR.BuildingBlocks.dll</HintPath>
     </Reference>
-    <Reference Include="Meta.XR.MultiplayerBlocks.Shared.Editor">
-      <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Meta.XR.MultiplayerBlocks.Shared.Editor.dll</HintPath>
+    <Reference Include="Oculus.Interaction">
+      <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Oculus.Interaction.dll</HintPath>
+    </Reference>
+    <Reference Include="VoiceSDK.Telemetry">
+      <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\VoiceSDK.Telemetry.dll</HintPath>
     </Reference>
     <Reference Include="VoiceSDK.Dictation.Runtime">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\VoiceSDK.Dictation.Runtime.dll</HintPath>
@@ -871,9 +880,6 @@
     <Reference Include="Meta.WitAi.Editor">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Meta.WitAi.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="VoiceSDK.Telemetry">
-      <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\VoiceSDK.Telemetry.dll</HintPath>
-    </Reference>
     <Reference Include="Oculus.Haptics">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Oculus.Haptics.dll</HintPath>
     </Reference>
@@ -888,6 +894,9 @@
     </Reference>
     <Reference Include="UnityEngine.XR.LegacyInputHelpers">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\UnityEngine.XR.LegacyInputHelpers.dll</HintPath>
+    </Reference>
+    <Reference Include="Meta.Net.endel.nativewebsocket">
+      <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Meta.Net.endel.nativewebsocket.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PlasticSCM.Editor">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Unity.PlasticSCM.Editor.dll</HintPath>
@@ -1017,9 +1026,6 @@
     </Reference>
     <Reference Include="Meta.Wit.Dictation.Editor">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Meta.Wit.Dictation.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Meta.XR.GuidedSetups.Editor">
-      <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Meta.XR.GuidedSetups.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Oculus.VR">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Oculus.VR.dll</HintPath>

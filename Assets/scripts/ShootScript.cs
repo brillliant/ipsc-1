@@ -17,15 +17,15 @@ public class ShootScript : MonoBehaviour {
     public GameObject codeObject;
     private Main mainScript;
     
-    private int magazineBulletsCount = 5;
-    private Boolean isBulletInChamber = true;
+    private int magazineCartrigeCount = 5;
+    private Boolean isСartridgeInChamber = true;
     private Boolean isMagazineIn = true;
     
     void Start() {
         _vibration.Duration = 0.15f;
         _vibration.Samples = new[] { 1f };
         _vibration.SamplesCount = 1;
-        shotSound.volume = 0.4f;
+        shotSound.volume = 1.0f;
 
         mainScript = codeObject.GetComponent<Main>();
 
@@ -59,9 +59,10 @@ public class ShootScript : MonoBehaviour {
         if (!triggerPressed && 
             (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0 || Input.GetKeyDown(KeyCode.Space))
             ) {
+            
             triggerPressed = true;
 
-            if (isBulletInChamber) {
+            if (isСartridgeInChamber) {
                 shoot();
             } else {
                 emptyShoot();
@@ -70,7 +71,7 @@ public class ShootScript : MonoBehaviour {
     }
 
     private void emptyShoot() {
-        emptyShotSound.Play();
+        emptyShotSound.PlayOneShot(emptyShotSound.clip);
     }
     
     private void shoot() {
@@ -83,9 +84,16 @@ public class ShootScript : MonoBehaviour {
 
         bulletRigidbody.velocity = bulletPoint.forward * bulletSpeed;
         Destroy(bullet, 3);
-        shotSound.Play();  //todo при новом проигрывании старое прекращается
-        isBulletInChamber = false;
-        //shotSound.Stop();
+        shotSound.PlayOneShot(shotSound.clip);
+        isСartridgeInChamber = false;
+        moveСartridgeFromMagazineToChamber();
+    }
+
+    private void moveСartridgeFromMagazineToChamber() {
+        if (isMagazineIn && magazineCartrigeCount > 0) {
+            isСartridgeInChamber = true;
+            magazineCartrigeCount--;    
+        }
     }
 
     void Template() {
