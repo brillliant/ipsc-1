@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 public class ShootScript : MonoBehaviour {
     [SerializeField] 
@@ -7,10 +8,18 @@ public class ShootScript : MonoBehaviour {
     public Boolean triggerPressed = false;
     public GameObject bulletPrefub;
     public GameObject magazine;
+    
     public AudioSource shotSound;
+    public AudioSource emptyShotSound;
+    public AudioSource magazineOutSound;
+    
     [SerializeField] private Transform bulletPoint;
     public GameObject codeObject;
     private Main mainScript;
+    
+    private int magazineBulletsCount = 5;
+    private Boolean isBulletInChamber = true;
+    private Boolean isMagazineIn = true;
     
     void Start() {
         _vibration.Duration = 0.15f;
@@ -19,13 +28,15 @@ public class ShootScript : MonoBehaviour {
         shotSound.volume = 0.4f;
 
         mainScript = codeObject.GetComponent<Main>();
+
+        //Time.timeScale = 0.1f;
     }
 
     private OVRInput.HapticsAmplitudeEnvelopeVibration _vibration = new OVRInput.HapticsAmplitudeEnvelopeVibration();
 
     void Update() {
         if (!mainScript.isStageMenuActivated) {
-            shootIfNeeded();
+            shootActionIfNeeded();
             if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Input.GetKeyUp(KeyCode.Space)) {
                 triggerPressed = false;
             }
@@ -36,17 +47,33 @@ public class ShootScript : MonoBehaviour {
     }
 
     private void releaseMagazine() {
-        //magazine.
+        isMagazineIn = false;
+        
+        magazine.GetComponent<MeshCollider>().convex = true;
+        magazine.GetComponent<Rigidbody>().useGravity = true;
+        
+        magazineOutSound.PlayOneShot(magazineOutSound.clip);
     }
 
-    void shootIfNeeded() {
-        if (!triggerPressed && (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0 || Input.GetKeyDown(KeyCode.Space))) { //������� ������ �����
+    void shootActionIfNeeded() {
+        if (!triggerPressed && 
+            (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0 || Input.GetKeyDown(KeyCode.Space))
+            ) {
             triggerPressed = true;
-            shoot();
+
+            if (isBulletInChamber) {
+                shoot();
+            } else {
+                emptyShoot();
+            }
         }
     }
+
+    private void emptyShoot() {
+        emptyShotSound.Play();
+    }
     
-    void shoot() {
+    private void shoot() {
         OVRInput.SetControllerHapticsAmplitudeEnvelope(_vibration, OVRInput.Controller.RTouch);
         var bullet = Instantiate(bulletPrefub);
         var bulletRigidbody = bullet.GetComponent<Rigidbody>();
@@ -57,6 +84,7 @@ public class ShootScript : MonoBehaviour {
         bulletRigidbody.velocity = bulletPoint.forward * bulletSpeed;
         Destroy(bullet, 3);
         shotSound.Play();  //todo при новом проигрывании старое прекращается
+        isBulletInChamber = false;
         //shotSound.Stop();
     }
 

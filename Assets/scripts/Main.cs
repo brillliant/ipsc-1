@@ -17,7 +17,7 @@ public class Main : MonoBehaviour {
     public List<GameObject> установленныеМишени;
     public List<GameObject> пробоины;
 
-    private List<TextMeshProUGUI> menuList; 
+    private List<TextMeshProUGUI> menuList;
     
     private int currentIndex = 0;
     public Boolean isStageMenuActivated = true;
@@ -40,7 +40,10 @@ public class Main : MonoBehaviour {
             Ray ray = new Ray(OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch),
                 OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch) * Vector3.forward);
 
-            if (Physics.Raycast(ray, out RaycastHit hit)) {
+            if (Physics.Raycast(ray, out RaycastHit hit)
+                && !hit.collider.gameObject.name.Equals("emptyObjectForCollider")
+                && !hit.collider.gameObject.name.Equals("Glock17")) {
+                
                 currentPreview.transform.position = hit.point;
                 currentPreview.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
 
