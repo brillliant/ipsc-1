@@ -14,6 +14,7 @@ public class ShootScript : MonoBehaviour {
     public AudioSource magazineOutSound;
     
     [SerializeField] private Transform bulletPoint;
+    //public Transform leftHandTransform;
     public GameObject codeObject;
     private Main mainScript;
     
@@ -42,10 +43,19 @@ public class ShootScript : MonoBehaviour {
             }
             
             if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) mainScript.clearHoles();
+            if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch)) magazineAppears();
             if (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.RTouch)) releaseMagazine();
         }
     }
 
+    private void magazineAppears() {
+        /*if (leftHandTransform != null) {
+            transform.position = leftHandTransform.position;
+            transform.rotation = leftHandTransform.rotation;
+            transform.parent = leftHandTransform;
+        }*/
+    }
+    
     private void releaseMagazine() {
         isMagazineIn = false;
         
