@@ -57,12 +57,14 @@ public class ShootScript : MonoBehaviour {
     }
     
     private void releaseMagazine() {
-        isMagazineIn = false;
-        
-        magazine.GetComponent<MeshCollider>().convex = true;
-        magazine.GetComponent<Rigidbody>().useGravity = true;
-        
-        magazineOutSound.PlayOneShot(magazineOutSound.clip);
+        if (isMagazineIn) {
+            isMagazineIn = false;
+
+            magazine.GetComponent<MeshCollider>().convex = true;
+            magazine.GetComponent<Rigidbody>().useGravity = true;
+
+            magazineOutSound.PlayOneShot(magazineOutSound.clip);
+        }
     }
 
     void shootActionIfNeeded() {
