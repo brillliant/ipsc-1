@@ -15,6 +15,15 @@ public class SyncPlayerControllerWithCameraRig : MonoBehaviour {
     void Update() {
         // Обновляем позицию OVRPlayerController в соответствии с позицией OVRCameraRig
         cameraPosition = cameraTransform.position;
-        transform.position = new Vector3(cameraPosition.x, transform.position.y, cameraPosition.z);
+        
+        
+        Vector3 forward = cameraTransform.forward;
+        Vector3 up = cameraTransform.up;
+        
+        transform.position = new Vector3(cameraPosition.x, cameraPosition.y, cameraPosition.z);
+        //transform.rotation = new Quaternion(transform.rotation.x, cameraTransform.rotation.y, cameraTransform.rotation.z, transform.rotation.w);
+        
+        transform.rotation = Quaternion.LookRotation(forward, up);
+        Debug.Log("b");
     }
 }
