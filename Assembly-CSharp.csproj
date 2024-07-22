@@ -742,6 +742,9 @@
     <Reference Include="Meta.VoiceSDK.Mic.Common">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Meta.VoiceSDK.Mic.Common.dll</HintPath>
     </Reference>
+    <Reference Include="Meta.XR.EnvironmentDepth">
+      <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Meta.XR.EnvironmentDepth.dll</HintPath>
+    </Reference>
     <Reference Include="AssistantVoiceCommandCommon">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\AssistantVoiceCommandCommon.dll</HintPath>
     </Reference>
@@ -967,6 +970,9 @@
     <Reference Include="Meta.WitAi.TTS">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Meta.WitAi.TTS.dll</HintPath>
     </Reference>
+    <Reference Include="Meta.XR.EnvironmentDepth.Editor">
+      <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Meta.XR.EnvironmentDepth.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.XR.Oculus">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Unity.XR.Oculus.dll</HintPath>
     </Reference>
@@ -991,8 +997,8 @@
     <Reference Include="Meta.XR.Audio">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Meta.XR.Audio.dll</HintPath>
     </Reference>
-    <Reference Include="Autodesk.Fbx">
-      <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Autodesk.Fbx.dll</HintPath>
+    <Reference Include="Oculus.Interaction.OVR.Samples">
+      <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Oculus.Interaction.OVR.Samples.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VisualScripting.State.Editor">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Unity.VisualScripting.State.Editor.dll</HintPath>
@@ -1000,14 +1006,14 @@
     <Reference Include="Autodesk.Fbx.Editor">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Autodesk.Fbx.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Autodesk.Fbx">
+      <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Autodesk.Fbx.dll</HintPath>
+    </Reference>
     <Reference Include="Meta.XR.BuildingBlocks.Editor">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Meta.XR.BuildingBlocks.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Meta.WitAI.Lib.Editor">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Meta.WitAI.Lib.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Oculus.Interaction.OVR.Samples">
-      <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Oculus.Interaction.OVR.Samples.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Unity.TextMeshPro.Editor.dll</HintPath>
