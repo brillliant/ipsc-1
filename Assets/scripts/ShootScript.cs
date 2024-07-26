@@ -18,7 +18,7 @@ public class ShootScript : MonoBehaviour {
     public GameObject codeObject;
     private Main mainScript;
     
-    private int magazineCartrigeCount = 5;
+    private int magazineCartrigeCount = 10000;
     private Boolean isСartridgeInChamber = true;
     private Boolean isMagazineIn = true;
     
