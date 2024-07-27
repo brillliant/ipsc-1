@@ -181,7 +181,6 @@ public class Main : MonoBehaviour {
  
             // Восстановите объекты
             foreach (ObjectData data in objectDataList) {
-                //todo yp врядли с ноуШут будет работаь
                 GameObject prefab = Resources.Load<GameObject>(/*"ipcs_target/" + */data.prefabName.Substring(0, data.prefabName.Length - 7));
 
                 if (prefab != null) {
