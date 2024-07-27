@@ -8,10 +8,15 @@ using UnityEngine;
 public class Main : MonoBehaviour {
     public GameObject prefab;
     public GameObject previewPrefab;
+    public GameObject previewPrefabNoShot;
+    public GameObject prefabNoShot;
+    
     private GameObject currentPreview;
+    //private GameObject currentNoShotPreview;
 
     public TextMeshProUGUI menuItem1_stage;
     public TextMeshProUGUI menuItem2_shoot;
+    public TextMeshProUGUI menuItem3_noShot;
 
     public List<ObjectData> objectDataList;
     public List<GameObject> установленныеМишени;
@@ -20,53 +25,61 @@ public class Main : MonoBehaviour {
     private List<TextMeshProUGUI> menuList;
     
     private int currentIndex = 0;
-    public Boolean isStageMenuActivated = true;
+    public Boolean isTargetSetUpMenuActivated = true;
+    public Boolean isNoShotSetUpMenuActivated = false;
     public Boolean triggerPressed = false;
     
     void Start() {
         objectDataList = new List<ObjectData>();
         установленныеМишени = new List<GameObject>();
-        currentPreview = Instantiate(previewPrefab);
+        //currentPreview = Instantiate(previewPrefab);
 
         menuList = new List<TextMeshProUGUI>();
         menuList.Add(menuItem1_stage);
         menuList.Add(menuItem2_shoot);
+        menuList.Add(menuItem3_noShot);
     }
 
     void Update() {
-        if (isStageMenuActivated) {
-            if (!currentPreview.activeSelf) currentPreview.SetActive(true);
-            
-            Ray ray = new Ray(OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch),
-                OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch) * Vector3.forward);
-
-            if (Physics.Raycast(ray, out RaycastHit hit)
-                && !hit.collider.gameObject.name.Equals("emptyObjectForCollider")
-                && !hit.collider.gameObject.name.Equals("Glock17")) {
-                
-                currentPreview.transform.position = hit.point;
-                currentPreview.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
-
-                // Поворот модели лицом к камере
-                Vector3 cameraPosition = Camera.main.transform.position;
-                currentPreview.transform.LookAt(new Vector3(cameraPosition.x, currentPreview.transform.position.y,
-                    cameraPosition.z));
-
-                if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Input.GetKeyUp(KeyCode.Space)) {
-                    triggerPressed = false;
-                }
-
-                if (!triggerPressed && OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0.5) placeATarget(hit);
-            }
-
-            if (OVRInput.Get(OVRInput.RawAxis1D.RHandTrigger) > 0.5) SaveObjects();
-            if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) RemoveAllObjects();
-            if (OVRInput.GetDown(OVRInput.Button.One)) LoadObjects();
+        if (isTargetSetUpMenuActivated) {
+            setUpTargets(previewPrefab, prefab);
+        } else if (isNoShotSetUpMenuActivated) {
+            setUpTargets(previewPrefabNoShot, prefabNoShot);
         } else {
             currentPreview.SetActive(false);
         }
         //menu change
         if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickUp) || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickDown)) changeMenu();
+    }
+
+    protected void setUpTargets(GameObject previewPrefab, GameObject prefab) {
+        if (!currentPreview) currentPreview = Instantiate(previewPrefab);
+        if (currentPreview && !currentPreview.activeSelf) currentPreview.SetActive(true);
+
+        Ray ray = new Ray(OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch),
+            OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch) * Vector3.forward);
+
+        if (Physics.Raycast(ray, out RaycastHit hit)
+            && !hit.collider.gameObject.name.Equals("emptyObjectForCollider")
+            && !hit.collider.gameObject.name.Equals("Glock17")) {
+            currentPreview.transform.position = hit.point;
+            currentPreview.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+
+            // Поворот модели лицом к камере
+            Vector3 cameraPosition = Camera.main.transform.position;
+            currentPreview.transform.LookAt(new Vector3(cameraPosition.x, currentPreview.transform.position.y,
+                cameraPosition.z));
+
+            if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Input.GetKeyUp(KeyCode.Space)) {
+                triggerPressed = false;
+            }
+
+            if (!triggerPressed && OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0.5) placeATarget(hit, currentPreview, prefab);
+        }
+
+        if (OVRInput.Get(OVRInput.RawAxis1D.RHandTrigger) > 0.5) SaveObjects();
+        if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) RemoveAllObjects();
+        if (OVRInput.GetDown(OVRInput.Button.One)) LoadObjects();
     }
 
     private int getNextIndex() {
@@ -94,16 +107,21 @@ public class Main : MonoBehaviour {
         }
 
         if (currentIndex == 0) {
-            isStageMenuActivated = true;
+            isTargetSetUpMenuActivated = true;
+            isNoShotSetUpMenuActivated = false;
+        } else if (currentIndex == 2) {
+            isTargetSetUpMenuActivated = false;
+            isNoShotSetUpMenuActivated = true;
         } else {
-            isStageMenuActivated = false;
+            isTargetSetUpMenuActivated = false;
+            isNoShotSetUpMenuActivated = false;
         }
     }
 
-    private void placeATarget(RaycastHit hit) {
+    private void placeATarget(RaycastHit hit, GameObject previewPrefab, GameObject prefab) {
         triggerPressed = true;
         установленныеМишени.Add(
-            Instantiate(prefab, hit.point, currentPreview.transform.rotation)
+            Instantiate(prefab, hit.point, previewPrefab.transform.rotation)
         );
     }
 
@@ -163,7 +181,9 @@ public class Main : MonoBehaviour {
  
             // Восстановите объекты
             foreach (ObjectData data in objectDataList) {
+                //todo yp врядли с ноуШут будет работаь
                 GameObject prefab = Resources.Load<GameObject>(/*"ipcs_target/" + */data.prefabName.Substring(0, data.prefabName.Length - 7));
+
                 if (prefab != null) {
                     установленныеМишени.Add(
                     Instantiate(prefab, data.position, data.rotation)
