@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 
 public class Main : MonoBehaviour {
-    public GameObject prefab;
+    public GameObject targetPrefab;
     public GameObject previewPrefab;
     public GameObject previewPrefabNoShot;
     public GameObject prefabNoShot;
@@ -42,7 +42,7 @@ public class Main : MonoBehaviour {
 
     void Update() {
         if (isTargetSetUpMenuActivated) {
-            setUpTargets(previewPrefab, prefab);
+            setUpTargets(previewPrefab, targetPrefab);
         } else if (isNoShotSetUpMenuActivated) {
             setUpTargets(previewPrefabNoShot, prefabNoShot);
         } else {

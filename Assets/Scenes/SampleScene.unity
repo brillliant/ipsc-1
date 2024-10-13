@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -854,10 +853,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcdd147bf4b34e7439c4d3216e4bb33d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 6177415639674001883, guid: 5847aea319e2f66478e7bfcab82fb829, type: 3}
+  targetPrefab: {fileID: 6177415639674001883, guid: 5847aea319e2f66478e7bfcab82fb829, type: 3}
   previewPrefab: {fileID: 1331760992598048564, guid: 15ad2d59c491b454691adaf5c0d5065d, type: 3}
-  previewPrefabNoShot: {fileID: 1331760992598048564, guid: f32eb33deaceaf04eb904216ed10cde8, type: 3}
-  prefabNoShot: {fileID: 6177415639674001883, guid: accd440769dc0e542af34ffb9a336189, type: 3}
+  previewPrefabNoShot: {fileID: 6177415639674001883, guid: 300c54dc5b8e29f4ba1e41e6de7c0353, type: 3}
+  prefabNoShot: {fileID: 6177415639674001883, guid: 9c6851a973f752f459740328bbd243c2, type: 3}
   menuItem1_stage: {fileID: 1521864574}
   menuItem2_shoot: {fileID: 585372784}
   menuItem3_noShot: {fileID: 1044434609}
@@ -2786,6 +2785,9 @@ MonoBehaviour:
   overridePerLayerColorScaleAndOffset: 0
   colorScale: {x: 1, y: 1, z: 1, w: 1}
   colorOffset: {x: 0, y: 0, z: 0, w: 0}
+  passthroughLayerResumed:
+    m_PersistentCalls:
+      m_Calls: []
   colorMapEditorType_: 0
   colorMapEditorGradient:
     serializedVersion: 2
