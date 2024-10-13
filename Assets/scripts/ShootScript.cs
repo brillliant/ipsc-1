@@ -60,8 +60,10 @@ public class ShootScript : MonoBehaviour {
         isMagazineIn = false;
         
         magazine.GetComponent<MeshCollider>().convex = true;
+        magazine.GetComponent<Rigidbody>().isKinematic = false;
         magazine.GetComponent<Rigidbody>().useGravity = true;
-        
+        magazine.transform.parent = null;
+
         magazineOutSound.PlayOneShot(magazineOutSound.clip);
     }
 
