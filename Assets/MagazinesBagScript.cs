@@ -1,46 +1,45 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MagazinesBagScript : MonoBehaviour {
-    //public Transform cameraTransform; // Ссылка на трансформ камеры
-    //public float verticalOffset = -0.5f; // Смещение по вертикали (например, для пояса)
     private float height = 0.7f;
+    public GameObject leftHand; 
+    public GameObject magazinePrefub;
+    public Boolean isHandKeepingMagazine = false;
 
-    public GameObject camera; 
+    public GameObject camera;
+    private GameObject magazine;
     
     private Color color1 = Color.red;
     private Color color2 = Color.blue;
     
-    private bool isColor1Active = true;
+    private float change = 0.01f;
     
-    /*void LateUpdate() {
-        Vector3 parentPosition = transform.parent.transform.position;
-        
-        //parentPosition.z += -0.5f;  //смещаем вперед
-        //parentPosition.x += -1.00f;  //смещаем объект влево
-        
-        Quaternion currentRotation = transform.rotation;
-        // Убираем наклон, оставляя вращение только по оси Y
-        transform.rotation = Quaternion.Euler(0, currentRotation.eulerAngles.y, 0);
-        // Восстанавливаем высоту (Y) объекта
-        transform.position = new Vector3(transform.position.x, height, transform.position.z);
-    }*/
+    private bool isColor1Active = true;
+
+    private Quaternion offsetRotation = Quaternion.Euler(230f, 100f, 160f); 
     
     void LateUpdate() {
         Transform cameraTransform = camera.transform;
 
-        //parentPosition.z += -0.5f;  //смещаем вперед
-        //parentPosition.x += -1.00f;  //смещаем объект влево
-
         transform.rotation = Quaternion.Euler(0, cameraTransform.rotation.eulerAngles.y, 0);
-        // Восстанавливаем высоту (Y) объекта
         transform.position = 
             new Vector3(
                 cameraTransform.position.x, 
                 cameraTransform.position.y - 0.7f, 
-                cameraTransform.position.z - 0.1f
+                cameraTransform.position.z
             );
+        if (magazine != null) {
+            magazine.transform.position = new Vector3(
+                leftHand.transform.position.x,// + 0.02f,
+                leftHand.transform.position.y,// + 0.02f, //+0.01
+                leftHand.transform.position.z// + 0.02f 
+            );
+            magazine.transform.rotation =
+            leftHand.transform.rotation * offsetRotation;
+        }
     }
     
     void OnTriggerEnter(Collider other) {
@@ -52,7 +51,25 @@ public class MagazinesBagScript : MonoBehaviour {
     }
 
     private void TakeMagazine() {
-        
+        if (!isHandKeepingMagazine) {
+            magazine = Instantiate(
+                magazinePrefub,
+                new Vector3(
+                    leftHand.transform.position.x,
+                    leftHand.transform.position.y,
+                    leftHand.transform.position.z
+                ),
+                //leftHand.transform.rotation,
+                Quaternion.Euler(
+                    leftHand.transform.rotation.eulerAngles.x + 180, 
+                    leftHand.transform.rotation.eulerAngles.y, 
+                    leftHand.transform.rotation.eulerAngles.z
+                ),
+                leftHand.transform
+            );
+            
+            isHandKeepingMagazine = true;
+        }
     }
 
     private void ToggleColor() {
