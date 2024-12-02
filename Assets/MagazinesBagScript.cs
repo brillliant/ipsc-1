@@ -32,7 +32,7 @@ public class MagazinesBagScript : MonoBehaviour {
                 cameraTransform.position.z
             );
         
-        if (!ReferenceEquals(magazine, null)) {
+        if (!ReferenceEquals(magazine, null) && magazine.transform.parent is not null) {
             magazine.transform.position = new Vector3(
                 magazineSpawn.transform.position.x,
                 magazineSpawn.transform.position.y,
@@ -43,6 +43,7 @@ public class MagazinesBagScript : MonoBehaviour {
     }
     
     void OnTriggerEnter(Collider other) {
+        //todo сделать для руки.
         //if (collision.gameObject.name == "mixamorig:LeftHand") {
             Debug.Log("схватил магазин");
             
