@@ -1,10 +1,12 @@
 using System;
+using System.Collections;
+using Oculus.Interaction;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
 
-public class ShootScript : MonoBehaviour {
+public class PistolScript : MonoBehaviour {
     [SerializeField] 
-    private float bulletSpeed = 0.03f;
+    private float bulletSpeed;
     public Boolean triggerPressed = false;
     public GameObject bulletPrefub;
     public GameObject magazine;
@@ -12,24 +14,24 @@ public class ShootScript : MonoBehaviour {
     public AudioSource shotSound;
     public AudioSource emptyShotSound;
     public AudioSource magazineOutSound;
-    
+
     [SerializeField] private Transform bulletPoint;
     //public Transform leftHandTransform;
     public GameObject codeObject;
     private Main mainScript;
     
-    private int magazineCartrigeCount = 10000;
+    private int roundsCount;// = 10000;
     private Boolean isСartridgeInChamber = true;
     private Boolean isMagazineIn = true;
     
     void Start() {
+        roundsCount = magazine.GetComponent<MagazineScript>().getRoundCount();
         _vibration.Duration = 0.15f;
         _vibration.Samples = new[] { 1f };
         _vibration.SamplesCount = 1;
         shotSound.volume = 1.0f;
 
         mainScript = codeObject.GetComponent<Main>();
-
         //Time.timeScale = 0.1f;
     }
 
@@ -55,18 +57,19 @@ public class ShootScript : MonoBehaviour {
             transform.parent = leftHandTransform;
         }*/
     }
-    
+
     private void releaseMagazine() {
         isMagazineIn = false;
-        
+
         magazine.GetComponent<MeshCollider>().convex = true;
         magazine.GetComponent<Rigidbody>().isKinematic = false;
         magazine.GetComponent<Rigidbody>().useGravity = true;
+
         magazine.transform.parent = null;
 
         magazineOutSound.PlayOneShot(magazineOutSound.clip);
+        magazine.transform.Find("ISDK_HandGrabInteraction").gameObject.SetActive(true);
     }
-
     void shootActionIfNeeded() {
         if (!triggerPressed && 
             (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0 || Input.GetKeyDown(KeyCode.Space))
@@ -102,9 +105,10 @@ public class ShootScript : MonoBehaviour {
     }
 
     private void moveСartridgeFromMagazineToChamber() {
-        if (isMagazineIn && magazineCartrigeCount > 0) {
+        if (isMagazineIn && roundsCount > 0) {
             isСartridgeInChamber = true;
-            magazineCartrigeCount--;    
+            roundsCount--;
+            magazine.GetComponent<MagazineScript>().decrementRoundCount();
         }
     }
 

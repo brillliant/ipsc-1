@@ -2,16 +2,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class MagazinesBagScript : MonoBehaviour {
-    private float height = 0.7f;
-    public GameObject leftHand; 
+    public GameObject magazineSpawn; 
     public GameObject magazinePrefub;
     public Boolean isHandKeepingMagazine = false;
 
     public GameObject camera;
     private GameObject magazine;
     
+    //todo удалить после отладки
     private Color color1 = Color.red;
     private Color color2 = Color.blue;
     
@@ -19,8 +20,7 @@ public class MagazinesBagScript : MonoBehaviour {
     
     private bool isColor1Active = true;
 
-    private Quaternion offsetRotation = Quaternion.Euler(230f, 100f, 160f); 
-    
+    //private Quaternion offsetRotation = Quaternion.Euler(230f, 100f, 160f); 
     void LateUpdate() {
         Transform cameraTransform = camera.transform;
 
@@ -31,21 +31,24 @@ public class MagazinesBagScript : MonoBehaviour {
                 cameraTransform.position.y - 0.7f, 
                 cameraTransform.position.z
             );
-        if (magazine != null) {
+        
+        if (!ReferenceEquals(magazine, null)) {
             magazine.transform.position = new Vector3(
-                leftHand.transform.position.x,// + 0.02f,
-                leftHand.transform.position.y,// + 0.02f, //+0.01
-                leftHand.transform.position.z// + 0.02f 
+                magazineSpawn.transform.position.x,
+                magazineSpawn.transform.position.y,
+                magazineSpawn.transform.position.z
             );
-            magazine.transform.rotation =
-            leftHand.transform.rotation * offsetRotation;
+            magazine.transform.rotation = magazineSpawn.transform.rotation;
         }
     }
     
     void OnTriggerEnter(Collider other) {
         //if (collision.gameObject.name == "mixamorig:LeftHand") {
             Debug.Log("схватил магазин");
+            
+            //todo удалить после отладки
             ToggleColor();
+            
             TakeMagazine();
         //}
     }
@@ -55,23 +58,22 @@ public class MagazinesBagScript : MonoBehaviour {
             magazine = Instantiate(
                 magazinePrefub,
                 new Vector3(
-                    leftHand.transform.position.x,
-                    leftHand.transform.position.y,
-                    leftHand.transform.position.z
+                    magazineSpawn.transform.position.x,
+                    magazineSpawn.transform.position.y,
+                    magazineSpawn.transform.position.z
                 ),
-                //leftHand.transform.rotation,
                 Quaternion.Euler(
-                    leftHand.transform.rotation.eulerAngles.x + 180, 
-                    leftHand.transform.rotation.eulerAngles.y, 
-                    leftHand.transform.rotation.eulerAngles.z
+                    magazineSpawn.transform.rotation.eulerAngles.x, 
+                    magazineSpawn.transform.rotation.eulerAngles.y, 
+                    magazineSpawn.transform.rotation.eulerAngles.z
                 ),
-                leftHand.transform
+                magazineSpawn.transform
             );
-            
             isHandKeepingMagazine = true;
         }
     }
 
+    //todo удалить позже
     private void ToggleColor() {
         Renderer renderer = GetComponent<Renderer>();
         if (renderer != null) {
