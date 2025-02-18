@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//todo на работает. создал. не пригодилось пока. идея чтобы рука знала, есть ли у нее касание с чем либо.
+/*todo на работает. создал. не пригодилось пока. идея чтобы рука знала, есть ли у нее касание с чем либо.*/
 public class HandScript : MonoBehaviour {
     public GameObject cube;
     
