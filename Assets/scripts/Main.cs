@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using DefaultNamespace;
+using Meta.XR.MRUtilityKit;
 using TMPro;
 using UnityEngine;
 
@@ -10,10 +11,12 @@ public class Main : MonoBehaviour {
     public GameObject previewPrefab;
     public GameObject previewPrefabNoShot;
     public GameObject prefabNoShot;
+    public GameObject cube2Temp;
     
     private GameObject currentPreview;
     //private GameObject currentNoShotPreview;
-
+    private EffectMesh effectMeshScript;
+    
     public TextMeshProUGUI menuItem1_stage;
     public TextMeshProUGUI menuItem2_shoot;
     public TextMeshProUGUI menuItem3_noShot;
@@ -28,11 +31,13 @@ public class Main : MonoBehaviour {
     public Boolean isTargetSetUpMenuActivated = true;
     public Boolean isNoShotSetUpMenuActivated = false;
     public Boolean triggerPressed = false;
+    public GameObject effectMeshObject;
     
     void Start() {
         objectDataList = new List<ObjectData>();
         установленныеМишени = new List<GameObject>();
         //currentPreview = Instantiate(previewPrefab);
+        effectMeshScript = effectMeshObject.GetComponent<EffectMesh>();
 
         menuList = new List<TextMeshProUGUI>();
         menuList.Add(menuItem1_stage);
@@ -50,6 +55,17 @@ public class Main : MonoBehaviour {
         }
         //menu change
         if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickUp) || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickDown)) changeMenu();
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft)) showHideWalls();
+    }
+
+    private void showHideWalls() {
+        if (effectMeshScript.HideMesh) {
+            effectMeshScript.HideMesh = false;
+            tempColorChange();
+        } else {
+            effectMeshScript.HideMesh = true;
+            tempColorChange();
+        }
     }
 
     protected void setUpTargets(GameObject previewPrefab, GameObject prefab) {
@@ -191,6 +207,26 @@ public class Main : MonoBehaviour {
                   Debug.LogWarning("Prefab not found: " + data.prefabName);
                 }
             }
+        }
+    }
+
+
+    //todo удалить после отладки
+    private Color color1 = Color.red;
+    private Color color2 = Color.blue;
+    
+    private float change = 0.01f;
+    
+    private bool isColor1Active = true;
+    
+    //todo удалить позже
+    private void tempColorChange() {
+        Renderer renderer = cube2Temp.GetComponent<Renderer>();
+        if (renderer != null) {
+            renderer.material.color = isColor1Active ? color1 : color2;
+            isColor1Active = !isColor1Active;
+        } else {
+            Debug.LogWarning("У объекта нет компонента Renderer!");
         }
     }
 }
