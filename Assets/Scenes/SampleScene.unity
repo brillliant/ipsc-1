@@ -24932,7 +24932,7 @@ MonoBehaviour:
   _rigidbody: {fileID: 2131453084}
   _grabSource: {fileID: 0}
   _useClosestPointAsGrabSource: 0
-  _releaseDistance: 0
+  _releaseDistance: 1
   _resetGrabOnGrabsUpdated: 1
   _physicsGrabbable: {fileID: 0}
 --- !u!114 &2049096870
@@ -24958,23 +24958,23 @@ MonoBehaviour:
   _scoringModifier:
     _positionRotationWeight: 0.5
   _slippiness: 0
-  _supportedGrabTypes: 3
+  _supportedGrabTypes: -1
   _pinchGrabRules:
     _thumbRequirement: 0
     _indexRequirement: 1
     _middleRequirement: 1
-    _ringRequirement: 0
-    _pinkyRequirement: 0
-    _unselectMode: 1
+    _ringRequirement: 1
+    _pinkyRequirement: 1
+    _unselectMode: 0
   _palmGrabRules:
-    _thumbRequirement: 1
-    _indexRequirement: 0
-    _middleRequirement: 2
-    _ringRequirement: 2
+    _thumbRequirement: 0
+    _indexRequirement: 1
+    _middleRequirement: 1
+    _ringRequirement: 1
     _pinkyRequirement: 1
     _unselectMode: 0
   _movementProvider: {fileID: 0}
-  _handAligment: 0
+  _handAligment: 1
   _handGrabPoses: []
 --- !u!114 &2049096871
 MonoBehaviour:
@@ -25866,7 +25866,7 @@ ConfigurableJoint:
   m_AngularYMotion: 0
   m_AngularZMotion: 0
   m_LinearLimitSpring:
-    spring: 10
+    spring: 0
     damper: 0
   m_LinearLimit:
     limit: 0.02
@@ -25898,10 +25898,10 @@ ConfigurableJoint:
   m_TargetVelocity: {x: 0, y: 0, z: 0}
   m_XDrive:
     serializedVersion: 4
-    positionSpring: 4000
+    positionSpring: 8000
     positionDamper: 100
     maximumForce: 3.4028233e+38
-    useAcceleration: 0
+    useAcceleration: 1
   m_YDrive:
     serializedVersion: 4
     positionSpring: 0
