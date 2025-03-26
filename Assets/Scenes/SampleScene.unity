@@ -1322,6 +1322,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 7f40b26a729a534468a8d81a5f6d3a7f, type: 2}
+    - target: {fileID: -5922622823359544968, guid: d083b4a358a65014eb2e8b42bdabf33c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: -5078903600777333599, guid: d083b4a358a65014eb2e8b42bdabf33c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.00003
@@ -7489,7 +7493,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   magazineSpawn: {fileID: 0}
   magazinePrefub: {fileID: 0}
-  isHandKeepingMagazine: 0
+  codeObject: {fileID: 0}
   camera: {fileID: 0}
 --- !u!65 &659562521
 BoxCollider:
@@ -9247,7 +9251,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   magazineSpawn: {fileID: 0}
   magazinePrefub: {fileID: 0}
-  isHandKeepingMagazine: 0
+  codeObject: {fileID: 0}
   camera: {fileID: 0}
 --- !u!54 &797335361
 Rigidbody:
@@ -11210,7 +11214,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &992711081
 Transform:
   m_ObjectHideFlags: 0
@@ -11832,6 +11836,7 @@ MonoBehaviour:
   previewPrefabNoShot: {fileID: 6177415639674001883, guid: 300c54dc5b8e29f4ba1e41e6de7c0353, type: 3}
   prefabNoShot: {fileID: 6177415639674001883, guid: 9c6851a973f752f459740328bbd243c2, type: 3}
   cube2Temp: {fileID: 1462417863}
+  isHandKeepingMagazine: 0
   menuItem1_stage: {fileID: 1521864574}
   menuItem2_shoot: {fileID: 585372784}
   menuItem3_noShot: {fileID: 1044434609}
@@ -14951,6 +14956,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Magazine_new (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3861189859654507191, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -17730,7 +17739,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   magazineSpawn: {fileID: 733191452}
   magazinePrefub: {fileID: 3861189859654507191, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
-  isHandKeepingMagazine: 0
+  codeObject: {fileID: 1043981333}
   camera: {fileID: 88431502}
 --- !u!1 &1464376738
 GameObject:
@@ -18516,7 +18525,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1519922399
 Transform:
   m_ObjectHideFlags: 0
@@ -23229,6 +23238,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Magazine_new (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 3861189859654507191, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -23360,6 +23373,10 @@ PrefabInstance:
     - target: {fileID: 3861189859654507191, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
       propertyPath: m_Name
       value: Magazine_new (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3861189859654507191, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -25468,6 +25485,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
+      propertyPath: enableDynamicResolution
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       propertyPath: dynamicResolutionVersion
       value: 1
       objectReference: {fileID: 0}
@@ -26189,6 +26210,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16307bba5f5fb8d4e9c73d89d94a5e42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  codeObject: {fileID: 1043981333}
   isSetUp: 1
 --- !u!1001 &6779759475394870676
 PrefabInstance:
@@ -26198,6 +26220,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1462417868}
     m_Modifications:
+    - target: {fileID: 1144555947092129489, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
+      propertyPath: codeObject
+      value: 
+      objectReference: {fileID: 1043981333}
     - target: {fileID: 2389798004769918579, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.53

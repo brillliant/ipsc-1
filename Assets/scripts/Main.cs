@@ -12,6 +12,7 @@ public class Main : MonoBehaviour {
     public GameObject previewPrefabNoShot;
     public GameObject prefabNoShot;
     public GameObject cube2Temp;
+    public Boolean isHandKeepingMagazine = false;
     
     private GameObject currentPreview;
     //private GameObject currentNoShotPreview;

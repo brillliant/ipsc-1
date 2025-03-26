@@ -5,11 +5,21 @@ using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
 public class MagazineScript : MonoBehaviour {
+    public GameObject codeObject;
+    private Main mainScript;
     private int roundCount = 10;//17;
     public Boolean isSetUp = false;
-
+    private ConfigurableJoint configurableJoint;
+    
+    void Start() {
+        if (codeObject == null) {
+            codeObject = GameObject.Find("codeObject");
+        }
+        mainScript = codeObject.GetComponent<Main>();
+        configurableJoint = GetComponent<ConfigurableJoint>();
+    } 
+    
     public int getRoundCount() {
-        
         return roundCount;
     }
 
@@ -22,6 +32,9 @@ public class MagazineScript : MonoBehaviour {
             if (transform.parent is not null) {
                 ToggleColor();
                 transform.SetParent(null);
+                setUpJoint(other);
+
+                mainScript.isHandKeepingMagazine = false;
                 gameObject.GetComponent<Rigidbody>().isKinematic = false;
                 gameObject.GetComponent<Rigidbody>().useGravity = true;
             }
@@ -44,7 +57,10 @@ public class MagazineScript : MonoBehaviour {
         }
     }
 
-    void Update() {
-        
+    private void setUpJoint(Collider reloadPoint1) {
+        Rigidbody pistolRigidBody = reloadPoint1.transform.parent.GetComponent<Rigidbody>();
+        configurableJoint.connectedBody = pistolRigidBody;
+        configurableJoint.connectedAnchor = new Vector3(0.0036f, 0.0143734f, -0.0306f);
+        configurableJoint.autoConfigureConnectedAnchor = true;
     }
 }

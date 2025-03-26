@@ -7,7 +7,8 @@ using UnityEngine.Serialization;
 public class MagazinesBagScript : MonoBehaviour {
     public GameObject magazineSpawn; 
     public GameObject magazinePrefub;
-    public Boolean isHandKeepingMagazine = false;
+    public GameObject codeObject;
+    private Main mainScript;
 
     public GameObject camera;
     private GameObject magazine;
@@ -19,6 +20,10 @@ public class MagazinesBagScript : MonoBehaviour {
     private float change = 0.01f;
     
     private bool isColor1Active = true;
+
+    void Start() {
+        mainScript = codeObject.GetComponent<Main>();
+    }
 
     //private Quaternion offsetRotation = Quaternion.Euler(230f, 100f, 160f); 
     void LateUpdate() {
@@ -50,12 +55,23 @@ public class MagazinesBagScript : MonoBehaviour {
             //todo удалить после отладки
             ToggleColor();
             
-            TakeMagazine();
+            TakeMagazine(other);
         //}
     }
 
-    private void TakeMagazine() {
-        if (!isHandKeepingMagazine) {
+    private void TakeMagazine(Collider other) {
+        Debug.Log("========" + other.gameObject.name);
+        
+        //other.gameObject.name = "leftHand";
+        //if (!isHandKeepingMagazine) {
+        /*if (other.gameObject.name.Contains("Hand") || other.gameObject.name.Contains("Rigidbody")
+                                                   || other.gameObject.name.Contains("PinchArea")
+                                                   || other.gameObject.name.Contains("Visuals")
+                                                   || other.gameObject.name.Contains("a")
+                                                   || true
+                                                   ) {*/
+        
+        if (!mainScript.isHandKeepingMagazine) {
             magazine = Instantiate(
                 magazinePrefub,
                 new Vector3(
@@ -70,7 +86,7 @@ public class MagazinesBagScript : MonoBehaviour {
                 ),
                 magazineSpawn.transform
             );
-            isHandKeepingMagazine = true;
+            mainScript.isHandKeepingMagazine = true;
         }
     }
 
