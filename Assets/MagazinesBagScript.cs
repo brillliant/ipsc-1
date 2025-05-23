@@ -27,6 +27,7 @@ public class MagazinesBagScript : MonoBehaviour {
 
     //private Quaternion offsetRotation = Quaternion.Euler(230f, 100f, 160f); 
     void LateUpdate() {
+        //положение бокса для магазинов
         Transform cameraTransform = camera.transform;
 
         transform.rotation = Quaternion.Euler(0, cameraTransform.rotation.eulerAngles.y, 0);
@@ -37,7 +38,7 @@ public class MagazinesBagScript : MonoBehaviour {
                 cameraTransform.position.z
             );
         
-        if (!ReferenceEquals(magazine, null) && magazine.transform.parent is not null) {
+        if (!ReferenceEquals(magazine, null) && magazine.transform.parent is not null && magazine.transform.parent.name == "magazineSpawn") {
             magazine.transform.position = new Vector3(
                 magazineSpawn.transform.position.x,
                 magazineSpawn.transform.position.y,
@@ -62,6 +63,8 @@ public class MagazinesBagScript : MonoBehaviour {
     private void TakeMagazine(Collider other) {
         Debug.Log("========" + other.gameObject.name);
         
+        //todo доработать условие. чтобы тольео если ЛЕВАЯ рука попадает в куб - тогда в ней появится магазин.
+        //пока, что даже пистолет.
         //other.gameObject.name = "leftHand";
         //if (!isHandKeepingMagazine) {
         /*if (other.gameObject.name.Contains("Hand") || other.gameObject.name.Contains("Rigidbody")

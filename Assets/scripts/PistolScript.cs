@@ -19,10 +19,13 @@ public class PistolScript : MonoBehaviour {
     //public Transform leftHandTransform;
     public GameObject codeObject;
     private Main mainScript;
+    private MagazineScript magazineScript;
     
     private int roundsCount;// = 10000;
     private Boolean isСartridgeInChamber = true;
     private Boolean isMagazineIn = true;
+
+    private ConfigurableJoint configurableJoint;
     
     void Start() {
         roundsCount = magazine.GetComponent<MagazineScript>().getRoundCount();
@@ -32,7 +35,11 @@ public class PistolScript : MonoBehaviour {
         shotSound.volume = 1.0f;
 
         mainScript = codeObject.GetComponent<Main>();
+        magazineScript = magazine.GetComponent<MagazineScript>(); //todo 2 раза получаю этот компонент. выше есть. отрефакторить потом
         //Time.timeScale = 0.1f;
+        Debug.Log(magazineScript.getIsSetUp());
+
+        configurableJoint = magazine.GetComponent<ConfigurableJoint>();
     }
 
     private OVRInput.HapticsAmplitudeEnvelopeVibration _vibration = new OVRInput.HapticsAmplitudeEnvelopeVibration();
@@ -58,7 +65,18 @@ public class PistolScript : MonoBehaviour {
         }*/
     }
 
+    private void resetConfigurableJoint() {
+        configurableJoint.xMotion = ConfigurableJointMotion.Free;
+        configurableJoint.yMotion = ConfigurableJointMotion.Free;
+        configurableJoint.zMotion = ConfigurableJointMotion.Free;
+        configurableJoint.angularXMotion = ConfigurableJointMotion.Free;
+        configurableJoint.angularYMotion = ConfigurableJointMotion.Free;
+        configurableJoint.angularZMotion = ConfigurableJointMotion.Free;
+    }
+
     private void releaseMagazine() {
+        resetConfigurableJoint();
+        
         isMagazineIn = false;
 
         magazine.GetComponent<MeshCollider>().convex = true;
@@ -69,7 +87,9 @@ public class PistolScript : MonoBehaviour {
 
         magazineOutSound.PlayOneShot(magazineOutSound.clip);
         magazine.transform.Find("ISDK_HandGrabInteraction").gameObject.SetActive(true);
+        magazineScript.setIsSetUp(isMagazineIn);
     }
+    
     void shootActionIfNeeded() {
         if (!triggerPressed && 
             (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0 || Input.GetKeyDown(KeyCode.Space))

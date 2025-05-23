@@ -3,17 +3,35 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class MagazineScript : MonoBehaviour {
     public GameObject codeObject;
+    public GameObject pistol;
     private Main mainScript;
     private int roundCount = 10;//17;
-    public Boolean isSetUp = false;
+    private Boolean isSetUp = true;
     private ConfigurableJoint configurableJoint;
+    private Boolean magazineJustDropped = false;
+
+    private String magazineId = "defaule";
+    
+    public void setIsSetUp(Boolean isSetUp) {
+        this.isSetUp = isSetUp;
+    }
+    
+    public Boolean getIsSetUp() {
+        return isSetUp;
+    }
     
     void Start() {
         if (codeObject == null) {
             codeObject = GameObject.Find("codeObject");
+        }
+        magazineId = Random.Range(0, 100).ToString();
+
+        if (pistol == null) {
+            pistol = GameObject.Find("Glock17");
         }
         mainScript = codeObject.GetComponent<Main>();
         configurableJoint = GetComponent<ConfigurableJoint>();
@@ -28,24 +46,33 @@ public class MagazineScript : MonoBehaviour {
     }
 
     void OnTriggerEnter(Collider other) {
-        if (other.gameObject.name == "reloadPoint1" && !isSetUp) {
-            if (transform.parent is not null) {
+        if (other.gameObject.name == "reloadPoint1" && !isSetUp && magazineJustDropped) {
+            //if (transform.parent is not null) {
                 ToggleColor();
+                gameObject.GetComponent<Rigidbody>().isKinematic = false;//временно тру. сделать фолс.
+                
                 transform.SetParent(null);
-                setUpJoint(other);
+                //transform.SetParent(pistol.transform);
+                setUpJoint();
 
                 mainScript.isHandKeepingMagazine = false;
-                gameObject.GetComponent<Rigidbody>().isKinematic = false;
-                gameObject.GetComponent<Rigidbody>().useGravity = true;
-            }
+                //gameObject.GetComponent<Rigidbody>().useGravity = false;
+                isSetUp = true;
+            //}
         }
     }
-    
+
+    void OnTriggerExit(Collider other) {
+        if (other.gameObject.name == "reloadPoint2" && !magazineJustDropped) {
+            magazineJustDropped = true;
+        }
+    }
+
     //todo удалить позже
     private bool isColor1Active = true;
     //todo удалить после отладки
-    private Color color1 = Color.green;
-    private Color color2 = Color.cyan;
+    private Color color1 = Color.red;
+    private Color color2 = Color.magenta;
     
     private void ToggleColor() {
         Renderer renderer = GetComponent<Renderer>();
@@ -57,10 +84,20 @@ public class MagazineScript : MonoBehaviour {
         }
     }
 
-    private void setUpJoint(Collider reloadPoint1) {
-        Rigidbody pistolRigidBody = reloadPoint1.transform.parent.GetComponent<Rigidbody>();
+    private void setUpJoint() {
+        setConfigurableJoint();
+        Rigidbody pistolRigidBody = pistol.GetComponent<Rigidbody>();
         configurableJoint.connectedBody = pistolRigidBody;
         configurableJoint.connectedAnchor = new Vector3(0.0036f, 0.0143734f, -0.0306f);
         configurableJoint.autoConfigureConnectedAnchor = true;
+    }
+    
+    private void setConfigurableJoint() {
+        configurableJoint.xMotion = ConfigurableJointMotion.Locked;
+        configurableJoint.yMotion = ConfigurableJointMotion.Limited;
+        configurableJoint.zMotion = ConfigurableJointMotion.Locked;
+        configurableJoint.angularXMotion = ConfigurableJointMotion.Locked;
+        configurableJoint.angularYMotion = ConfigurableJointMotion.Locked;
+        configurableJoint.angularZMotion = ConfigurableJointMotion.Locked;
     }
 }
