@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Oculus.Interaction;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -13,16 +14,8 @@ public class MagazineScript : MonoBehaviour {
     private Boolean isSetUp = true;
     private ConfigurableJoint configurableJoint;
     private Boolean magazineJustDropped = false;
-
+    
     private String magazineId = "defaule";
-    
-    public void setIsSetUp(Boolean isSetUp) {
-        this.isSetUp = isSetUp;
-    }
-    
-    public Boolean getIsSetUp() {
-        return isSetUp;
-    }
     
     void Start() {
         if (codeObject == null) {
@@ -35,30 +28,24 @@ public class MagazineScript : MonoBehaviour {
         }
         mainScript = codeObject.GetComponent<Main>();
         configurableJoint = GetComponent<ConfigurableJoint>();
-    } 
-    
-    public int getRoundCount() {
-        return roundCount;
-    }
-
-    public void decrementRoundCount() {
-        roundCount--;
     }
 
     void OnTriggerEnter(Collider other) {
         if (other.gameObject.name == "reloadPoint1" && !isSetUp && magazineJustDropped) {
-            //if (transform.parent is not null) {
-                ToggleColor();
-                gameObject.GetComponent<Rigidbody>().isKinematic = false;//временно тру. сделать фолс.
-                
-                transform.SetParent(null);
-                //transform.SetParent(pistol.transform);
-                setUpJoint();
+            ToggleColor();
+            gameObject.GetComponent<Rigidbody>().isKinematic = false;//временно тру. сделать фолс.
+            Debug.Log($" ===== root после Отсоединения Local: {transform.parent.localScale}, World: {transform.parent.lossyScale}");
+            Debug.Log($" ===== magazine после Отсоединения Local: {transform.localScale}, World: {transform.lossyScale}");
+            
+            //todo временно выключил пока трестирую джойнт
+            //transform.parent.SetParent(pistol.transform, true);
+            Debug.Log($" ===== root ПОСЛЕ присоденинения Local: {transform.parent.localScale}, World: {transform.parent.lossyScale}");
+            Debug.Log($" ===== magazine ПОСЛЕ присоденинения Local: {transform.localScale}, World: {transform.lossyScale}");
+            setUpJoint();
 
-                mainScript.isHandKeepingMagazine = false;
-                //gameObject.GetComponent<Rigidbody>().useGravity = false;
-                isSetUp = true;
-            //}
+            mainScript.isHandKeepingMagazine = false;
+            //gameObject.GetComponent<Rigidbody>().useGravity = false;
+            isSetUp = true; //todo продумать зашелку. когда до конца вставил.
         }
     }
 
@@ -90,6 +77,23 @@ public class MagazineScript : MonoBehaviour {
         configurableJoint.connectedBody = pistolRigidBody;
         configurableJoint.connectedAnchor = new Vector3(0.0036f, 0.0143734f, -0.0306f);
         configurableJoint.autoConfigureConnectedAnchor = true;
+
+        //add one grab transformer
+        var iSDKHandGrabInteractionGameObject = transform.Find("ISDK_HandGrabInteraction").gameObject;
+        var oneGrabTranslateTransformer = iSDKHandGrabInteractionGameObject.AddComponent<OneGrabTranslateTransformer>();
+        var constraint = new FloatConstraint {
+            Constrain = true
+        };
+        oneGrabTranslateTransformer.Constraints.MinX = constraint;
+        oneGrabTranslateTransformer.Constraints.MaxX = constraint;
+        oneGrabTranslateTransformer.Constraints.MaxY = constraint;
+        oneGrabTranslateTransformer.Constraints.MinZ = constraint;
+        oneGrabTranslateTransformer.Constraints.MaxZ = constraint;
+
+        
+        var grabbable = iSDKHandGrabInteractionGameObject.GetComponent<Grabbable>();
+        grabbable.InjectOptionalOneGrabTransformer(oneGrabTranslateTransformer);
+        grabbable.InjectOptionalTwoGrabTransformer(null);
     }
     
     private void setConfigurableJoint() {
@@ -99,5 +103,21 @@ public class MagazineScript : MonoBehaviour {
         configurableJoint.angularXMotion = ConfigurableJointMotion.Locked;
         configurableJoint.angularYMotion = ConfigurableJointMotion.Locked;
         configurableJoint.angularZMotion = ConfigurableJointMotion.Locked;
+    }
+        
+    public int getRoundCount() {
+        return roundCount;
+    }
+
+    public void decrementRoundCount() {
+        roundCount--;
+    }
+    
+    public void setIsSetUp(Boolean isSetUp) {
+        this.isSetUp = isSetUp;
+    }
+    
+    public Boolean getIsSetUp() {
+        return isSetUp;
     }
 }

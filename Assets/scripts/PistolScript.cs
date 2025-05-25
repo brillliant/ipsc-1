@@ -83,13 +83,37 @@ public class PistolScript : MonoBehaviour {
         magazine.GetComponent<Rigidbody>().isKinematic = false;
         magazine.GetComponent<Rigidbody>().useGravity = true;
 
-        magazine.transform.parent = null;
+        Debug.Log($" ===== root до отедления Local: {magazine.transform.parent.localScale}, World: {transform.parent.lossyScale}");
+        Debug.Log($" ===== magazine до отедления Local: {magazine.transform.localScale}, World: {transform.lossyScale}");
+        
+        //todo временно выключаю. сделаю пока только с джоинтом. невыключающимся.
+        //magazine.transform.parent.parent = null;
+        //removeJointScript();
 
-        magazineOutSound.PlayOneShot(magazineOutSound.clip);
-        magazine.transform.Find("ISDK_HandGrabInteraction").gameObject.SetActive(true);
         magazineScript.setIsSetUp(isMagazineIn);
     }
-    
+
+    private void removeJointScript() {
+        magazineOutSound.PlayOneShot(magazineOutSound.clip);
+        var iSDKHandGrabInteractiongameObject = magazine.transform.Find("ISDK_HandGrabInteraction").gameObject;
+        iSDKHandGrabInteractiongameObject.SetActive(true);
+            
+        var oneGrabTranslateTransformer = iSDKHandGrabInteractiongameObject.GetComponent<OneGrabTranslateTransformer>();
+        if (oneGrabTranslateTransformer != null) {
+            Destroy(oneGrabTranslateTransformer);
+        }
+        
+        var grabFreeTransformer = iSDKHandGrabInteractiongameObject.GetComponent<GrabFreeTransformer>();
+        if (grabFreeTransformer != null) {
+            Destroy(grabFreeTransformer);
+        }
+        
+        var moveTowardsTargetProvider = iSDKHandGrabInteractiongameObject.GetComponent<MoveTowardsTargetProvider>();
+        if (moveTowardsTargetProvider != null) {
+            Destroy(moveTowardsTargetProvider);
+        }
+    }
+
     void shootActionIfNeeded() {
         if (!triggerPressed && 
             (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0 || Input.GetKeyDown(KeyCode.Space))

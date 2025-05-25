@@ -61,7 +61,7 @@ public class MagazinesBagScript : MonoBehaviour {
     }
 
     private void TakeMagazine(Collider other) {
-        Debug.Log("========" + other.gameObject.name);
+        //Debug.Log("========" + other.gameObject.name);
         
         //todo доработать условие. чтобы тольео если ЛЕВАЯ рука попадает в куб - тогда в ней появится магазин.
         //пока, что даже пистолет.
@@ -73,8 +73,9 @@ public class MagazinesBagScript : MonoBehaviour {
                                                    || other.gameObject.name.Contains("a")
                                                    || true
                                                    ) {*/
-        
-        if (!mainScript.isHandKeepingMagazine) {
+
+        //todo временно выключил
+        /*if (!mainScript.isHandKeepingMagazine) {
             magazine = Instantiate(
                 magazinePrefub,
                 new Vector3(
@@ -90,7 +91,7 @@ public class MagazinesBagScript : MonoBehaviour {
                 magazineSpawn.transform
             );
             mainScript.isHandKeepingMagazine = true;
-        }
+        }*/
     }
 
     //todo удалить позже
