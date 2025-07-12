@@ -211,6 +211,7 @@ public class Main : MonoBehaviour {
         }
     }
 
+
     //todo удалить после отладки
     private Color color1 = Color.red;
     private Color color2 = Color.blue;

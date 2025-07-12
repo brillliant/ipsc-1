@@ -12,70 +12,59 @@ public class MagazineScript : MonoBehaviour {
     public GameObject pistol;
     private Main mainScript;
     private int roundCount = 10;//17;
-    private Boolean isSetUp = true;
+    private Boolean isSetUp = false;
     private ConfigurableJoint configurableJoint;
-    private Boolean magazineJustDropped;
-    
-    private String magazineId = "default";
-    
-    private Vector3 originalScale;
+    private Boolean magazineIsOut = true;
+
+    private String magazineId = null;
 
     void Awake() {
-        originalScale = transform.lossyScale;
-    }
-    
-    void Start() {
         if (codeObject == null) {
             codeObject = GameObject.Find("codeObject");
         }
-        magazineId = Random.Range(0, 100).ToString();
-
+        mainScript = codeObject.GetComponent<Main>();
+        configurableJoint = GetComponent<ConfigurableJoint>();
+        
+        //generate id
+        String magazineIdNumber = Random.Range(0, 100).ToString();
+        if (transform.parent.name == "MagazineRoot") {
+            isSetUp = true;
+            magazineIsOut = false;
+            magazineId = "FromPistol_" + magazineIdNumber;
+        } else {
+            isSetUp = false;
+            magazineIsOut = true;
+            magazineId = "FromBag_" + magazineIdNumber;
+        }
+    }
+    
+    void Start() {
         if (pistol == null) {
             pistol = GameObject.Find("Glock17");
         }
-        mainScript = codeObject.GetComponent<Main>();
-        configurableJoint = GetComponent<ConfigurableJoint>();
     }
 
     void OnTriggerEnter(Collider other) {
-        if (other.gameObject.name == "reloadPoint1" && !isSetUp && magazineJustDropped) {
+        if (other.gameObject.name == "reloadPoint1" && !isSetUp && magazineIsOut) {
             ToggleColor();
             gameObject.GetComponent<Rigidbody>().isKinematic = false;//временно тру. сделать фолс.
-            Debug.Log($" ===== root после Отсоединения Local: {transform.parent.localScale}, World: {transform.parent.lossyScale}");
-            Debug.Log($" ===== magazine после Отсоединения Local: {transform.localScale}, World: {transform.lossyScale}");
-            
-            //todo временно выключил пока трестирую джойнт
-            //transform.parent.SetParent(pistol.transform, true);
-            Debug.Log($" ===== root ПОСЛЕ присоденинения Local: {transform.parent.localScale}, World: {transform.parent.lossyScale}");
-            Debug.Log($" ===== magazine ПОСЛЕ присоденинения Local: {transform.localScale}, World: {transform.lossyScale}");
-            setUpJoint();
+            gameObject.GetComponent<Rigidbody>().useGravity = true;
+            transform.SetParent(null);
+
+            //setUpJoint();
 
             mainScript.isHandKeepingMagazine = false;
             //gameObject.GetComponent<Rigidbody>().useGravity = false;
-            isSetUp = true; //todo продумать зашелку. когда до конца вставил.
+            isSetUp = true; 
+            //todo продумать зашелку. когда до конца вставил.
         } else if (other.gameObject.name == "LeftHandCollider" && !isSetUp) {
             Debug.Log($" ===== имя руки: {other.gameObject.name}");
-            /*transform.localScale = originalScale;
-            
-            Vector3 desiredWorldScale = originalScale;
-            Transform t = transform;
-
-            if (t.parent != null) {
-                Vector3 parentScale = t.parent.lossyScale;
-                t.localScale = new Vector3(
-                    desiredWorldScale.x / parentScale.x,
-                    desiredWorldScale.y / parentScale.y,
-                    desiredWorldScale.z / parentScale.z
-                );
-            } else {
-                t.localScale = desiredWorldScale;
-            }*/
         }
     }
 
     void OnTriggerExit(Collider other) {
-        if (other.gameObject.name == "reloadPoint2" && !magazineJustDropped) {
-            magazineJustDropped = true;
+        if (other.gameObject.name == "reloadPoint2" && !magazineIsOut) {
+            magazineIsOut = true;
         }
     }
 

@@ -28,14 +28,14 @@ public class PistolScript : MonoBehaviour {
     private ConfigurableJoint configurableJoint;
     
     void Start() {
-        roundsCount = magazine.GetComponent<MagazineScript>().getRoundCount();
+        magazineScript = magazine.GetComponent<MagazineScript>();
+        roundsCount = magazineScript.getRoundCount();
         _vibration.Duration = 0.15f;
         _vibration.Samples = new[] { 1f };
         _vibration.SamplesCount = 1;
         shotSound.volume = 1.0f;
 
         mainScript = codeObject.GetComponent<Main>();
-        magazineScript = magazine.GetComponent<MagazineScript>(); //todo 2 раза получаю этот компонент. выше есть. отрефакторить потом
         //Time.timeScale = 0.1f;
         Debug.Log(magazineScript.getIsSetUp());
 
