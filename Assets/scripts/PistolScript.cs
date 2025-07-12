@@ -24,7 +24,7 @@ public class PistolScript : MonoBehaviour {
     private int roundsCount;// = 10000;
     private Boolean isСartridgeInChamber = true;
     private Boolean isMagazineIn = true;
-
+    
     private ConfigurableJoint configurableJoint;
     
     void Start() {
@@ -73,9 +73,14 @@ public class PistolScript : MonoBehaviour {
         configurableJoint.angularYMotion = ConfigurableJointMotion.Free;
         configurableJoint.angularZMotion = ConfigurableJointMotion.Free;
     }
+    
+    private void detach(GameObject magazine) {
+        magazine.transform.SetParent(null, true); // важно: worldPositionStays = true
+    }
 
     private void releaseMagazine() {
-        resetConfigurableJoint();
+        magazineOutSound.PlayOneShot(magazineOutSound.clip);
+        //resetConfigurableJoint();
         
         isMagazineIn = false;
 
@@ -83,18 +88,17 @@ public class PistolScript : MonoBehaviour {
         magazine.GetComponent<Rigidbody>().isKinematic = false;
         magazine.GetComponent<Rigidbody>().useGravity = true;
 
-        Debug.Log($" ===== root до отедления Local: {magazine.transform.parent.localScale}, World: {transform.parent.lossyScale}");
-        Debug.Log($" ===== magazine до отедления Local: {magazine.transform.localScale}, World: {transform.lossyScale}");
+        //Debug.Log($" ===== root до отедления Local: {magazine.transform.parent.localScale}, World: {transform.parent.lossyScale}");
+        //Debug.Log($" ===== magazine до отедления Local: {magazine.transform.localScale}, World: {transform.lossyScale}");
         
         //todo временно выключаю. сделаю пока только с джоинтом. невыключающимся.
-        //magazine.transform.parent.parent = null;
+        detach(magazine);
         //removeJointScript();
 
         magazineScript.setIsSetUp(isMagazineIn);
     }
 
     private void removeJointScript() {
-        magazineOutSound.PlayOneShot(magazineOutSound.clip);
         var iSDKHandGrabInteractiongameObject = magazine.transform.Find("ISDK_HandGrabInteraction").gameObject;
         iSDKHandGrabInteractiongameObject.SetActive(true);
             

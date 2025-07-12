@@ -6,6 +6,7 @@ using Oculus.Interaction;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+[RequireComponent(typeof(Grabbable))]
 public class MagazineScript : MonoBehaviour {
     public GameObject codeObject;
     public GameObject pistol;
@@ -13,9 +14,15 @@ public class MagazineScript : MonoBehaviour {
     private int roundCount = 10;//17;
     private Boolean isSetUp = true;
     private ConfigurableJoint configurableJoint;
-    private Boolean magazineJustDropped = false;
+    private Boolean magazineJustDropped;
     
-    private String magazineId = "defaule";
+    private String magazineId = "default";
+    
+    private Vector3 originalScale;
+
+    void Awake() {
+        originalScale = transform.lossyScale;
+    }
     
     void Start() {
         if (codeObject == null) {
@@ -46,6 +53,23 @@ public class MagazineScript : MonoBehaviour {
             mainScript.isHandKeepingMagazine = false;
             //gameObject.GetComponent<Rigidbody>().useGravity = false;
             isSetUp = true; //todo продумать зашелку. когда до конца вставил.
+        } else if (other.gameObject.name == "LeftHandCollider" && !isSetUp) {
+            Debug.Log($" ===== имя руки: {other.gameObject.name}");
+            /*transform.localScale = originalScale;
+            
+            Vector3 desiredWorldScale = originalScale;
+            Transform t = transform;
+
+            if (t.parent != null) {
+                Vector3 parentScale = t.parent.lossyScale;
+                t.localScale = new Vector3(
+                    desiredWorldScale.x / parentScale.x,
+                    desiredWorldScale.y / parentScale.y,
+                    desiredWorldScale.z / parentScale.z
+                );
+            } else {
+                t.localScale = desiredWorldScale;
+            }*/
         }
     }
 
