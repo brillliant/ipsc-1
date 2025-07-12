@@ -75,7 +75,7 @@ public class MagazinesBagScript : MonoBehaviour {
                                                    ) {*/
 
         //todo временно выключил
-        /*if (!mainScript.isHandKeepingMagazine) {
+        if (!mainScript.isHandKeepingMagazine) {
             magazine = Instantiate(
                 magazinePrefub,
                 new Vector3(
@@ -91,7 +91,7 @@ public class MagazinesBagScript : MonoBehaviour {
                 magazineSpawn.transform
             );
             mainScript.isHandKeepingMagazine = true;
-        }*/
+        }
     }
 
     //todo удалить позже

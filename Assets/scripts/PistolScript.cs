@@ -96,6 +96,7 @@ public class PistolScript : MonoBehaviour {
         //removeJointScript();
 
         magazineScript.setIsSetUp(isMagazineIn);
+        magazine.transform.Find("ISDK_HandGrabInteraction").gameObject.SetActive(true);
     }
 
     private void removeJointScript() {
