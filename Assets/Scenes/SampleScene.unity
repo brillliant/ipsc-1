@@ -20523,7 +20523,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   magazineSpawn: {fileID: 733191452}
   magazinePrefub: {fileID: 3861189859654507191, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
-  codeObject: {fileID: 0}
+  codeObject: {fileID: 1043981333}
   camera: {fileID: 88431502}
 --- !u!1 &1464376738
 GameObject:
@@ -30413,6 +30413,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4963621123432212765, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
       propertyPath: m_YMotion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8181723340548692305, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
+      propertyPath: _oneGrabTransformer
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8181723340548692305, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
+      propertyPath: _kinematicWhileSelected
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8385297197600322022, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}

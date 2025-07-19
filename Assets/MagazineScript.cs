@@ -44,6 +44,17 @@ public class MagazineScript : MonoBehaviour {
     }
 
     void OnTriggerEnter(Collider other) {
+        if (other.gameObject.name == "reloadPoint1" && !isSetUp) {
+            if (transform.parent is not null) {
+                ToggleColor();
+                transform.SetParent(null);
+                gameObject.GetComponent<Rigidbody>().isKinematic = false;
+                gameObject.GetComponent<Rigidbody>().useGravity = true;
+            }
+        }
+    }
+    
+    /*void OnTriggerEnter(Collider other) {
         if (other.gameObject.name == "reloadPoint1" && !isSetUp && magazineIsOut) {
             ToggleColor();
             gameObject.GetComponent<Rigidbody>().isKinematic = false;//временно тру. сделать фолс.
@@ -65,7 +76,7 @@ public class MagazineScript : MonoBehaviour {
         if (other.gameObject.name == "reloadPoint2" && !magazineIsOut) {
             magazineIsOut = true;
         }
-    }
+    }*/
 
     //todo удалить позже
     private bool isColor1Active = true;

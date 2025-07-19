@@ -162,7 +162,6 @@ GameObject:
   - component: {fileID: 8181723340548692305}
   - component: {fileID: 50495973615332737}
   - component: {fileID: 2512337691790765834}
-  - component: {fileID: 1747721264202368972}
   m_Layer: 0
   m_Name: ISDK_HandGrabInteraction
   m_TagString: Untagged
@@ -200,7 +199,7 @@ MonoBehaviour:
   _transferOnSecondSelection: 1
   _addNewPointsToFront: 0
   _forwardElement: {fileID: 0}
-  _oneGrabTransformer: {fileID: 1747721264202368972}
+  _oneGrabTransformer: {fileID: 0}
   _twoGrabTransformer: {fileID: 0}
   _targetTransform: {fileID: 2389798004769918579}
   _maxGrabPoints: -1
@@ -271,35 +270,3 @@ MonoBehaviour:
   _releaseDistance: 1
   _resetGrabOnGrabsUpdated: 1
   _physicsGrabbable: {fileID: 0}
---- !u!114 &1747721264202368972
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8385297197600322022}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9597e632dfbca247bcf65e49c67078e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _constraints:
-    ConstraintsAreRelative: 0
-    MinX:
-      Constrain: 1
-      Value: 0.00003
-    MaxX:
-      Constrain: 1
-      Value: 0.00003
-    MinY:
-      Constrain: 1
-      Value: 0.01650251
-    MaxY:
-      Constrain: 1
-      Value: 0.01650251
-    MinZ:
-      Constrain: 1
-      Value: -0.02058057
-    MaxZ:
-      Constrain: 1
-      Value: -0.01155
