@@ -6,7 +6,6 @@ using Oculus.Interaction;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-[RequireComponent(typeof(Grabbable))]
 public class MagazineScript : MonoBehaviour {
     public GameObject codeObject;
     public GameObject pistol;
@@ -84,7 +83,7 @@ public class MagazineScript : MonoBehaviour {
         }
     }
 
-    private void setUpJoint() {
+    /*private void setUpJoint() {
         setConfigurableJoint();
         Rigidbody pistolRigidBody = pistol.GetComponent<Rigidbody>();
         configurableJoint.connectedBody = pistolRigidBody;
@@ -104,19 +103,19 @@ public class MagazineScript : MonoBehaviour {
         oneGrabTranslateTransformer.Constraints.MaxZ = constraint;
 
         
-        var grabbable = iSDKHandGrabInteractionGameObject.GetComponent<Grabbable>();
+        /*var grabbable = iSDKHandGrabInteractionGameObject.GetComponent<Grabbable>();
         grabbable.InjectOptionalOneGrabTransformer(oneGrabTranslateTransformer);
-        grabbable.InjectOptionalTwoGrabTransformer(null);
-    }
+        grabbable.InjectOptionalTwoGrabTransformer(null);#1#
+    }*/
     
-    private void setConfigurableJoint() {
+    /*private void setConfigurableJoint() {
         configurableJoint.xMotion = ConfigurableJointMotion.Locked;
         configurableJoint.yMotion = ConfigurableJointMotion.Limited;
         configurableJoint.zMotion = ConfigurableJointMotion.Locked;
         configurableJoint.angularXMotion = ConfigurableJointMotion.Locked;
         configurableJoint.angularYMotion = ConfigurableJointMotion.Locked;
         configurableJoint.angularZMotion = ConfigurableJointMotion.Locked;
-    }
+    }*/
         
     public int getRoundCount() {
         return roundCount;

@@ -20523,7 +20523,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   magazineSpawn: {fileID: 733191452}
   magazinePrefub: {fileID: 3861189859654507191, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
-  codeObject: {fileID: 1043981333}
+  codeObject: {fileID: 0}
   camera: {fileID: 88431502}
 --- !u!1 &1464376738
 GameObject:
@@ -30105,7 +30105,6 @@ GameObject:
   - component: {fileID: 5232627393753238569}
   - component: {fileID: 5232627393753238573}
   - component: {fileID: 5232627393753238576}
-  - component: {fileID: 5232627393753238577}
   m_Layer: 0
   m_Name: Magazine
   m_TagString: Untagged
@@ -30301,29 +30300,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeObject: {fileID: 1043981333}
-  pistol: {fileID: 0}
---- !u!114 &5232627393753238577
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3300749213520534039}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43f86b14a27b52f4f9298c33015b5c26, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _transferOnSecondSelection: 0
-  _addNewPointsToFront: 0
-  _forwardElement: {fileID: 0}
-  _oneGrabTransformer: {fileID: 0}
-  _twoGrabTransformer: {fileID: 0}
-  _targetTransform: {fileID: 0}
-  _maxGrabPoints: -1
-  _rigidbody: {fileID: 125967220}
-  _kinematicWhileSelected: 1
-  _throwWhenUnselected: 1
+  pistol: {fileID: 919132149147182654}
 --- !u!1 &6619225641142677545
 GameObject:
   m_ObjectHideFlags: 0
@@ -30350,6 +30327,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1462417868}
     m_Modifications:
+    - target: {fileID: 1144555947092129489, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
+      propertyPath: pistol
+      value: 
+      objectReference: {fileID: 919132149147182654}
     - target: {fileID: 1144555947092129489, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
       propertyPath: codeObject
       value: 
@@ -30420,7 +30401,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3312585943459228056, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3861189859654507191, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
       propertyPath: m_Name
@@ -30438,8 +30419,7 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 4963621123432212765, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
