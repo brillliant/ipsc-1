@@ -15,6 +15,8 @@ public class MagazineScript : MonoBehaviour {
     private ConfigurableJoint configurableJoint;
     private Boolean magazineIsOut = true;
 
+    private GameObject magazineRoot;
+
     private String magazineId = null;
 
     void Awake() {
@@ -41,28 +43,30 @@ public class MagazineScript : MonoBehaviour {
         if (pistol == null) {
             pistol = GameObject.Find("Glock17");
         }
+        
+        magazineRoot = pistol.transform.Find("MagazineRoot").gameObject;
     }
 
     void OnTriggerEnter(Collider other) {
-        if (other.gameObject.name == "reloadPoint1" && !isSetUp) {
-            if (transform.parent is not null) {
-                ToggleColor();
-                transform.SetParent(null);
-                gameObject.GetComponent<Rigidbody>().isKinematic = false;
-                gameObject.GetComponent<Rigidbody>().useGravity = true;
-            }
-        }
-    }
-    
-    /*void OnTriggerEnter(Collider other) {
-        if (other.gameObject.name == "reloadPoint1" && !isSetUp && magazineIsOut) {
+        if (other.gameObject.name == "reloadPoint1" 
+            && !isSetUp 
+            && magazineIsOut) {
+            
             ToggleColor();
-            gameObject.GetComponent<Rigidbody>().isKinematic = false;//временно тру. сделать фолс.
-            gameObject.GetComponent<Rigidbody>().useGravity = true;
-            transform.SetParent(null);
+            /*gameObject.GetComponent<Rigidbody>().isKinematic = false;//временно тру. сделать фолс.
+            gameObject.GetComponent<Rigidbody>().useGravity = true;*/
 
-            //setUpJoint();
-
+            // - СТАРТ точно надо и точно работет 
+            transform.SetParent(null); //открепить от руки
+            Rigidbody rb = GetComponent<Rigidbody>();
+            rb.isKinematic = false;
+            rb.useGravity = true;
+        
+            //убрать хватательность магазина
+            var iSDKHandGrabInteractionGameObject = transform.Find("ISDK_HandGrabInteraction").gameObject;
+            iSDKHandGrabInteractionGameObject.GetComponent<Grabbable>().gameObject.SetActive(false);
+            // - ФИНИШ
+            
             mainScript.isHandKeepingMagazine = false;
             //gameObject.GetComponent<Rigidbody>().useGravity = false;
             isSetUp = true; 
@@ -72,11 +76,49 @@ public class MagazineScript : MonoBehaviour {
         }
     }
 
+    
+    /*private void setUpJoint2() {
+        ConfigurableJoint joint = gameObject.AddComponent<ConfigurableJoint>();
+        Rigidbody rbRoot = magazineRoot.GetComponent<Rigidbody>();
+        joint.connectedBody = rbRoot;
+        
+        // --- вычисление осей по MagazineRoot ---
+        Vector3 motionAxis = magazineRoot.transform.up; // направление вдоль шахты
+        Vector3 localAxisY = transform.InverseTransformDirection(motionAxis);
+        Vector3 localAxisX = transform.InverseTransformDirection(Vector3.Cross(motionAxis, transform.forward));
+        
+        joint.axis = localAxisX;           // задаёт X джойнта
+        joint.secondaryAxis = localAxisY;  // задаёт Y джойнта (вдоль направляющей)
+
+        joint.configuredInWorldSpace = false;
+        joint.autoConfigureConnectedAnchor = false;
+        joint.anchor = Vector3.zero;
+        joint.connectedAnchor = Vector3.zero;
+        
+        joint.xMotion = ConfigurableJointMotion.Locked;
+        joint.yMotion = ConfigurableJointMotion.Limited;
+        joint.zMotion = ConfigurableJointMotion.Locked;
+
+        joint.angularXMotion = ConfigurableJointMotion.Locked;
+        joint.angularYMotion = ConfigurableJointMotion.Locked;
+        joint.angularZMotion = ConfigurableJointMotion.Locked;
+
+        SoftJointLimit limit = new SoftJointLimit { limit = 0.2f };
+        joint.linearLimit = limit;
+        
+        JointDrive drive = new JointDrive {
+            positionSpring = 20000f,
+            positionDamper = 500f,
+            maximumForce = Mathf.Infinity
+        };
+        joint.yDrive = drive;
+    }*/
+
     void OnTriggerExit(Collider other) {
         if (other.gameObject.name == "reloadPoint2" && !magazineIsOut) {
             magazineIsOut = true;
         }
-    }*/
+    }
 
     //todo удалить позже
     private bool isColor1Active = true;
@@ -93,6 +135,8 @@ public class MagazineScript : MonoBehaviour {
             Debug.LogWarning("У объекта нет компонента Renderer!");
         }
     }
+    
+
 
     /*private void setUpJoint() {
         setConfigurableJoint();
