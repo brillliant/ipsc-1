@@ -12,14 +12,34 @@ public class MagazineScript : MonoBehaviour {
     private Main mainScript;
     private int roundCount = 10;//17;
     private Boolean isSetUp = false;
+    private Boolean isSetUpInProcess = false;
     private ConfigurableJoint configurableJoint;
     private Boolean magazineIsOut = true;
 
+    //рельсы при вставке
+    private Vector3 magazineOnRailStartPosition = new Vector3(0.0f, -0.02527f, -0.0008f);	// original local position
+    private Vector3 localInitRotation0 = new Vector3(25.338f, 0.085f, 0.07f);
     private GameObject magazineRoot;
+    private Vector3 magazineRootInitialPosition;
+    private Vector3 magazineRootInitialRotation;
+    private Rigidbody rootRb;
+    private Rigidbody rb; 
 
     private String magazineId = null;
 
     void Awake() {
+        if (pistol == null) {
+            pistol = GameObject.Find("Glock17");
+        }
+        magazineRoot = pistol.transform.Find("MagazineRoot").gameObject;
+        
+        rootRb = magazineRoot.GetComponent<Rigidbody>();
+        
+        rb = GetComponent<Rigidbody>();
+        
+        magazineRootInitialPosition = magazineRoot.transform.localPosition;
+        magazineRootInitialRotation = magazineRoot.transform.localEulerAngles;
+        
         if (codeObject == null) {
             codeObject = GameObject.Find("codeObject");
         }
@@ -40,16 +60,16 @@ public class MagazineScript : MonoBehaviour {
     }
     
     void Start() {
-        if (pistol == null) {
-            pistol = GameObject.Find("Glock17");
-        }
-        
-        magazineRoot = pistol.transform.Find("MagazineRoot").gameObject;
+
+    }
+
+    private void Update() {
+        keepMagazineOnRailsIfNeeded();
     }
 
     void OnTriggerEnter(Collider other) {
         if (other.gameObject.name == "reloadPoint1" 
-            && !isSetUp 
+            && !isSetUpInProcess 
             && magazineIsOut) {
             
             ToggleColor();
@@ -58,7 +78,6 @@ public class MagazineScript : MonoBehaviour {
 
             // - СТАРТ точно надо и точно работет 
             transform.SetParent(null); //открепить от руки
-            Rigidbody rb = GetComponent<Rigidbody>();
             rb.isKinematic = false;
             rb.useGravity = true;
         
@@ -66,16 +85,47 @@ public class MagazineScript : MonoBehaviour {
             var iSDKHandGrabInteractionGameObject = transform.Find("ISDK_HandGrabInteraction").gameObject;
             iSDKHandGrabInteractionGameObject.GetComponent<Grabbable>().gameObject.SetActive(false);
             // - ФИНИШ
+
+            transform.position = magazineOnRailStartPosition;
             
             mainScript.isHandKeepingMagazine = false;
-            //gameObject.GetComponent<Rigidbody>().useGravity = false;
-            isSetUp = true; 
+            isSetUpInProcess = true;
+            //isSetUp = true; 
             //todo продумать зашелку. когда до конца вставил.
         } else if (other.gameObject.name == "LeftHandCollider" && !isSetUp) {
             Debug.Log($" ===== имя руки: {other.gameObject.name}");
         }
     }
 
+    private void keepMagazineOnRailsIfNeeded() {
+        if (isSetUpInProcess) {
+            //transform.localScale = Vector3.one;
+            /*transform.SetParent(magazineRoot.transform);
+            Vector3 local = magazineRoot.transform.InverseTransformPoint(transform.position);
+            local.x = 0f;
+            local.z = 0f;
+            transform.position = magazineRoot.transform.TransformPoint(local);
+            
+            transform.localEulerAngles = localInitRotation0;*/
+            
+            // transform.localPosition = Vector3.zero;
+            //magazineRoot.transform.localPosition = new Vector3(magazineRootInitialPosition.x, magazineRoot.transform.localPosition.y, magazineRootInitialPosition.z);
+            //magazineRoot.transform.localEulerAngles = magazineRootInitialRotation;
+            //rootRb.isKinematic = false;
+            //rootRb.useGravity = true;
+            
+            //тест лижбы работало.
+            transform.localScale = Vector3.one;
+            transform.SetParent(magazineRoot.transform);
+            float maxOffset = 0.026f;
+            Vector3 currentLocal = transform.localPosition;
+            float shift = currentLocal.y - magazineOnRailStartPosition.y;
+            shift = Mathf.Clamp(shift, 0f, maxOffset); // только вперёд
+            transform.localPosition = new Vector3(magazineOnRailStartPosition.x, magazineOnRailStartPosition.y + shift, magazineOnRailStartPosition.z);
+            transform.localEulerAngles = localInitRotation0;
+            
+        }    
+    }
     
     /*private void setUpJoint2() {
         ConfigurableJoint joint = gameObject.AddComponent<ConfigurableJoint>();
@@ -136,8 +186,6 @@ public class MagazineScript : MonoBehaviour {
         }
     }
     
-
-
     /*private void setUpJoint() {
         setConfigurableJoint();
         Rigidbody pistolRigidBody = pistol.GetComponent<Rigidbody>();
@@ -178,6 +226,14 @@ public class MagazineScript : MonoBehaviour {
 
     public void decrementRoundCount() {
         roundCount--;
+    }
+
+    public void setIsSetUpInProcess(Boolean isSetUpInProcess) {
+        this.isSetUpInProcess = isSetUpInProcess;
+    }
+    
+    public Boolean getIsSetUpInProcess() {
+        return this.isSetUpInProcess;
     }
     
     public void setIsSetUp(Boolean isSetUp) {

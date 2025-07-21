@@ -77,9 +77,32 @@ public class PistolScript : MonoBehaviour {
     private void detach(GameObject magazine) {
         magazine.transform.SetParent(null, true); // важно: worldPositionStays = true
     }
+    
+    private Transform findMagazine(Transform parent) {
+        foreach (Transform child in parent.GetComponentsInChildren<Transform>(false)) {
+            if (child == parent) continue; 
+            if (child.name.Contains("Magazine")) {
+                return child;
+            }
+        }
+        return null;
+    }
 
     private void releaseMagazine() {
-        magazineOutSound.PlayOneShot(magazineOutSound.clip);
+        magazine = findMagazine(transform.Find("MagazineRoot"))?.gameObject;
+
+        /*if (magazine == null) {
+            magazine = GameObject.Find("MagazinePrefub(Clone)");
+        }*/
+        
+        magazineScript = magazine.GetComponent<MagazineScript>();
+
+        if (isMagazineIn) {
+            magazineOutSound.PlayOneShot(magazineOutSound.clip);
+            //todo добавить звук выскальзывания (взять из КС)
+        } else {
+            //todo yp сделать другой звук
+        }
         //resetConfigurableJoint();
         
         isMagazineIn = false;
@@ -92,10 +115,11 @@ public class PistolScript : MonoBehaviour {
         //Debug.Log($" ===== magazine до отедления Local: {magazine.transform.localScale}, World: {transform.lossyScale}");
         
         //todo временно выключаю. сделаю пока только с джоинтом. невыключающимся.
-        detach(magazine);
-        //removeJointScript();
 
+        //removeJointScript();
         magazineScript.setIsSetUp(isMagazineIn);
+        magazineScript.setIsSetUpInProcess(isMagazineIn);
+        detach(magazine);
         magazine.transform.Find("ISDK_HandGrabInteraction").gameObject.SetActive(true);
     }
 
