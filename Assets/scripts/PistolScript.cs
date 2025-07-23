@@ -22,8 +22,8 @@ public class PistolScript : MonoBehaviour {
     private MagazineScript magazineScript;
     
     private int roundsCount;// = 10000;
-    private Boolean isСartridgeInChamber = true;
-    private Boolean isMagazineIn = true;
+    private Boolean isRoundInChamber = true;
+    private Boolean magazineIn = true;
     
     private ConfigurableJoint configurableJoint;
     
@@ -75,17 +75,20 @@ public class PistolScript : MonoBehaviour {
     }
 
     private void releaseMagazine() {
-        if (isMagazineIn) {
+        if (magazineIn) {
+            //todo сделать чтобы эти вещи сетались когда магазин установлен.
             magazine = findMagazine(transform.Find("MagazineRoot"))?.gameObject;
             magazineScript = magazine.GetComponent<MagazineScript>();
+            
             magazineOutSound.PlayOneShot(magazineOutSound.clip);
             //todo добавить звук выскальзывания (взять из КС)
             
-            isMagazineIn = false;
+            magazineIn = false;
             magazine.GetComponent<Rigidbody>().isKinematic = false;
             magazine.GetComponent<Rigidbody>().useGravity = true;
 
             magazineScript.setIsMagazineMovingInGun(true);
+            //magazineScript.setMagazineIsSetUp(false);
         } else {
             //todo yp сделать другой звук
         }
@@ -118,7 +121,7 @@ public class PistolScript : MonoBehaviour {
             
             triggerPressed = true;
 
-            if (isСartridgeInChamber) {
+            if (isRoundInChamber) {
                 shoot();
             } else {
                 emptyShoot();
@@ -141,16 +144,20 @@ public class PistolScript : MonoBehaviour {
         bulletRigidbody.velocity = bulletPoint.forward * bulletSpeed;
         Destroy(bullet, 3);
         shotSound.PlayOneShot(shotSound.clip);
-        isСartridgeInChamber = false;
-        moveСartridgeFromMagazineToChamber();
+        isRoundInChamber = false;
+        moveRoundFromMagazineToChamber();
     }
 
-    private void moveСartridgeFromMagazineToChamber() {
-        if (isMagazineIn && roundsCount > 0) {
-            isСartridgeInChamber = true;
+    private void moveRoundFromMagazineToChamber() {
+        if (magazineIn && roundsCount > 0) {
+            isRoundInChamber = true;
             roundsCount--;
-            magazine.GetComponent<MagazineScript>().decrementRoundCount();
+            magazineScript.decrementRoundCount();
         }
+    }
+
+    public void setMagazineIn(Boolean magazineIn) {
+        this.magazineIn = magazineIn;
     }
 
     void Template() {

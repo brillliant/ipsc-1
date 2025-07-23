@@ -9,9 +9,10 @@ using Random = UnityEngine.Random;
 public class MagazineScript : MonoBehaviour {
     public GameObject codeObject;
     public GameObject pistol;
+    private PistolScript pistolScript;
     private Main mainScript;
     private int roundCount = 10;//17;
-    private Boolean isMagazineMovingInGun = false;
+    private Boolean isMagazineMovingInGun;
 
     //рельсы при вставке
     private Vector3 magazineOnRailStartPosition = new(0.0f, -0.02f, -0.0008f);	// original local position
@@ -25,12 +26,17 @@ public class MagazineScript : MonoBehaviour {
     private GameObject handGrabInteraction;
 
     private Boolean enteredPoint1;
+    private Boolean readyToLock;
+    //todo использовать это при досыле патрона в патронник. в будущем.
+    private Boolean magazineIsSetUp;
     private String magazineId = null;
 
     void Awake() {
         if (pistol == null) {
             pistol = GameObject.Find("Glock17");
         }
+
+        pistolScript = pistol.GetComponent<PistolScript>();
         magazineRoot = pistol.transform.Find("MagazineRoot").gameObject;
         rootRb = magazineRoot.GetComponent<Rigidbody>();
         rb = GetComponent<Rigidbody>();
@@ -40,15 +46,19 @@ public class MagazineScript : MonoBehaviour {
         }
         mainScript = codeObject.GetComponent<Main>();
         configurableJoint = GetComponent<ConfigurableJoint>();
-        Destroy(configurableJoint);
+        Destroy(configurableJoint); //todo yp убрать надо будет везде джоинты
         handGrabInteraction = transform.Find("ISDK_HandGrabInteraction").gameObject;
         
         String magazineIdNumber = Random.Range(0, 100).ToString();
         if (transform.parent.name == "MagazineRoot") {
             enteredPoint1 = true;
+            magazineIsSetUp = true;
+            readyToLock = false;
             magazineId = "FromPistol_" + magazineIdNumber;
         } else {
             enteredPoint1 = false;
+            magazineIsSetUp = false;
+            readyToLock = true;
             magazineId = "FromBag_" + magazineIdNumber;
         }
     }
@@ -56,6 +66,31 @@ public class MagazineScript : MonoBehaviour {
     private void Update() {
         keepMagazineOnRailsIfNeeded();
         checkPositionIfNeeded();
+        lockMagazineIfNeeded();
+    }
+
+    private void lockMagazineIfNeeded() {
+        if (isMagazineMovingInGun && !readyToLock) {
+            if (transform.localPosition.y <= -0.0021f) {
+                readyToLock = true;
+                magazineIsSetUp = false;
+            }
+        }    
+        
+        if (isMagazineMovingInGun && readyToLock) {
+            if (transform.localPosition.y >= -7e-05f) { //todo yp после полировки вынести в константу
+                magazineLock();
+            }
+        }
+    }
+
+    private void magazineLock() {
+        rb.isKinematic = true;
+        rb.useGravity = false;
+
+        magazineIsSetUp = true;
+        readyToLock = false;
+        pistolScript.setMagazineIn(magazineIsSetUp);
     }
 
     //т.к. я жестко телепортирую магазин куда надо. тригеры срабатывают на enter даже если я на этом тригере и стоял все время.
@@ -111,19 +146,12 @@ public class MagazineScript : MonoBehaviour {
     }
     
     private void setLimitedPositionAndRotation() {
-        /*Vector3 vel = rb.velocity;
-        vel.x = 0;
-        vel.z = 0;
-        rb.velocity = vel;*/
-        
         transform.localScale = Vector3.one;
 
         float maxOffsetUp = 0.021f;
         float maxOffsetDown = 0.02f;
         
         Vector3 currentLocal = transform.localPosition;
-        
-        Debug.Log("current local position: " + transform.localPosition);
         
         float minY = magazineOnRailStartPosition.y - maxOffsetDown;
         float maxY = magazineOnRailStartPosition.y + maxOffsetUp;
@@ -136,8 +164,6 @@ public class MagazineScript : MonoBehaviour {
             magazineOnRailStartPosition.z
         );
         
-        Debug.Log("current local position CHANGED: " + transform.localPosition);
-
         transform.localEulerAngles = localInitRotation0;
     }
     
@@ -190,6 +216,14 @@ public class MagazineScript : MonoBehaviour {
         roundCount--;
     }
 
+    public void setMagazineIsSetUp(bool isSetUp) {
+        this.magazineIsSetUp = isSetUp;
+    }
+    
+    /*public Boolean getMagazineIsSetUp() {
+        return magazineIsSetUp;
+    }*/
+    
     public void setIsMagazineMovingInGun(Boolean isMagazineMovingInGun) {
         this.isMagazineMovingInGun = isMagazineMovingInGun;
     }    
