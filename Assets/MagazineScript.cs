@@ -13,14 +13,10 @@ public class MagazineScript : MonoBehaviour {
     private int roundCount = 10;//17;
     private Boolean isMagazineMovingInGun = false;
 
-    private Boolean magazineIsOut = true;
-
     //рельсы при вставке
-    private Vector3 magazineOnRailStartPosition = new Vector3(0.0f, -0.02527f, -0.0008f);	// original local position
-    private Vector3 localInitRotation0 = new Vector3(25.338f, 0.085f, 0.07f);
+    private Vector3 magazineOnRailStartPosition = new(0.0f, -0.02f, -0.0008f);	// original local position
+    private Vector3 localInitRotation0 = new(25.338f, 0.085f, 0.07f);
     private GameObject magazineRoot;
-    private Vector3 magazineRootInitialPosition;
-    private Vector3 magazineRootInitialRotation;
     private Rigidbody rootRb;
     private Rigidbody rb; 
     
@@ -28,6 +24,7 @@ public class MagazineScript : MonoBehaviour {
     private ConfigurableJoint configurableJoint;
     private GameObject handGrabInteraction;
 
+    private Boolean enteredPoint1;
     private String magazineId = null;
 
     void Awake() {
@@ -38,23 +35,20 @@ public class MagazineScript : MonoBehaviour {
         rootRb = magazineRoot.GetComponent<Rigidbody>();
         rb = GetComponent<Rigidbody>();
         
-        magazineRootInitialPosition = magazineRoot.transform.localPosition;
-        magazineRootInitialRotation = magazineRoot.transform.localEulerAngles;
-        
         if (codeObject == null) {
             codeObject = GameObject.Find("codeObject");
         }
         mainScript = codeObject.GetComponent<Main>();
         configurableJoint = GetComponent<ConfigurableJoint>();
-
+        Destroy(configurableJoint);
         handGrabInteraction = transform.Find("ISDK_HandGrabInteraction").gameObject;
         
         String magazineIdNumber = Random.Range(0, 100).ToString();
         if (transform.parent.name == "MagazineRoot") {
-            magazineIsOut = false;
+            enteredPoint1 = true;
             magazineId = "FromPistol_" + magazineIdNumber;
         } else {
-            magazineIsOut = true;
+            enteredPoint1 = false;
             magazineId = "FromBag_" + magazineIdNumber;
         }
     }
@@ -68,8 +62,8 @@ public class MagazineScript : MonoBehaviour {
     //из-за ручной директивной корректции transform 
     //рушение: переписать все тригеры на ручную проверку координаты и выставление флага.
     private void checkPositionIfNeeded() {
-        if (!magazineIsOut && !rb.isKinematic && rb.useGravity) {
-            if (transform.localPosition.y < -0.03f) { //todo yp после полировки вынести в константу
+        if (isMagazineMovingInGun && !rb.isKinematic && rb.useGravity) {
+            if (transform.localPosition.y < -0.035f) { //todo yp после полировки вынести в константу
                 magazineFullEjection();
             }
         }
@@ -80,59 +74,57 @@ public class MagazineScript : MonoBehaviour {
         Destroy(configurableJoint);
         
         isMagazineMovingInGun = false;
-        magazineIsOut = true;
-        
-        rb.isKinematic = false;
-        rb.useGravity = true;
+        enteredPoint1 = false;
         handGrabInteraction.SetActive(true);
     }
-
-    private Boolean enteredPoint1 = false;
     
-    /*void OnTriggerEnter(Collider other) {
+    void OnTriggerEnter(Collider other) {
         if (!enteredPoint1 &&
             other.gameObject.name == "reloadPoint1" 
-            && !isMagazineMovingInGun 
-            && magazineIsOut) {
+            && !isMagazineMovingInGun) {
 
             enteredPoint1 = true;
-            
             ToggleColor();
-            /*gameObject.GetComponent<Rigidbody>().isKinematic = false;//временно тру. сделать фолс.
-            gameObject.GetComponent<Rigidbody>().useGravity = true;#1#
-            
-            rb.isKinematic = false;
-            rb.useGravity = true;
-            var iSDKHandGrabInteractionGameObject = transform.Find("ISDK_HandGrabInteraction").gameObject;
-            iSDKHandGrabInteractionGameObject.GetComponent<Grabbable>().gameObject.SetActive(false);
-
-            transform.position = magazineOnRailStartPosition;
+            handGrabInteraction.SetActive(false);
             mainScript.isHandKeepingMagazine = false;
             isMagazineMovingInGun = true;
-            //isSetUp = true; 
+            
+            if (ReferenceEquals(transform.parent, null) || !transform.parent.name.Contains("Root") 
+                && magazineRoot.transform.childCount == 0) {
+                transform.SetParent(magazineRoot.transform);
+            }
+            
+            /*if (configurableJoint == null) {
+                setUpConfiguredJoint();
+            }*/
+            
             //todo продумать зашелку. когда до конца вставил.
         } else if (other.gameObject.name == "LeftHandCollider") {
             Debug.Log($" ===== имя руки: {other.gameObject.name}");
         }
-    }*/
+    }
 
     private void keepMagazineOnRailsIfNeeded() {
         if (isMagazineMovingInGun) {
             setLimitedPositionAndRotation();
-            /*if (ReferenceEquals(magazineJoint, null)) {
-                //setUpConfiguredJoint();
-            }*/
         }
     }
     
     private void setLimitedPositionAndRotation() {
+        /*Vector3 vel = rb.velocity;
+        vel.x = 0;
+        vel.z = 0;
+        rb.velocity = vel;*/
+        
         transform.localScale = Vector3.one;
-        //transform.SetParent(magazineRoot.transform);
 
-        float maxOffsetUp = 0.026f;
-        float maxOffsetDown = 0.005f;
-
+        float maxOffsetUp = 0.021f;
+        float maxOffsetDown = 0.02f;
+        
         Vector3 currentLocal = transform.localPosition;
+        
+        Debug.Log("current local position: " + transform.localPosition);
+        
         float minY = magazineOnRailStartPosition.y - maxOffsetDown;
         float maxY = magazineOnRailStartPosition.y + maxOffsetUp;
 
@@ -143,57 +135,40 @@ public class MagazineScript : MonoBehaviour {
             clampedY,
             magazineOnRailStartPosition.z
         );
+        
+        Debug.Log("current local position CHANGED: " + transform.localPosition);
 
         transform.localEulerAngles = localInitRotation0;
     }
     
-    /*private void setUpJoint2() {
-        ConfigurableJoint joint = gameObject.AddComponent<ConfigurableJoint>();
-        Rigidbody rbRoot = magazineRoot.GetComponent<Rigidbody>();
-        joint.connectedBody = rbRoot;
-        
-        // --- вычисление осей по MagazineRoot ---
-        Vector3 motionAxis = magazineRoot.transform.up; // направление вдоль шахты
-        Vector3 localAxisY = transform.InverseTransformDirection(motionAxis);
-        Vector3 localAxisX = transform.InverseTransformDirection(Vector3.Cross(motionAxis, transform.forward));
-        
-        joint.axis = localAxisX;           // задаёт X джойнта
-        joint.secondaryAxis = localAxisY;  // задаёт Y джойнта (вдоль направляющей)
-
-        joint.configuredInWorldSpace = false;
-        joint.autoConfigureConnectedAnchor = false;
-        joint.anchor = Vector3.zero;
-        joint.connectedAnchor = Vector3.zero;
-        
-        joint.xMotion = ConfigurableJointMotion.Locked;
-        joint.yMotion = ConfigurableJointMotion.Limited;
-        joint.zMotion = ConfigurableJointMotion.Locked;
-
-        joint.angularXMotion = ConfigurableJointMotion.Locked;
-        joint.angularYMotion = ConfigurableJointMotion.Locked;
-        joint.angularZMotion = ConfigurableJointMotion.Locked;
-
-        SoftJointLimit limit = new SoftJointLimit { limit = 0.2f };
-        joint.linearLimit = limit;
-        
-        JointDrive drive = new JointDrive {
-            positionSpring = 20000f,
-            positionDamper = 500f,
-            maximumForce = Mathf.Infinity
-        };
-        joint.yDrive = drive;
-    }*/
-
-    /*void OnTriggerExit(Collider other) {
-        if (other.gameObject.name == "reloadPoint1" && enteredPoint1) {
-            
-            magazineFullEjection();
+    void FixedUpdate() {
+        Debug.DrawRay(transform.position, rb.velocity, Color.red);
+        Debug.DrawRay(transform.position, rb.angularVelocity, Color.green);
+    }
+    
+    void OnCollisionEnter(Collision col) {
+        foreach (var c in col.contacts) {
+            Debug.DrawRay(c.point, col.impulse, Color.magenta, 1f);
+            Debug.Log("Impulse: " + col.impulse);
         }
-    }*/
-
-    //todo удалить позже
+    }
+    
+    private void setUpConfiguredJoint() { 
+        configurableJoint = gameObject.AddComponent<ConfigurableJoint>();
+        configurableJoint.connectedBody = rootRb;
+        configurableJoint.autoConfigureConnectedAnchor = true;
+        
+        configurableJoint.configuredInWorldSpace = false;
+        configurableJoint.xMotion = ConfigurableJointMotion.Free;
+        configurableJoint.yMotion = ConfigurableJointMotion.Locked;
+        configurableJoint.zMotion = ConfigurableJointMotion.Locked;
+        
+        configurableJoint.angularXMotion = ConfigurableJointMotion.Locked;
+        configurableJoint.angularYMotion = ConfigurableJointMotion.Locked;
+        configurableJoint.angularZMotion = ConfigurableJointMotion.Locked;
+    }
+      
     private bool isColor1Active = true;
-    //todo удалить после отладки
     private Color color1 = Color.red;
     private Color color2 = Color.magenta;
     
@@ -206,7 +181,52 @@ public class MagazineScript : MonoBehaviour {
             Debug.LogWarning("У объекта нет компонента Renderer!");
         }
     }
+  
+    public int getRoundCount() {
+        return roundCount;
+    }
+
+    public void decrementRoundCount() {
+        roundCount--;
+    }
+
+    public void setIsMagazineMovingInGun(Boolean isMagazineMovingInGun) {
+        this.isMagazineMovingInGun = isMagazineMovingInGun;
+    }    
     
+    /*private void setUpJoint2() {
+        ConfigurableJoint joint = gameObject.AddComponent<ConfigurableJoint>();
+        Rigidbody rbRoot = magazineRoot.GetComponent<Rigidbody>();
+        joint.connectedBody = rbRoot;
+
+        // --- вычисление осей по MagazineRoot ---
+        Vector3 motionAxis = magazineRoot.transform.up; // направление вдоль шахты
+        Vector3 localAxisY = transform.InverseTransformDirection(motionAxis);
+        Vector3 localAxisX = transform.InverseTransformDirection(Vector3.Cross(motionAxis, transform.forward));
+
+        joint.axis = localAxisX;           // задаёт X джойнта
+        joint.secondaryAxis = localAxisY;  // задаёт Y джойнта (вдоль направляющей)
+
+        joint.configuredInWorldSpace = false;
+        joint.autoConfigureConnectedAnchor = false;
+        joint.anchor = Vector3.zero;
+        joint.connectedAnchor = Vector3.zero;
+
+        joint.xMotion = ConfigurableJointMotion.Locked;
+        joint.yMotion = ConfigurableJointMotion.Limited;
+        joint.zMotion = ConfigurableJointMotion.Locked;
+
+        SoftJointLimit limit = new SoftJointLimit { limit = 0.2f };
+        joint.linearLimit = limit;
+
+        JointDrive drive = new JointDrive {
+            positionSpring = 20000f,
+            positionDamper = 500f,
+            maximumForce = Mathf.Infinity
+        };
+        joint.yDrive = drive;
+    }*/
+        
     /*private void setUpJoint() {
         setConfigurableJoint();
         Rigidbody pistolRigidBody = pistol.GetComponent<Rigidbody>();
@@ -226,53 +246,8 @@ public class MagazineScript : MonoBehaviour {
         oneGrabTranslateTransformer.Constraints.MinZ = constraint;
         oneGrabTranslateTransformer.Constraints.MaxZ = constraint;
 
-        
         /*var grabbable = iSDKHandGrabInteractionGameObject.GetComponent<Grabbable>();
         grabbable.InjectOptionalOneGrabTransformer(oneGrabTranslateTransformer);
         grabbable.InjectOptionalTwoGrabTransformer(null);#1#
-    }*/
-    
-    /*private void setConfigurableJoint() {
-        configurableJoint.xMotion = ConfigurableJointMotion.Locked;
-        configurableJoint.yMotion = ConfigurableJointMotion.Limited;
-        configurableJoint.zMotion = ConfigurableJointMotion.Locked;
-        configurableJoint.angularXMotion = ConfigurableJointMotion.Locked;
-        configurableJoint.angularYMotion = ConfigurableJointMotion.Locked;
-        configurableJoint.angularZMotion = ConfigurableJointMotion.Locked;
-    }*/
-        
-    public int getRoundCount() {
-        return roundCount;
-    }
-
-    public void decrementRoundCount() {
-        roundCount--;
-    }
-
-    public void setIsMagazineMovingInGun(Boolean isMagazineMovingInGun) {
-        this.isMagazineMovingInGun = isMagazineMovingInGun;
-    }
-    
-    public Boolean getIsSetUpInProcess() {
-        return isMagazineMovingInGun;
-    }
-
-    public Boolean isEnteredPoint1() {
-        return enteredPoint1;
-    }
-
-    public void setEnteredPoint1(Boolean enteredPoint1) {
-        this.enteredPoint1 = enteredPoint1;
-    }
-    
-    /*private void setUpConfiguredJoint() { 
-        configurableJoint = gameObject.AddComponent<ConfigurableJoint>();
-        configurableJoint.connectedBody = rootRb;
-        configurableJoint.autoConfigureConnectedAnchor = true;
-        
-        configurableJoint.configuredInWorldSpace = false;
-        configurableJoint.xMotion = ConfigurableJointMotion.Locked;
-        configurableJoint.yMotion = ConfigurableJointMotion.Limited;
-        configurableJoint.zMotion = ConfigurableJointMotion.Locked;
     }*/
 }
