@@ -55,7 +55,7 @@ public class Main : MonoBehaviour {
             currentPreview.SetActive(false);
         }
         //menu change
-        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickUp) || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickDown)) changeMenu();
+        if (Input.GetKeyUp(KeyCode.Y) || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickUp) || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickDown)) changeMenu();
         if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft)) showHideWalls();
     }
 

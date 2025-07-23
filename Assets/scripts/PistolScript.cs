@@ -37,7 +37,6 @@ public class PistolScript : MonoBehaviour {
 
         mainScript = codeObject.GetComponent<Main>();
         //Time.timeScale = 0.1f;
-        Debug.Log(magazineScript.getIsSetUp());
 
         configurableJoint = magazine.GetComponent<ConfigurableJoint>();
     }
@@ -53,7 +52,7 @@ public class PistolScript : MonoBehaviour {
             
             if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) mainScript.clearHoles();
             if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch)) magazineAppears();
-            if (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.RTouch)) releaseMagazine();
+            if (Input.GetKeyUp(KeyCode.U) || OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.RTouch)) releaseMagazine();
         }
     }
 
@@ -63,15 +62,6 @@ public class PistolScript : MonoBehaviour {
             transform.rotation = leftHandTransform.rotation;
             transform.parent = leftHandTransform;
         }*/
-    }
-
-    private void resetConfigurableJoint() {
-        configurableJoint.xMotion = ConfigurableJointMotion.Free;
-        configurableJoint.yMotion = ConfigurableJointMotion.Free;
-        configurableJoint.zMotion = ConfigurableJointMotion.Free;
-        configurableJoint.angularXMotion = ConfigurableJointMotion.Free;
-        configurableJoint.angularYMotion = ConfigurableJointMotion.Free;
-        configurableJoint.angularZMotion = ConfigurableJointMotion.Free;
     }
     
     private void detach(GameObject magazine) {
@@ -90,37 +80,26 @@ public class PistolScript : MonoBehaviour {
 
     private void releaseMagazine() {
         magazine = findMagazine(transform.Find("MagazineRoot"))?.gameObject;
-
-        /*if (magazine == null) {
-            magazine = GameObject.Find("MagazinePrefub(Clone)");
-        }*/
-        
         magazineScript = magazine.GetComponent<MagazineScript>();
 
         if (isMagazineIn) {
             magazineOutSound.PlayOneShot(magazineOutSound.clip);
             //todo добавить звук выскальзывания (взять из КС)
+            
+            isMagazineIn = false;
+            magazine.GetComponent<Rigidbody>().isKinematic = false;
+            magazine.GetComponent<Rigidbody>().useGravity = true;
+
+            magazineScript.setIsMagazineMovingInGun(true);
+            magazineScript.setEnteredPoint1(true);
         } else {
             //todo yp сделать другой звук
         }
-        //resetConfigurableJoint();
+
         
-        isMagazineIn = false;
-
-        magazine.GetComponent<MeshCollider>().convex = true;
-        magazine.GetComponent<Rigidbody>().isKinematic = false;
-        magazine.GetComponent<Rigidbody>().useGravity = true;
-
-        //Debug.Log($" ===== root до отедления Local: {magazine.transform.parent.localScale}, World: {transform.parent.lossyScale}");
-        //Debug.Log($" ===== magazine до отедления Local: {magazine.transform.localScale}, World: {transform.lossyScale}");
-        
-        //todo временно выключаю. сделаю пока только с джоинтом. невыключающимся.
-
-        //removeJointScript();
-        magazineScript.setIsSetUp(isMagazineIn);
-        magazineScript.setIsSetUpInProcess(isMagazineIn);
-        detach(magazine);
-        magazine.transform.Find("ISDK_HandGrabInteraction").gameObject.SetActive(true);
+        //этоприменить при ОТКАСАНИИ от точки1
+        //todo temp disabled detach(magazine);
+        //magazine.transform.Find("ISDK_HandGrabInteraction").gameObject.SetActive(true);
     }
 
     private void removeJointScript() {

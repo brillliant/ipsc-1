@@ -11,9 +11,8 @@ public class MagazineScript : MonoBehaviour {
     public GameObject pistol;
     private Main mainScript;
     private int roundCount = 10;//17;
-    private Boolean isSetUp = false;
-    private Boolean isSetUpInProcess = false;
-    private ConfigurableJoint configurableJoint;
+    private Boolean isMagazineMovingInGun = false;
+
     private Boolean magazineIsOut = true;
 
     //рельсы при вставке
@@ -24,6 +23,10 @@ public class MagazineScript : MonoBehaviour {
     private Vector3 magazineRootInitialRotation;
     private Rigidbody rootRb;
     private Rigidbody rb; 
+    
+    //joint for magazine
+    private ConfigurableJoint configurableJoint;
+    private GameObject handGrabInteraction;
 
     private String magazineId = null;
 
@@ -32,9 +35,7 @@ public class MagazineScript : MonoBehaviour {
             pistol = GameObject.Find("Glock17");
         }
         magazineRoot = pistol.transform.Find("MagazineRoot").gameObject;
-        
         rootRb = magazineRoot.GetComponent<Rigidbody>();
-        
         rb = GetComponent<Rigidbody>();
         
         magazineRootInitialPosition = magazineRoot.transform.localPosition;
@@ -45,86 +46,105 @@ public class MagazineScript : MonoBehaviour {
         }
         mainScript = codeObject.GetComponent<Main>();
         configurableJoint = GetComponent<ConfigurableJoint>();
+
+        handGrabInteraction = transform.Find("ISDK_HandGrabInteraction").gameObject;
         
-        //generate id
         String magazineIdNumber = Random.Range(0, 100).ToString();
         if (transform.parent.name == "MagazineRoot") {
-            isSetUp = true;
             magazineIsOut = false;
             magazineId = "FromPistol_" + magazineIdNumber;
         } else {
-            isSetUp = false;
             magazineIsOut = true;
             magazineId = "FromBag_" + magazineIdNumber;
         }
     }
-    
-    void Start() {
-
-    }
 
     private void Update() {
         keepMagazineOnRailsIfNeeded();
+        checkPositionIfNeeded();
     }
 
-    void OnTriggerEnter(Collider other) {
-        if (other.gameObject.name == "reloadPoint1" 
-            && !isSetUpInProcess 
+    //т.к. я жестко телепортирую магазин куда надо. тригеры срабатывают на enter даже если я на этом тригере и стоял все время.
+    //из-за ручной директивной корректции transform 
+    //рушение: переписать все тригеры на ручную проверку координаты и выставление флага.
+    private void checkPositionIfNeeded() {
+        if (!magazineIsOut && !rb.isKinematic && rb.useGravity) {
+            if (transform.localPosition.y < -0.03f) { //todo yp после полировки вынести в константу
+                magazineFullEjection();
+            }
+        }
+    }
+    
+    private void magazineFullEjection() {
+        transform.SetParent(null);
+        Destroy(configurableJoint);
+        
+        isMagazineMovingInGun = false;
+        magazineIsOut = true;
+        
+        rb.isKinematic = false;
+        rb.useGravity = true;
+        handGrabInteraction.SetActive(true);
+    }
+
+    private Boolean enteredPoint1 = false;
+    
+    /*void OnTriggerEnter(Collider other) {
+        if (!enteredPoint1 &&
+            other.gameObject.name == "reloadPoint1" 
+            && !isMagazineMovingInGun 
             && magazineIsOut) {
+
+            enteredPoint1 = true;
             
             ToggleColor();
             /*gameObject.GetComponent<Rigidbody>().isKinematic = false;//временно тру. сделать фолс.
-            gameObject.GetComponent<Rigidbody>().useGravity = true;*/
-
-            // - СТАРТ точно надо и точно работет 
-            transform.SetParent(null); //открепить от руки
+            gameObject.GetComponent<Rigidbody>().useGravity = true;#1#
+            
             rb.isKinematic = false;
             rb.useGravity = true;
-        
-            //убрать хватательность магазина
             var iSDKHandGrabInteractionGameObject = transform.Find("ISDK_HandGrabInteraction").gameObject;
             iSDKHandGrabInteractionGameObject.GetComponent<Grabbable>().gameObject.SetActive(false);
-            // - ФИНИШ
 
             transform.position = magazineOnRailStartPosition;
-            
             mainScript.isHandKeepingMagazine = false;
-            isSetUpInProcess = true;
+            isMagazineMovingInGun = true;
             //isSetUp = true; 
             //todo продумать зашелку. когда до конца вставил.
-        } else if (other.gameObject.name == "LeftHandCollider" && !isSetUp) {
+        } else if (other.gameObject.name == "LeftHandCollider") {
             Debug.Log($" ===== имя руки: {other.gameObject.name}");
         }
-    }
+    }*/
 
     private void keepMagazineOnRailsIfNeeded() {
-        if (isSetUpInProcess) {
-            //transform.localScale = Vector3.one;
-            /*transform.SetParent(magazineRoot.transform);
-            Vector3 local = magazineRoot.transform.InverseTransformPoint(transform.position);
-            local.x = 0f;
-            local.z = 0f;
-            transform.position = magazineRoot.transform.TransformPoint(local);
-            
-            transform.localEulerAngles = localInitRotation0;*/
-            
-            // transform.localPosition = Vector3.zero;
-            //magazineRoot.transform.localPosition = new Vector3(magazineRootInitialPosition.x, magazineRoot.transform.localPosition.y, magazineRootInitialPosition.z);
-            //magazineRoot.transform.localEulerAngles = magazineRootInitialRotation;
-            //rootRb.isKinematic = false;
-            //rootRb.useGravity = true;
-            
-            //тест лижбы работало.
-            transform.localScale = Vector3.one;
-            transform.SetParent(magazineRoot.transform);
-            float maxOffset = 0.026f;
-            Vector3 currentLocal = transform.localPosition;
-            float shift = currentLocal.y - magazineOnRailStartPosition.y;
-            shift = Mathf.Clamp(shift, 0f, maxOffset); // только вперёд
-            transform.localPosition = new Vector3(magazineOnRailStartPosition.x, magazineOnRailStartPosition.y + shift, magazineOnRailStartPosition.z);
-            transform.localEulerAngles = localInitRotation0;
-            
-        }    
+        if (isMagazineMovingInGun) {
+            setLimitedPositionAndRotation();
+            /*if (ReferenceEquals(magazineJoint, null)) {
+                //setUpConfiguredJoint();
+            }*/
+        }
+    }
+    
+    private void setLimitedPositionAndRotation() {
+        transform.localScale = Vector3.one;
+        //transform.SetParent(magazineRoot.transform);
+
+        float maxOffsetUp = 0.026f;
+        float maxOffsetDown = 0.005f;
+
+        Vector3 currentLocal = transform.localPosition;
+        float minY = magazineOnRailStartPosition.y - maxOffsetDown;
+        float maxY = magazineOnRailStartPosition.y + maxOffsetUp;
+
+        float clampedY = Mathf.Clamp(currentLocal.y, minY, maxY);
+
+        transform.localPosition = new Vector3(
+            magazineOnRailStartPosition.x,
+            clampedY,
+            magazineOnRailStartPosition.z
+        );
+
+        transform.localEulerAngles = localInitRotation0;
     }
     
     /*private void setUpJoint2() {
@@ -164,11 +184,12 @@ public class MagazineScript : MonoBehaviour {
         joint.yDrive = drive;
     }*/
 
-    void OnTriggerExit(Collider other) {
-        if (other.gameObject.name == "reloadPoint2" && !magazineIsOut) {
-            magazineIsOut = true;
+    /*void OnTriggerExit(Collider other) {
+        if (other.gameObject.name == "reloadPoint1" && enteredPoint1) {
+            
+            magazineFullEjection();
         }
-    }
+    }*/
 
     //todo удалить позже
     private bool isColor1Active = true;
@@ -228,19 +249,30 @@ public class MagazineScript : MonoBehaviour {
         roundCount--;
     }
 
-    public void setIsSetUpInProcess(Boolean isSetUpInProcess) {
-        this.isSetUpInProcess = isSetUpInProcess;
+    public void setIsMagazineMovingInGun(Boolean isMagazineMovingInGun) {
+        this.isMagazineMovingInGun = isMagazineMovingInGun;
     }
     
     public Boolean getIsSetUpInProcess() {
-        return this.isSetUpInProcess;
+        return isMagazineMovingInGun;
+    }
+
+    public Boolean isEnteredPoint1() {
+        return enteredPoint1;
+    }
+
+    public void setEnteredPoint1(Boolean enteredPoint1) {
+        this.enteredPoint1 = enteredPoint1;
     }
     
-    public void setIsSetUp(Boolean isSetUp) {
-        this.isSetUp = isSetUp;
-    }
-    
-    public Boolean getIsSetUp() {
-        return isSetUp;
-    }
+    /*private void setUpConfiguredJoint() { 
+        configurableJoint = gameObject.AddComponent<ConfigurableJoint>();
+        configurableJoint.connectedBody = rootRb;
+        configurableJoint.autoConfigureConnectedAnchor = true;
+        
+        configurableJoint.configuredInWorldSpace = false;
+        configurableJoint.xMotion = ConfigurableJointMotion.Locked;
+        configurableJoint.yMotion = ConfigurableJointMotion.Limited;
+        configurableJoint.zMotion = ConfigurableJointMotion.Locked;
+    }*/
 }
