@@ -167,7 +167,6 @@ public class Main : MonoBehaviour {
             }
         }
         установленныеМишени.Clear();
-        
         clearHoles();
     }
 
@@ -210,7 +209,6 @@ public class Main : MonoBehaviour {
             }
         }
     }
-
 
     //todo удалить после отладки
     private Color color1 = Color.red;

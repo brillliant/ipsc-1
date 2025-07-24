@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8994462883636714006}
   - component: {fileID: 7112546138298313484}
   - component: {fileID: 1144555947092129489}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: MagazinePrefub
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -162,7 +162,7 @@ GameObject:
   - component: {fileID: 8181723340548692305}
   - component: {fileID: 50495973615332737}
   - component: {fileID: 2512337691790765834}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ISDK_HandGrabInteraction
   m_TagString: Untagged
   m_Icon: {fileID: 0}

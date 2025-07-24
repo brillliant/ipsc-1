@@ -3770,7 +3770,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &251863836
 Transform:
   m_ObjectHideFlags: 0
@@ -5647,7 +5647,7 @@ GameObject:
   - component: {fileID: 387453795}
   - component: {fileID: 387453794}
   - component: {fileID: 387453797}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ISDK_HandGrabInteraction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17718,7 +17718,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2389798004769918579, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.321
+      value: 0.42099994
       objectReference: {fileID: 0}
     - target: {fileID: 2389798004769918579, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -20698,7 +20698,7 @@ GameObject:
   - component: {fileID: 1462417866}
   - component: {fileID: 1462417865}
   - component: {fileID: 1462417869}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Cube2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20785,8 +20785,8 @@ Transform:
   m_GameObject: {fileID: 1462417863}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.358, z: 0}
-  m_LocalScale: {x: 0.48702347, y: 0.48702347, z: 0.48702347}
+  m_LocalPosition: {x: 0, y: -0.417, z: -0.121}
+  m_LocalScale: {x: 0.34, y: 0.34, z: 0.34}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1945691500}
@@ -27166,7 +27166,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2389798004769918579, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.321
+      value: 0.42099994
       objectReference: {fileID: 0}
     - target: {fileID: 2389798004769918579, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -27341,7 +27341,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2389798004769918579, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.321
+      value: 0.42099994
       objectReference: {fileID: 0}
     - target: {fileID: 2389798004769918579, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -29133,7 +29133,7 @@ GameObject:
   - component: {fileID: 2049096870}
   - component: {fileID: 2049096869}
   - component: {fileID: 2049096872}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ISDK_HandGrabInteraction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30462,7 +30462,7 @@ GameObject:
   - component: {fileID: 5232627393753238569}
   - component: {fileID: 5232627393753238573}
   - component: {fileID: 5232627393753238576}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Magazine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30494,7 +30494,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 0.00093589973, y: 0.040730435, z: 0.021121614}
   m_Center: {x: 0.0044773915, y: 0.000057977555, z: -0.0012983892}
@@ -30515,7 +30515,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 0.0015768738, y: 0.040730443, z: 0.021121612}
   m_Center: {x: -0.0049038427, y: 0.000057977537, z: -0.0012983951}
@@ -30722,7 +30722,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2389798004769918579, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.321
+      value: 0.421
       objectReference: {fileID: 0}
     - target: {fileID: 2389798004769918579, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -30812,7 +30812,7 @@ GameObject:
   - component: {fileID: 2131453085}
   - component: {fileID: 7255613752231056640}
   - component: {fileID: 7255613752231056641}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Slide
   m_TagString: Untagged
   m_Icon: {fileID: 0}

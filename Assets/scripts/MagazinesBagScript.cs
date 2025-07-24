@@ -9,7 +9,7 @@ public class MagazinesBagScript : MonoBehaviour {
     public GameObject magazinePrefub;
     private GameObject codeObject;
     private Main mainScript;
-
+    
     public GameObject camera;
     private GameObject magazine;
     
@@ -35,11 +35,11 @@ public class MagazinesBagScript : MonoBehaviour {
         transform.position = 
             new Vector3(
                 cameraTransform.position.x, 
-                cameraTransform.position.y - 0.7f, 
+                cameraTransform.position.y - 0.9f, 
                 cameraTransform.position.z
             );
         
-        if (!ReferenceEquals(magazine, null) && magazine.transform.parent is not null && magazine.transform.parent.name == "magazineSpawn") {
+        if (magazine != null && magazine.transform.parent is not null && magazine.transform.parent.name == "magazineSpawn") {
             magazine.transform.position = new Vector3(
                 magazineSpawn.transform.position.x,
                 magazineSpawn.transform.position.y,
@@ -52,16 +52,16 @@ public class MagazinesBagScript : MonoBehaviour {
     void OnTriggerEnter(Collider other) {
         //todo сделать для руки.
         //if (collision.gameObject.name == "mixamorig:LeftHand") {
-            Debug.Log("схватил магазин");
+
             
             //todo удалить после отладки
             ToggleColor();
             
-            TakeMagazine(other);
+            takeMagazine(other);
         //}
     }
 
-    private void TakeMagazine(Collider other) {
+    private void takeMagazine(Collider other) {
         //Debug.Log("========" + other.gameObject.name);
         
         //todo доработать условие. чтобы тольео если ЛЕВАЯ рука попадает в куб - тогда в ней появится магазин.
@@ -74,24 +74,30 @@ public class MagazinesBagScript : MonoBehaviour {
                                                    || other.gameObject.name.Contains("a")
                                                    || true
                                                    ) {*/
-
-        //todo временно выключил
-        if (!mainScript.isHandKeepingMagazine) {
-            magazine = Instantiate(
-                magazinePrefub,
-                new Vector3(
-                    magazineSpawn.transform.position.x,
-                    magazineSpawn.transform.position.y,
-                    magazineSpawn.transform.position.z
-                ),
-                Quaternion.Euler(
-                    magazineSpawn.transform.rotation.eulerAngles.x, 
-                    magazineSpawn.transform.rotation.eulerAngles.y, 
-                    magazineSpawn.transform.rotation.eulerAngles.z
-                ),
-                magazineSpawn.transform
-            );
-            mainScript.isHandKeepingMagazine = true;
+        
+        if (other.gameObject.name == "LeftHandCollider") {
+            if (!mainScript.isHandKeepingMagazine) {
+                magazine = Instantiate(
+                    magazinePrefub,
+                    new Vector3(
+                        magazineSpawn.transform.position.x,
+                        magazineSpawn.transform.position.y,
+                        magazineSpawn.transform.position.z
+                    ),
+                    Quaternion.Euler(
+                        magazineSpawn.transform.rotation.eulerAngles.x,
+                        magazineSpawn.transform.rotation.eulerAngles.y,
+                        magazineSpawn.transform.rotation.eulerAngles.z
+                    ),
+                    magazineSpawn.transform
+                );
+                mainScript.isHandKeepingMagazine = true;
+                Debug.Log("схватил магазин");
+            }
+            else {
+                Destroy(magazine);
+                mainScript.isHandKeepingMagazine = false;
+            }
         }
     }
 
