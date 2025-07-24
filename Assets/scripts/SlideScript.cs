@@ -6,6 +6,8 @@ public class SlideScript : MonoBehaviour {
     private Vector3 localRotation0;
     private PistolScript pistolScript;
     
+    public AudioSource sliderBackSound;
+    public AudioSource sliderReleaseSound;
     float maxOffset = 0.009f;
 
     private void Awake() {
@@ -36,6 +38,7 @@ public class SlideScript : MonoBehaviour {
 
         // если затвор оттянули назад — запоминаем это
         if (!hasTriggeredPullEvent && dz >= slidePullThreshold) {
+            sliderBackSound.PlayOneShot(sliderBackSound.clip);
             hasTriggeredPullEvent = true;
             
             if (pistolScript.isRoundInChamber()) {
@@ -47,6 +50,7 @@ public class SlideScript : MonoBehaviour {
         // если затвор вернулся почти полностью вперёд — считаем передёргивание завершённым
         if (hasTriggeredPullEvent && dz < 0.001f) {
             hasTriggeredPullEvent = false;
+            sliderReleaseSound.PlayOneShot(sliderReleaseSound.clip);
             tryChamberRound(); // пробуем дослать патрон
         }
     }

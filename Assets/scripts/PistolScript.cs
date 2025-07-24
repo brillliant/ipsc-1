@@ -14,6 +14,7 @@ public class PistolScript : MonoBehaviour {
     public AudioSource shotSound;
     public AudioSource emptyShotSound;
     public AudioSource magazineOutSound;
+    public AudioSource magazineInSound;
 
     [SerializeField] private Transform bulletPoint;
     //public Transform leftHandTransform;
@@ -79,7 +80,6 @@ public class PistolScript : MonoBehaviour {
             magazineScript = magazine.GetComponent<MagazineScript>();
             
             magazineOutSound.PlayOneShot(magazineOutSound.clip);
-            //todo добавить звук выскальзывания (взять из КС)
             
             magazineLocked = false;
             magazine.GetComponent<Rigidbody>().isKinematic = false;
@@ -170,6 +170,7 @@ public class PistolScript : MonoBehaviour {
         if (magazineLocked) {
             magazine = findMagazine(transform.Find("MagazineRoot"))?.gameObject;
             magazineScript = magazine.GetComponent<MagazineScript>();
+            magazineInSound.PlayOneShot(magazineInSound.clip);
         } 
         this.magazineLocked = magazineLocked;
     }
