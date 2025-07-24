@@ -8858,7 +8858,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   magazineSpawn: {fileID: 0}
   magazinePrefub: {fileID: 0}
-  codeObject: {fileID: 0}
   camera: {fileID: 0}
 --- !u!65 &659562521
 BoxCollider:
@@ -10901,7 +10900,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   magazineSpawn: {fileID: 0}
   magazinePrefub: {fileID: 0}
-  codeObject: {fileID: 0}
   camera: {fileID: 0}
 --- !u!54 &797335361
 Rigidbody:
@@ -20551,7 +20549,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   magazineSpawn: {fileID: 733191452}
   magazinePrefub: {fileID: 3861189859654507191, guid: bad76d209f098fb43a33d893d8a7869b, type: 3}
-  codeObject: {fileID: 1043981333}
   camera: {fileID: 88431502}
 --- !u!1 &1464376738
 GameObject:
@@ -30271,8 +30268,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16307bba5f5fb8d4e9c73d89d94a5e42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  codeObject: {fileID: 1043981333}
-  pistol: {fileID: 919132149147182654}
+  codeObject: {fileID: 0}
+  pistol: {fileID: 0}
 --- !u!1 &6619225641142677545
 GameObject:
   m_ObjectHideFlags: 0

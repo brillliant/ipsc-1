@@ -21,15 +21,13 @@ public class PistolScript : MonoBehaviour {
     private Main mainScript;
     private MagazineScript magazineScript;
     
-    private int roundsCount;// = 10000;
-    private Boolean isRoundInChamber = true;
+    private Boolean roundInChamber = false;  //временно можно ставить тру, для дебага
     private Boolean magazineLocked = true;
     
     private ConfigurableJoint configurableJoint;
     
     void Start() {
         magazineScript = magazine.GetComponent<MagazineScript>();
-        roundsCount = magazineScript.getRoundCount();
         _vibration.Duration = 0.15f;
         _vibration.Samples = new[] { 1f };
         _vibration.SamplesCount = 1;
@@ -121,7 +119,7 @@ public class PistolScript : MonoBehaviour {
             
             triggerPressed = true;
 
-            if (isRoundInChamber) {
+            if (roundInChamber) {
                 shoot();
             } else {
                 emptyShoot();
@@ -144,20 +142,40 @@ public class PistolScript : MonoBehaviour {
         bulletRigidbody.velocity = bulletPoint.forward * bulletSpeed;
         Destroy(bullet, 3);
         shotSound.PlayOneShot(shotSound.clip);
-        isRoundInChamber = false;
+        roundInChamber = false;
+        //todo animation
         moveRoundFromMagazineToChamber();
     }
 
-    private void moveRoundFromMagazineToChamber() {
-        if (magazineLocked && roundsCount > 0) {
-            isRoundInChamber = true;
-            roundsCount--;
+    public void moveRoundFromMagazineToChamber() {
+        if (magazineLocked && magazineScript.getRoundCount() > 0) {
+            roundInChamber = true;
             magazineScript.decrementRoundCount();
         }
     }
+    
+    public int getRoundsCount() {
+        return magazineScript.getRoundCount();
+    }
+    
+    public Boolean isRoundInChamber() {
+        return roundInChamber;
+    }
+    
+    public void setRoundInChamber(Boolean value) {
+        roundInChamber = value;
+    }
 
     public void setMagazineLocked(Boolean magazineLocked) {
+        if (magazineLocked) {
+            magazine = findMagazine(transform.Find("MagazineRoot"))?.gameObject;
+            magazineScript = magazine.GetComponent<MagazineScript>();
+        } 
         this.magazineLocked = magazineLocked;
+    }
+    
+    public Boolean isMagazineLocked() {
+        return magazineLocked;
     }
 
     void Template() {
