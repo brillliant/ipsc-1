@@ -23,7 +23,7 @@ public class PistolScript : MonoBehaviour {
     
     private int roundsCount;// = 10000;
     private Boolean isRoundInChamber = true;
-    private Boolean magazineIn = true;
+    private Boolean magazineLocked = true;
     
     private ConfigurableJoint configurableJoint;
     
@@ -75,7 +75,7 @@ public class PistolScript : MonoBehaviour {
     }
 
     private void releaseMagazine() {
-        if (magazineIn) {
+        if (magazineLocked) {
             //todo сделать чтобы эти вещи сетались когда магазин установлен.
             magazine = findMagazine(transform.Find("MagazineRoot"))?.gameObject;
             magazineScript = magazine.GetComponent<MagazineScript>();
@@ -83,7 +83,7 @@ public class PistolScript : MonoBehaviour {
             magazineOutSound.PlayOneShot(magazineOutSound.clip);
             //todo добавить звук выскальзывания (взять из КС)
             
-            magazineIn = false;
+            magazineLocked = false;
             magazine.GetComponent<Rigidbody>().isKinematic = false;
             magazine.GetComponent<Rigidbody>().useGravity = true;
 
@@ -149,15 +149,15 @@ public class PistolScript : MonoBehaviour {
     }
 
     private void moveRoundFromMagazineToChamber() {
-        if (magazineIn && roundsCount > 0) {
+        if (magazineLocked && roundsCount > 0) {
             isRoundInChamber = true;
             roundsCount--;
             magazineScript.decrementRoundCount();
         }
     }
 
-    public void setMagazineIn(Boolean magazineIn) {
-        this.magazineIn = magazineIn;
+    public void setMagazineLocked(Boolean magazineLocked) {
+        this.magazineLocked = magazineLocked;
     }
 
     void Template() {
