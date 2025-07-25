@@ -573,7 +573,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: f5252a88f2968214eaa28dd199ec5778, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.332
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -3853,8 +3853,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.0089378515, y: 0.031246021, z: 0.0014597297}
-  m_Center: {x: -0.36377776, y: -0.014055618, z: -0.020132048}
+  m_Size: {x: 0.0089378515, y: 0.027080482, z: 0.001459737}
+  m_Center: {x: -0.36377722, y: -0.016138062, z: -0.020130837}
 --- !u!1 &252765587
 GameObject:
   m_ObjectHideFlags: 0
@@ -5535,7 +5535,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 71fea8971479a3445b8017fb71bc8b2e, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.332
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -17435,7 +17435,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: f5f70d1ca4c6d1246bf3f048363d797b, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.332
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -24151,7 +24151,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 313f5f7ae3917bf4892744565a9ff42a, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.332
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -26816,7 +26816,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 53469ec5aa972bc4392621bb3e6108c9, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.332
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -30496,8 +30496,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.000644854, y: 0.03005046, z: 0.021121616}
-  m_Center: {x: 0.0049140085, y: -0.004311996, z: -0.0012983893}
+  m_Size: {x: 0.000644854, y: 0.029622914, z: 0.021121616}
+  m_Center: {x: 0.0049140085, y: -0.004525776, z: -0.0012983893}
 --- !u!65 &3469287837590909734
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -30517,8 +30517,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.00093162333, y: 0.029906547, z: 0.021121612}
-  m_Center: {x: -0.0048947884, y: -0.004347702, z: -0.0012983955}
+  m_Size: {x: 0.00093162333, y: 0.029511208, z: 0.021121612}
+  m_Center: {x: -0.0048947884, y: -0.0045453897, z: -0.0012983955}
 --- !u!4 &4144468436102475726
 Transform:
   m_ObjectHideFlags: 0
@@ -30812,6 +30812,7 @@ GameObject:
   - component: {fileID: 2131453085}
   - component: {fileID: 7255613752231056640}
   - component: {fileID: 7255613752231056641}
+  - component: {fileID: 7255613752231056642}
   m_Layer: 6
   m_Name: Slide
   m_TagString: Untagged
@@ -30972,11 +30973,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 7163563658345455521}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c02c395f041ea554699f14ac1bd8aca0, type: 3}
+  m_Script: {fileID: 11500000, guid: 400ef58724d6fcc4fa2b1996042541fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   sliderBackSound: {fileID: 30437493}
   sliderReleaseSound: {fileID: 1908943726}
+--- !u!95 &7255613752231056642
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7163563658345455521}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 033d5a39bba29804db89e5dfc1ea18e4, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 2
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

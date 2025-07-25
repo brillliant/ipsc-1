@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
-using Oculus.Interaction;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
 
 public class PistolScript : MonoBehaviour {
     [SerializeField] 
@@ -15,17 +12,17 @@ public class PistolScript : MonoBehaviour {
     public AudioSource emptyShotSound;
     public AudioSource magazineOutSound;
     public AudioSource magazineInSound;
+    
+    private SlideScript slideScript;
 
     [SerializeField] private Transform bulletPoint;
-    //public Transform leftHandTransform;
     public GameObject codeObject;
     private Main mainScript;
     private MagazineScript magazineScript;
     
     private Boolean roundInChamber = false;  //временно можно ставить тру, для дебага
     private Boolean magazineLocked = true;
-    
-    private ConfigurableJoint configurableJoint;
+    private Boolean inShooting = false;
     
     void Start() {
         magazineScript = magazine.GetComponent<MagazineScript>();
@@ -36,8 +33,14 @@ public class PistolScript : MonoBehaviour {
 
         mainScript = codeObject.GetComponent<Main>();
         //Time.timeScale = 0.1f;
+    }
 
-        configurableJoint = magazine.GetComponent<ConfigurableJoint>();
+    private void Awake() {
+        slideScript = transform.Find("Slide").GetComponent<SlideScript>();
+        
+#if UNITY_EDITOR
+        roundInChamber = true;
+#endif
     }
 
     private OVRInput.HapticsAmplitudeEnvelopeVibration _vibration = new OVRInput.HapticsAmplitudeEnvelopeVibration();
@@ -50,17 +53,8 @@ public class PistolScript : MonoBehaviour {
             }
             
             if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) mainScript.clearHoles();
-            if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch)) magazineAppears();
             if (Input.GetKeyUp(KeyCode.U) || OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.RTouch)) releaseMagazine();
         }
-    }
-
-    private void magazineAppears() {
-        /*if (leftHandTransform != null) {
-            transform.position = leftHandTransform.position;
-            transform.rotation = leftHandTransform.rotation;
-            transform.parent = leftHandTransform;
-        }*/
     }
 
     private Transform findMagazine(Transform parent) {
@@ -86,40 +80,20 @@ public class PistolScript : MonoBehaviour {
             magazine.GetComponent<Rigidbody>().useGravity = true;
 
             magazineScript.setIsMagazineMovingInGun(true);
-            //magazineScript.setMagazineIsSetUp(false);
         } else {
             //todo yp сделать другой звук
         }
     }
 
-    private void removeJointScript() {
-        var iSDKHandGrabInteractiongameObject = magazine.transform.Find("ISDK_HandGrabInteraction").gameObject;
-        iSDKHandGrabInteractiongameObject.SetActive(true);
-            
-        var oneGrabTranslateTransformer = iSDKHandGrabInteractiongameObject.GetComponent<OneGrabTranslateTransformer>();
-        if (oneGrabTranslateTransformer != null) {
-            Destroy(oneGrabTranslateTransformer);
-        }
-        
-        var grabFreeTransformer = iSDKHandGrabInteractiongameObject.GetComponent<GrabFreeTransformer>();
-        if (grabFreeTransformer != null) {
-            Destroy(grabFreeTransformer);
-        }
-        
-        var moveTowardsTargetProvider = iSDKHandGrabInteractiongameObject.GetComponent<MoveTowardsTargetProvider>();
-        if (moveTowardsTargetProvider != null) {
-            Destroy(moveTowardsTargetProvider);
-        }
-    }
-
     void shootActionIfNeeded() {
         if (!triggerPressed && 
-            (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0 || Input.GetKeyDown(KeyCode.Space))
-            ) {
+            (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0 
+             || Input.GetKeyDown(KeyCode.Space))) {
             
             triggerPressed = true;
 
-            if (roundInChamber) {
+            if (roundInChamber && !inShooting) {
+                inShooting = true;
                 shoot();
             } else {
                 emptyShoot();
@@ -139,23 +113,18 @@ public class PistolScript : MonoBehaviour {
         transform1.position = bulletPoint.position;
         transform1.rotation = bulletPoint.rotation;
 
+        shotSound.PlayOneShot(shotSound.clip);
         bulletRigidbody.velocity = bulletPoint.forward * bulletSpeed;
         Destroy(bullet, 3);
-        shotSound.PlayOneShot(shotSound.clip);
-        roundInChamber = false;
-        //todo animation
-        moveRoundFromMagazineToChamber();
+        slideScript.runSliderAnimation();
     }
 
     public void moveRoundFromMagazineToChamber() {
         if (magazineLocked && magazineScript.getRoundCount() > 0) {
             roundInChamber = true;
             magazineScript.decrementRoundCount();
+            inShooting = false;
         }
-    }
-    
-    public int getRoundsCount() {
-        return magazineScript.getRoundCount();
     }
     
     public Boolean isRoundInChamber() {
@@ -173,10 +142,6 @@ public class PistolScript : MonoBehaviour {
             magazineInSound.PlayOneShot(magazineInSound.clip);
         } 
         this.magazineLocked = magazineLocked;
-    }
-    
-    public Boolean isMagazineLocked() {
-        return magazineLocked;
     }
 
     void Template() {

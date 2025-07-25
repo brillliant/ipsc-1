@@ -1,5 +1,5 @@
+using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class SlideScript : MonoBehaviour {
     private Vector3 localPosition0;
@@ -9,12 +9,33 @@ public class SlideScript : MonoBehaviour {
     public AudioSource sliderBackSound;
     public AudioSource sliderReleaseSound;
     float maxOffset = 0.009f;
-
+    
+    private Animator sliderAnimator;
+    private Boolean sliderAnimationRunning;
+    
     private void Awake() {
+        sliderAnimator = GetComponent<Animator>();
+        sliderAnimator.enabled = false;
         localPosition0 = transform.localPosition;
         localRotation0 = transform.localEulerAngles;
         
         pistolScript = GetComponentInParent<PistolScript>();
+    }
+
+    public void runSliderAnimation() {
+        sliderAnimationRunning = true;
+        sliderAnimator.enabled = true;
+        sliderAnimator.SetTrigger("SliderShotMove"); // запускает sliderShotMove
+    }
+
+    public void onRunSliderReturned() {
+        sliderAnimator.enabled = false;
+        sliderReturnedActions();
+        sliderAnimationRunning = false;
+    }
+    
+    public void onRunSliderMovedBack() {
+        sliderMovedBackActions();
     }
 	
     void Update () {
@@ -33,25 +54,45 @@ public class SlideScript : MonoBehaviour {
         DetectSlidePull(); // проверяем, было ли полное передёргивание
     }
 
-    private void DetectSlidePull() {
-        float dz = transform.localPosition.z - localPosition0.z;
-
+    private void sliderMovedBackActions() {
         // если затвор оттянули назад — запоминаем это
-        if (!hasTriggeredPullEvent && dz >= slidePullThreshold) {
-            sliderBackSound.PlayOneShot(sliderBackSound.clip);
+        if (!hasTriggeredPullEvent) {
             hasTriggeredPullEvent = true;
+            
+            if (!sliderBackSound.isPlaying) {
+                sliderBackSound.PlayOneShot(sliderBackSound.clip);
+            }
             
             if (pistolScript.isRoundInChamber()) {
                 ejectRound(); // выброс патрона
-                pistolScript.setRoundInChamber(false);
             }
         }
+    }
 
+    private void sliderReturnedActions() {
         // если затвор вернулся почти полностью вперёд — считаем передёргивание завершённым
-        if (hasTriggeredPullEvent && dz < 0.001f) {
+        if (hasTriggeredPullEvent) {
             hasTriggeredPullEvent = false;
-            sliderReleaseSound.PlayOneShot(sliderReleaseSound.clip);
+            
+            if (!sliderReleaseSound.isPlaying) {
+                sliderReleaseSound.PlayOneShot(sliderReleaseSound.clip);
+            }
+            
             tryChamberRound(); // пробуем дослать патрон
+        }
+    }
+
+    public void DetectSlidePull() {
+        if (!sliderAnimationRunning) {
+            float dz = transform.localPosition.z - localPosition0.z;
+
+            if (dz >= slidePullThreshold) {
+                sliderMovedBackActions();
+            }
+
+            if (dz < 0.001f) {
+                sliderReturnedActions();
+            }
         }
     }
 

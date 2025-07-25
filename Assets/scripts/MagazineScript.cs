@@ -7,7 +7,7 @@ public class MagazineScript : MonoBehaviour {
     public GameObject pistol;
     private PistolScript pistolScript;
     private Main mainScript;
-    private int roundCount = 8;//17;
+    private int roundCount = 5;//17;
     private Boolean isMagazineMovingInGun;
 
     //рельсы при вставке
