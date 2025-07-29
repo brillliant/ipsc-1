@@ -17,8 +17,6 @@ public class MagazinesBagScript : MonoBehaviour {
     private Color color1 = Color.red;
     private Color color2 = Color.blue;
     
-    private float change = 0.01f;
-    
     private bool isColor1Active = true;
 
     void Start() {

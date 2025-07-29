@@ -6,24 +6,19 @@ public class MagazineScript : MonoBehaviour {
     public GameObject codeObject;
     public GameObject pistol;
     private PistolScript pistolScript;
+    private GameObject reloadPoint1;
     private Main mainScript;
     private int roundCount = 5;//17;
     private Boolean isMagazineMovingInGun;
 
-    //рельсы при вставке
-    private Vector3 magazineOnRailStartPosition = new(0.0f, -0.02f, -0.0008f);	// original local position
-    private Vector3 localInitRotation0 = new(25.338f, 0.085f, 0.07f);
+    private Vector3 localInitRotation0 = new(21.90f, 0.083f, 0.069f);
     private GameObject magazineRoot;
-    private Rigidbody rootRb;
     private Rigidbody rb; 
     
-    //joint for magazine
-    private ConfigurableJoint configurableJoint;
     private GameObject handGrabInteraction;
 
     private Boolean enteredPoint1;
     private Boolean readyToLock;
-    //todo использовать это при досыле патрона в патронник. в будущем.
     private Boolean magazineIsSetUp;
     private String magazineId = null;
 
@@ -31,17 +26,17 @@ public class MagazineScript : MonoBehaviour {
         if (pistol == null) {
             pistol = GameObject.Find("Glock17");
         }
-
+        reloadPoint1 = pistol.transform.Find("reloadPoint1").gameObject;
+        
         pistolScript = pistol.GetComponent<PistolScript>();
         magazineRoot = pistol.transform.Find("MagazineRoot").gameObject;
-        rootRb = magazineRoot.GetComponent<Rigidbody>();
+        
         rb = GetComponent<Rigidbody>();
         
         if (codeObject == null) {
             codeObject = GameObject.Find("codeObject");
         }
         mainScript = codeObject.GetComponent<Main>();
-        configurableJoint = GetComponent<ConfigurableJoint>();
         handGrabInteraction = transform.Find("ISDK_HandGrabInteraction").gameObject;
         
         String magazineIdNumber = Random.Range(0, 100).ToString();
@@ -85,6 +80,9 @@ public class MagazineScript : MonoBehaviour {
         magazineIsSetUp = true;
         readyToLock = false;
         pistolScript.setMagazineLocked(magazineIsSetUp);
+        
+        transform.localPosition = Vector3.zero;
+        isMagazineMovingInGun = false;
     }
 
     //т.к. я жестко телепортирую магазин куда надо. тригеры срабатывают на enter даже если я на этом тригере и стоял все время.
@@ -100,7 +98,6 @@ public class MagazineScript : MonoBehaviour {
     
     private void magazineFullEjection() {
         transform.SetParent(null);
-        Destroy(configurableJoint);
         
         isMagazineMovingInGun = false;
         enteredPoint1 = false;
@@ -124,6 +121,8 @@ public class MagazineScript : MonoBehaviour {
             if (ReferenceEquals(transform.parent, null) || !transform.parent.name.Contains("Root")) {
                 transform.SetParent(magazineRoot.transform);
             }
+
+            setLimitedPositionAndRotation();
         }
     }
 
@@ -136,20 +135,10 @@ public class MagazineScript : MonoBehaviour {
     private void setLimitedPositionAndRotation() {
         transform.localScale = Vector3.one;
 
-        float maxOffsetUp = 0.021f;
-        float maxOffsetDown = 0.02f;
-        
-        Vector3 currentLocal = transform.localPosition;
-        
-        float minY = magazineOnRailStartPosition.y - maxOffsetDown;
-        float maxY = magazineOnRailStartPosition.y + maxOffsetUp;
-
-        float clampedY = Mathf.Clamp(currentLocal.y, minY, maxY);
-
         transform.localPosition = new Vector3(
-            magazineOnRailStartPosition.x,
-            clampedY,
-            magazineOnRailStartPosition.z
+            reloadPoint1.transform.localPosition.x,
+            transform.localPosition.y,
+            reloadPoint1.transform.localPosition.z
         );
         transform.localEulerAngles = localInitRotation0;
     }

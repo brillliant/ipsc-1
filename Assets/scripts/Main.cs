@@ -34,7 +34,11 @@ public class Main : MonoBehaviour {
     public Boolean triggerPressed = false;
     public GameObject effectMeshObject;
     
+    private string targetLayer = "Character";
+    
     void Start() {
+        InvokeRepeating(nameof(SetHandColliderLayer), 1f, 1f); // кажду секунду пробуем задать слой для левой руки
+        
         objectDataList = new List<ObjectData>();
         установленныеМишени = new List<GameObject>();
         //currentPreview = Instantiate(previewPrefab);
@@ -44,6 +48,22 @@ public class Main : MonoBehaviour {
         menuList.Add(menuItem1_stage);
         menuList.Add(menuItem2_shoot);
         menuList.Add(menuItem3_noShot);
+    }
+    
+    void SetHandColliderLayer() {
+        GameObject capsules = GameObject.Find("Capsules");
+        if (capsules == null) return;
+
+        int layer = LayerMask.NameToLayer(targetLayer);
+        SetLayerRecursive(capsules, layer);
+        CancelInvoke(nameof(SetHandColliderLayer)); // один раз хватит
+    }
+
+    void SetLayerRecursive(GameObject obj, int layer) {
+        obj.layer = layer;
+        foreach (Transform child in obj.transform) {
+            SetLayerRecursive(child.gameObject, layer);
+        }
     }
 
     void Update() {
@@ -213,8 +233,6 @@ public class Main : MonoBehaviour {
     //todo удалить после отладки
     private Color color1 = Color.red;
     private Color color2 = Color.blue;
-    
-    private float change = 0.01f;
     
     private bool isColor1Active = true;
     
