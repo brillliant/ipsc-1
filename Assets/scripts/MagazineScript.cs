@@ -8,7 +8,7 @@ public class MagazineScript : MonoBehaviour {
     private PistolScript pistolScript;
     private GameObject reloadPoint1;
     private Main mainScript;
-    private int roundCount = 37;
+    private int roundCount = 10;
     private Boolean isMagazineMovingInGun;
 
     private Vector3 localInitRotation0 = new(21.90f, 0.083f, 0.069f);
@@ -175,6 +175,18 @@ public class MagazineScript : MonoBehaviour {
 
     public void decrementRoundCount() {
         roundCount--;
+        
+        if (roundCount == 0) {
+            Transform round = transform.Find("round");
+            if (round != null) {
+                Destroy(round.gameObject);
+            }
+        } else if (roundCount == 1) {
+            Transform round_second = transform.Find("round_second");
+            if (round_second != null) {
+                Destroy(round_second.gameObject);
+            }
+        }
     }
 
     public void setIsMagazineMovingInGun(Boolean isMagazineMovingInGun) {

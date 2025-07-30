@@ -8,7 +8,7 @@ public class PistolScript : MonoBehaviour {
     public Boolean triggerPressed = false;
     public GameObject bulletPrefub;
     public GameObject roundPrefub;
-    public GameObject magazine;
+    private GameObject magazine;
     
     public AudioSource shotSound;
     public AudioSource emptyShotSound;
@@ -27,6 +27,8 @@ public class PistolScript : MonoBehaviour {
     private Boolean firedRound = false;
     private Boolean magazineLocked = true;
     private Boolean inShooting = false;
+
+    private Transform magazineRootTransform;
     
     void Start() {
         magazineScript = magazine.GetComponent<MagazineScript>();
@@ -40,6 +42,9 @@ public class PistolScript : MonoBehaviour {
     }
 
     private void Awake() {
+        magazineRootTransform = transform.Find("MagazineRoot");
+        
+        magazine = findMagazine(magazineRootTransform).gameObject;
         slideScript = transform.Find("Slide").GetComponent<SlideScript>();
         throwRoundPoint = transform.Find("throwRoundPoint").transform;
         
@@ -75,7 +80,7 @@ public class PistolScript : MonoBehaviour {
     private void releaseMagazine() {
         if (magazineLocked) {
             //todo сделать чтобы эти вещи сетались когда магазин установлен.
-            magazine = findMagazine(transform.Find("MagazineRoot"))?.gameObject;
+            magazine = findMagazine(magazineRootTransform)?.gameObject;
             magazineScript = magazine.GetComponent<MagazineScript>();
             
             magazineOutSound.PlayOneShot(magazineOutSound.clip);
@@ -144,9 +149,13 @@ public class PistolScript : MonoBehaviour {
         roundInChamber = false;
         
         var round = Instantiate(roundPrefub);
+        //todo если стрелянный - то гильза пустая
         var roundRigidbody = round.GetComponent<Rigidbody>();
+        roundRigidbody.isKinematic = false;
         round.transform.position = throwRoundPoint.position;
         round.transform.rotation = transform.rotation;
+        
+        round.transform.localScale = Vector3.one * 3f;
         
         roundRigidbody.ResetCenterOfMass();
         roundRigidbody.centerOfMass = Vector3.zero;
