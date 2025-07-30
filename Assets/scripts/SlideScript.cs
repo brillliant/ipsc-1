@@ -101,7 +101,7 @@ public class SlideScript : MonoBehaviour {
     }
     
     private void ejectRound() {
-        pistolScript.setRoundInChamber(false);
+        pistolScript.removeRoundFromChamber();
         //todo запустить анимацию выброса патрона (это может быть пустой, а может гильзя. пока похер)
     }
 }

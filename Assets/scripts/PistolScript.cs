@@ -4,8 +4,10 @@ using UnityEngine;
 public class PistolScript : MonoBehaviour {
     [SerializeField] 
     private float bulletSpeed;
+    public  float roundThrowSpeed;
     public Boolean triggerPressed = false;
     public GameObject bulletPrefub;
+    public GameObject roundPrefub;
     public GameObject magazine;
     
     public AudioSource shotSound;
@@ -16,11 +18,13 @@ public class PistolScript : MonoBehaviour {
     private SlideScript slideScript;
 
     [SerializeField] private Transform bulletPoint;
+    private Transform throwRoundPoint;
     public GameObject codeObject;
     private Main mainScript;
     private MagazineScript magazineScript;
     
-    private Boolean roundInChamber = false;  //временно можно ставить тру, для дебага
+    private Boolean roundInChamber = false;
+    private Boolean firedRound = false;
     private Boolean magazineLocked = true;
     private Boolean inShooting = false;
     
@@ -37,6 +41,7 @@ public class PistolScript : MonoBehaviour {
 
     private void Awake() {
         slideScript = transform.Find("Slide").GetComponent<SlideScript>();
+        throwRoundPoint = transform.Find("throwRoundPoint").transform;
         
 #if UNITY_EDITOR
         roundInChamber = true;
@@ -115,6 +120,9 @@ public class PistolScript : MonoBehaviour {
 
         shotSound.PlayOneShot(shotSound.clip);
         bulletRigidbody.velocity = bulletPoint.forward * bulletSpeed;
+
+        firedRound = true;
+        
         Destroy(bullet, 3);
         slideScript.runSliderAnimation();
     }
@@ -122,6 +130,7 @@ public class PistolScript : MonoBehaviour {
     public void moveRoundFromMagazineToChamber() {
         if (magazineLocked && magazineScript.getRoundCount() > 0) {
             roundInChamber = true;
+            firedRound = false;
             magazineScript.decrementRoundCount();
             inShooting = false;
         }
@@ -131,8 +140,31 @@ public class PistolScript : MonoBehaviour {
         return roundInChamber;
     }
     
-    public void setRoundInChamber(Boolean value) {
-        roundInChamber = value;
+    public void removeRoundFromChamber() {
+        roundInChamber = false;
+        
+        var round = Instantiate(roundPrefub);
+        var roundRigidbody = round.GetComponent<Rigidbody>();
+        round.transform.position = throwRoundPoint.position;
+        round.transform.rotation = transform.rotation;
+        
+        roundRigidbody.ResetCenterOfMass();
+        roundRigidbody.centerOfMass = Vector3.zero;
+        
+        roundRigidbody.angularVelocity = UnityEngine.Random.insideUnitSphere * 7f;
+
+        //shotSound.PlayOneShot(shotSound.clip);
+        
+        // Генерация направления с отклонением до 40°
+        Vector3 direction = throwRoundPoint.forward;
+        Quaternion tiltX = Quaternion.AngleAxis(UnityEngine.Random.Range(-20f, 20f), throwRoundPoint.right);
+        Quaternion tiltY = Quaternion.AngleAxis(UnityEngine.Random.Range(-20f, 20f), throwRoundPoint.up);
+        direction = tiltY * tiltX * direction;
+        
+        // Случайный множитель силы: 70%–130%
+        var forceMultiplier = UnityEngine.Random.Range(0.7f, 1.3f);
+        
+        roundRigidbody.velocity = direction.normalized * (roundThrowSpeed * forceMultiplier);
     }
 
     public void setMagazineLocked(Boolean magazineLocked) {
