@@ -165,6 +165,8 @@ public class PistolScript : MonoBehaviour {
         var forceMultiplier = UnityEngine.Random.Range(0.7f, 1.3f);
         
         roundRigidbody.velocity = direction.normalized * (roundThrowSpeed * forceMultiplier);
+        
+        Destroy(round, 60);
     }
 
     public void setMagazineLocked(Boolean magazineLocked) {
