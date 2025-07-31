@@ -8,6 +8,7 @@ public class PistolScript : MonoBehaviour {
     public Boolean triggerPressed = false;
     public GameObject bulletPrefub;
     public GameObject roundPrefub;
+    public GameObject casePrefub;
     private GameObject magazine;
     
     public AudioSource shotSound;
@@ -145,17 +146,23 @@ public class PistolScript : MonoBehaviour {
         return roundInChamber;
     }
     
-    public void removeRoundFromChamber() {
+    public void removeRoundFromChamber(bool manual) {
         roundInChamber = false;
+
+        GameObject caseOrRound = null;
         
-        var round = Instantiate(roundPrefub);
-        //todo если стрелянный - то гильза пустая
-        var roundRigidbody = round.GetComponent<Rigidbody>();
+        if (firedRound) {
+            caseOrRound = Instantiate(casePrefub);
+        } else {
+            caseOrRound = Instantiate(roundPrefub);
+        }
+        
+        var roundRigidbody = caseOrRound.GetComponent<Rigidbody>();
         roundRigidbody.isKinematic = false;
-        round.transform.position = throwRoundPoint.position;
-        round.transform.rotation = transform.rotation;
+        caseOrRound.transform.position = throwRoundPoint.position;
+        caseOrRound.transform.rotation = transform.rotation;
         
-        round.transform.localScale = Vector3.one * 3f;
+        caseOrRound.transform.localScale = Vector3.one * 3f;
         
         roundRigidbody.ResetCenterOfMass();
         roundRigidbody.centerOfMass = Vector3.zero;
@@ -171,11 +178,17 @@ public class PistolScript : MonoBehaviour {
         direction = tiltY * tiltX * direction;
         
         // Случайный множитель силы: 70%–130%
-        var forceMultiplier = UnityEngine.Random.Range(0.7f, 1.3f);
+        var forceMultiplier = 0f;
+        
+        if (manual) {
+            forceMultiplier = UnityEngine.Random.Range(0.2f, 0.5f);
+        } else {
+            forceMultiplier = UnityEngine.Random.Range(0.7f, 1.3f);
+        }
         
         roundRigidbody.velocity = direction.normalized * (roundThrowSpeed * forceMultiplier);
         
-        Destroy(round, 60);
+        Destroy(caseOrRound, 60);
     }
 
     public void setMagazineLocked(Boolean magazineLocked) {

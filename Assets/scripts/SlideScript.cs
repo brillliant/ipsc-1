@@ -35,7 +35,7 @@ public class SlideScript : MonoBehaviour {
     }
     
     public void onRunSliderMovedBack() {
-        sliderMovedBackActions();
+        sliderMovedBackActions(false);
     }
 	
     void Update () {
@@ -54,7 +54,7 @@ public class SlideScript : MonoBehaviour {
         DetectSlidePull(); // проверяем, было ли полное передёргивание
     }
 
-    private void sliderMovedBackActions() {
+    private void sliderMovedBackActions(bool manual) {
         // если затвор оттянули назад — запоминаем это
         if (!hasTriggeredPullEvent) {
             hasTriggeredPullEvent = true;
@@ -64,7 +64,7 @@ public class SlideScript : MonoBehaviour {
             }
             
             if (pistolScript.isRoundInChamber()) {
-                ejectRound(); // выброс патрона
+                ejectRound(manual); // выброс патрона
             }
         }
     }
@@ -87,7 +87,7 @@ public class SlideScript : MonoBehaviour {
             float dz = transform.localPosition.z - localPosition0.z;
 
             if (dz >= slidePullThreshold) {
-                sliderMovedBackActions();
+                sliderMovedBackActions(true);
             }
 
             if (dz < 0.001f) {
@@ -100,8 +100,8 @@ public class SlideScript : MonoBehaviour {
         pistolScript.moveRoundFromMagazineToChamber();//пытаемся досылать патрон, если он есть
     }
     
-    private void ejectRound() {
-        pistolScript.removeRoundFromChamber();
+    private void ejectRound(bool manual) {
+        pistolScript.removeRoundFromChamber(manual);
         //todo запустить анимацию выброса патрона (это может быть пустой, а может гильзя. пока похер)
     }
 }
