@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class PistolScript : MonoBehaviour {
@@ -126,7 +127,8 @@ public class PistolScript : MonoBehaviour {
 
         shotSound.PlayOneShot(shotSound.clip);
         bulletRigidbody.velocity = bulletPoint.forward * bulletSpeed;
-
+        recoil();
+        
         firedRound = true;
         
         Destroy(bullet, 3);
@@ -144,6 +146,41 @@ public class PistolScript : MonoBehaviour {
     
     public Boolean isRoundInChamber() {
         return roundInChamber;
+    }
+    
+    [SerializeField] private float recoilDuration = 0.07f;
+    [SerializeField] private float returnDuration = 0.15f;
+    
+    [SerializeField] private float recoilUp = 10f;
+    [SerializeField] private float recoilSide = 3f;
+
+    private void recoil() {
+        float up = recoilUp + UnityEngine.Random.Range(-1f, 1f);
+        float side = UnityEngine.Random.Range(-recoilSide, recoilSide);
+        Quaternion targetRotation = transform.localRotation * Quaternion.Euler(up, side, 0);
+        StartCoroutine(recoilRoutine(targetRotation));
+    }
+
+    private IEnumerator recoilRoutine(Quaternion targetRotation) {
+        Quaternion originalRotation = transform.localRotation;
+        float t = 0f;
+
+        while (t < recoilDuration) {
+            transform.localRotation = Quaternion.Slerp(originalRotation, targetRotation, t / recoilDuration);
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.localRotation = targetRotation;
+        t = 0f;
+
+        while (t < returnDuration) {
+            transform.localRotation = Quaternion.Slerp(targetRotation, originalRotation, t / returnDuration);
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.localRotation = originalRotation;
     }
     
     public void removeRoundFromChamber(bool manual) {
