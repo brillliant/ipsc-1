@@ -30,9 +30,12 @@ public class PistolScript : MonoBehaviour {
     private Boolean magazineLocked = true;
     private Boolean inShooting = false;
 
+    private Quaternion originalRotation;
+
     private Transform magazineRootTransform;
     
     void Start() {
+        originalRotation = transform.localRotation;
         magazineScript = magazine.GetComponent<MagazineScript>();
         _vibration.Duration = 0.15f;
         _vibration.Samples = new[] { 1f };
@@ -162,7 +165,6 @@ public class PistolScript : MonoBehaviour {
     }
 
     private IEnumerator recoilRoutine(Quaternion targetRotation) {
-        Quaternion originalRotation = transform.localRotation;
         float t = 0f;
 
         while (t < recoilDuration) {
