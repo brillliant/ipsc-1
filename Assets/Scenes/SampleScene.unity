@@ -1866,6 +1866,10 @@ MonoBehaviour:
   magazineInSound: {fileID: 386960257}
   bulletPoint: {fileID: 947667043}
   codeObject: {fileID: 1043981333}
+  recoilDuration: 0.07
+  returnDuration: 0.15
+  recoilUp: 10
+  recoilSide: 3
 --- !u!1 &129014512
 GameObject:
   m_ObjectHideFlags: 0
@@ -22283,6 +22287,18 @@ PrefabInstance:
       propertyPath: m_Convex
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2669067137338395415, guid: 29a8d60843e68bc47a04e1c0b36546c6, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2669067137338395415, guid: 29a8d60843e68bc47a04e1c0b36546c6, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 5a7ac6df2f4137a49bff8bd2da5234cf, type: 2}
+    - target: {fileID: 3207594498134715766, guid: 29a8d60843e68bc47a04e1c0b36546c6, type: 3}
+      propertyPath: m_AngularDrag
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 3856148643968565083, guid: 29a8d60843e68bc47a04e1c0b36546c6, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -22339,14 +22355,42 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0.069
       objectReference: {fileID: 0}
+    - target: {fileID: 4033665891792064257, guid: 29a8d60843e68bc47a04e1c0b36546c6, type: 3}
+      propertyPath: m_ImplicitCom
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4033665891792064257, guid: 29a8d60843e68bc47a04e1c0b36546c6, type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4033665891792064257, guid: 29a8d60843e68bc47a04e1c0b36546c6, type: 3}
+      propertyPath: m_ImplicitTensor
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4620281204032344401, guid: 29a8d60843e68bc47a04e1c0b36546c6, type: 3}
       propertyPath: m_Name
       value: Magazine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8000424039978334005, guid: 29a8d60843e68bc47a04e1c0b36546c6, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 5a7ac6df2f4137a49bff8bd2da5234cf, type: 2}
+    - target: {fileID: 8409133817528228561, guid: 29a8d60843e68bc47a04e1c0b36546c6, type: 3}
+      propertyPath: m_AngularDrag
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 8448739440638687503, guid: 29a8d60843e68bc47a04e1c0b36546c6, type: 3}
       propertyPath: m_Convex
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8448739440638687503, guid: 29a8d60843e68bc47a04e1c0b36546c6, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448739440638687503, guid: 29a8d60843e68bc47a04e1c0b36546c6, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 5a7ac6df2f4137a49bff8bd2da5234cf, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -30799,7 +30843,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 0.000644854, y: 0.029622914, z: 0.021121616}
   m_Center: {x: 0.0049140085, y: -0.004525776, z: -0.0012983893}
@@ -30820,7 +30864,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 0.00093162333, y: 0.029511208, z: 0.021121612}
   m_Center: {x: -0.0048947884, y: -0.0045453897, z: -0.0012983955}

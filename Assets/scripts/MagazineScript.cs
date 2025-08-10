@@ -134,20 +134,50 @@ public class MagazineScript : MonoBehaviour {
     
     private void setLimitedPositionAndRotation() {
         transform.localScale = Vector3.one;
-
+        
+        Debug.Log($"local Y {transform.localPosition.y}");
+        
         transform.localPosition = new Vector3(
             reloadPoint1.transform.localPosition.x,
             transform.localPosition.y,
             reloadPoint1.transform.localPosition.z
         );
         transform.localEulerAngles = localInitRotation0;
+        
+        
+        //rb.angularVelocity = Vector3.zero;
+
+        /*Vector3 pos = transform.localPosition;
+        pos.x = reloadPoint1.transform.localPosition.x;
+        pos.z = reloadPoint1.transform.localPosition.z;
+        transform.localPosition = pos;
+        transform.localEulerAngles = localInitRotation0;*/
+        
+        // Получаем мировую позицию шахты
+        /*Vector3 pos = rb.position;
+        Vector3 target = reloadPoint1.transform.position;
+        rb.MovePosition(new Vector3(target.x, pos.y, target.z));*/
     }
-    
+
     void FixedUpdate() {
-        Debug.DrawRay(transform.position, rb.velocity, Color.red);
-        Debug.DrawRay(transform.position, rb.angularVelocity, Color.green);
+        
+        
+        
+        Debug.DrawRay(transform.position, Physics.gravity, Color.blue); // сила гравита
+        Debug.DrawRay(transform.position, rb.velocity, Color.red); // линейная скорость
+        Debug.DrawRay(transform.position, rb.angularVelocity, Color.green); // угловая скорость
+        
+        Debug.Log($"Velocity: {rb.velocity}, Angular: {rb.angularVelocity}");
     }
     
+    void OnCollisionStay(Collision collision) {
+        foreach (ContactPoint contact in collision.contacts) {
+            Vector3 force = collision.impulse / Time.fixedDeltaTime;
+            Debug.DrawRay(contact.point, force * 0.01f, Color.magenta);
+            Debug.Log($"Force from {collision.collider.name}: {force}");
+        }
+    }
+
     void OnCollisionEnter(Collision col) {
         foreach (var c in col.contacts) {
             Debug.DrawRay(c.point, col.impulse, Color.magenta, 1f);
