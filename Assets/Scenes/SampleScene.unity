@@ -22356,12 +22356,24 @@ PrefabInstance:
       value: 0.069
       objectReference: {fileID: 0}
     - target: {fileID: 4033665891792064257, guid: 29a8d60843e68bc47a04e1c0b36546c6, type: 3}
+      propertyPath: m_Drag
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4033665891792064257, guid: 29a8d60843e68bc47a04e1c0b36546c6, type: 3}
+      propertyPath: m_AngularDrag
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4033665891792064257, guid: 29a8d60843e68bc47a04e1c0b36546c6, type: 3}
+      propertyPath: m_Constraints
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 4033665891792064257, guid: 29a8d60843e68bc47a04e1c0b36546c6, type: 3}
       propertyPath: m_ImplicitCom
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4033665891792064257, guid: 29a8d60843e68bc47a04e1c0b36546c6, type: 3}
       propertyPath: m_IsKinematic
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4033665891792064257, guid: 29a8d60843e68bc47a04e1c0b36546c6, type: 3}
       propertyPath: m_ImplicitTensor
