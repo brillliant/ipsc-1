@@ -94,7 +94,7 @@ public class PistolScript : MonoBehaviour {
             magazine.GetComponent<Rigidbody>().isKinematic = false;
             magazine.GetComponent<Rigidbody>().useGravity = true;
 
-            magazineScript.setIsMagazineMovingInGun(true);
+            magazineScript.setIsMagazineMovingInGunTrue();
         } else {
             //todo yp сделать другой звук
         }
@@ -227,7 +227,7 @@ public class PistolScript : MonoBehaviour {
         
         roundRigidbody.velocity = direction.normalized * (roundThrowSpeed * forceMultiplier);
         
-        Destroy(caseOrRound, 60);
+        Destroy(caseOrRound, 20);
     }
 
     public void setMagazineLocked(Boolean magazineLocked) {

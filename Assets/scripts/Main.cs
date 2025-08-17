@@ -111,12 +111,19 @@ public class Main : MonoBehaviour {
                 triggerPressed = false;
             }
 
-            if (!triggerPressed && OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0.5) placeATarget(hit, currentPreview, prefab);
+            if (!triggerPressed &&
+                (Input.GetKeyDown(KeyCode.Space) || OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0.5)
+                ) {
+                placeATarget(hit, currentPreview, prefab);
+            }
         }
 
-        if (OVRInput.Get(OVRInput.RawAxis1D.RHandTrigger) > 0.5) SaveObjects();
-        if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) RemoveAllObjects();
-        if (OVRInput.GetDown(OVRInput.Button.One)) LoadObjects();
+        if (OVRInput.Get(OVRInput.RawAxis1D.RHandTrigger) > 0.5) 
+            SaveObjects();
+        if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) 
+            RemoveAllObjects();
+        if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch)) 
+            LoadObjects();
     }
 
     private int getNextIndex() {
@@ -157,9 +164,7 @@ public class Main : MonoBehaviour {
 
     private void placeATarget(RaycastHit hit, GameObject previewPrefab, GameObject prefab) {
         triggerPressed = true;
-        установленныеМишени.Add(
-            Instantiate(prefab, hit.point, previewPrefab.transform.rotation)
-        );
+        установленныеМишени.Add(Instantiate(prefab, hit.point, previewPrefab.transform.rotation));
     }
 
     public void SaveObjects() {

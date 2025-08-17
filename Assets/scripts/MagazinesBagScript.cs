@@ -24,6 +24,13 @@ public class MagazinesBagScript : MonoBehaviour {
         mainScript = codeObject.GetComponent<Main>();
     }
 
+    void Update() {
+        //temp for debug
+        if (Input.GetKeyUp(KeyCode.O)) {
+            instantiateMagazineInHand();
+        }
+    }
+
     //private Quaternion offsetRotation = Quaternion.Euler(230f, 100f, 160f); 
     void LateUpdate() {
         //положение бокса для магазинов
@@ -75,28 +82,32 @@ public class MagazinesBagScript : MonoBehaviour {
         
         if (other.gameObject.name == "LeftHandCollider") {
             if (!mainScript.isHandKeepingMagazine) {
-                magazine = Instantiate(
-                    magazinePrefub,
-                    new Vector3(
-                        magazineSpawn.transform.position.x,
-                        magazineSpawn.transform.position.y,
-                        magazineSpawn.transform.position.z
-                    ),
-                    Quaternion.Euler(
-                        magazineSpawn.transform.rotation.eulerAngles.x,
-                        magazineSpawn.transform.rotation.eulerAngles.y,
-                        magazineSpawn.transform.rotation.eulerAngles.z
-                    ),
-                    magazineSpawn.transform
-                );
-                mainScript.isHandKeepingMagazine = true;
-                Debug.Log("схватил магазин");
+                instantiateMagazineInHand();
             }
             else {
                 Destroy(magazine);
                 mainScript.isHandKeepingMagazine = false;
             }
         }
+    }
+
+    private void instantiateMagazineInHand() {
+        magazine = Instantiate(
+            magazinePrefub,
+            new Vector3(
+                magazineSpawn.transform.position.x,
+                magazineSpawn.transform.position.y,
+                magazineSpawn.transform.position.z
+            ),
+            Quaternion.Euler(
+                magazineSpawn.transform.rotation.eulerAngles.x,
+                magazineSpawn.transform.rotation.eulerAngles.y,
+                magazineSpawn.transform.rotation.eulerAngles.z
+            ),
+            magazineSpawn.transform
+        );
+        mainScript.isHandKeepingMagazine = true;
+        Debug.Log("схватил магазин");
     }
 
     //todo удалить позже

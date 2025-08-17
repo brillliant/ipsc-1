@@ -102,6 +102,7 @@ public class MagazineScript : MonoBehaviour {
         isMagazineMovingInGun = false;
         enteredPoint1 = false;
         handGrabInteraction.SetActive(true);
+        rb.constraints = RigidbodyConstraints.None;
     }
     
     void OnTriggerEnter(Collider other) {
@@ -122,7 +123,7 @@ public class MagazineScript : MonoBehaviour {
                 transform.SetParent(magazineRoot.transform);
             }
 
-            setLimitedPositionAndRotation();
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
         }
     }
 
@@ -143,26 +144,9 @@ public class MagazineScript : MonoBehaviour {
             reloadPoint1.transform.localPosition.z
         );
         transform.localEulerAngles = localInitRotation0;
-        
-        
-        //rb.angularVelocity = Vector3.zero;
-
-        /*Vector3 pos = transform.localPosition;
-        pos.x = reloadPoint1.transform.localPosition.x;
-        pos.z = reloadPoint1.transform.localPosition.z;
-        transform.localPosition = pos;
-        transform.localEulerAngles = localInitRotation0;*/
-        
-        // Получаем мировую позицию шахты
-        /*Vector3 pos = rb.position;
-        Vector3 target = reloadPoint1.transform.position;
-        rb.MovePosition(new Vector3(target.x, pos.y, target.z));*/
     }
 
     void FixedUpdate() {
-        
-        
-        
         Debug.DrawRay(transform.position, Physics.gravity, Color.blue); // сила гравита
         Debug.DrawRay(transform.position, rb.velocity, Color.red); // линейная скорость
         Debug.DrawRay(transform.position, rb.angularVelocity, Color.green); // угловая скорость
@@ -219,7 +203,8 @@ public class MagazineScript : MonoBehaviour {
         }
     }
 
-    public void setIsMagazineMovingInGun(Boolean isMagazineMovingInGun) {
-        this.isMagazineMovingInGun = isMagazineMovingInGun;
+    public void setIsMagazineMovingInGunTrue() {
+        isMagazineMovingInGun = true;
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
     }    
 }
