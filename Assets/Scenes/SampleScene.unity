@@ -15919,7 +15919,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.4
+      scalar: 0.5
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -23599,8 +23599,8 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.06
-      minScalar: 0.04
+      scalar: 0.08
+      minScalar: 0.05
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -23770,8 +23770,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.006
-      minScalar: 0.003
+      scalar: 0.009
+      minScalar: 0.005
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -40635,7 +40635,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.000644854, y: 0.029622914, z: 0.021121616}
   m_Center: {x: 0.0049140085, y: -0.004525776, z: -0.0012983893}
@@ -40656,7 +40656,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.00093162333, y: 0.029511208, z: 0.021121612}
   m_Center: {x: -0.0048947884, y: -0.0045453897, z: -0.0012983955}

@@ -14,6 +14,7 @@ public class PistolScript : MonoBehaviour {
     public GameObject roundPrefub;
     public GameObject casePrefub;
     private GameObject magazine;
+    private GameObject roundInChamber = null;
     
     public AudioSource shotSound;
     public AudioSource emptyShotSound;
@@ -28,7 +29,7 @@ public class PistolScript : MonoBehaviour {
     private Main mainScript;
     private MagazineScript magazineScript;
     
-    private Boolean roundInChamber = false;
+    private Boolean roundInChamberFlag = false;
     private Boolean firedRound = false;
     private Boolean magazineLocked = true;
     private Boolean inShooting = false;
@@ -57,7 +58,7 @@ public class PistolScript : MonoBehaviour {
         throwRoundPoint = transform.Find("throwRoundPoint").transform;
         
 #if UNITY_EDITOR
-        roundInChamber = true;
+        roundInChamberFlag = true;
 #endif
     }
 
@@ -110,7 +111,7 @@ public class PistolScript : MonoBehaviour {
             
             triggerPressed = true;
 
-            if (roundInChamber && !inShooting) {
+            if (roundInChamberFlag && !inShooting) {
                 inShooting = true;
                 shoot();
             } else {
@@ -150,15 +151,31 @@ public class PistolScript : MonoBehaviour {
 
     public void moveRoundFromMagazineToChamber() {
         if (magazineLocked && magazineScript.getRoundCount() > 0) {
-            roundInChamber = true;
+            setRoundToChamber();
             firedRound = false;
             magazineScript.decrementRoundCount();
             inShooting = false;
         }
     }
     
+    private void setRoundToChamber() {
+        Vector3 localPos = new Vector3(0.000609999988f, 0.0178599991f, -0.0188299995f);
+        Quaternion localRot = Quaternion.Euler(new Vector3(-1535.621f, 2.356003f, -0.4459839f));
+        Vector3 localScale = new Vector3(1f, 1f, 1f);
+
+        roundInChamber = Instantiate(roundPrefub, transform, false); // false = не в мировых, сразу в локальных
+        roundInChamber.transform.localPosition = localPos;
+        roundInChamber.transform.localRotation = localRot;
+        roundInChamber.transform.localScale   = localScale;
+        
+        roundInChamber.GetComponent<Rigidbody>().isKinematic = true;
+        roundInChamber.GetComponent<Rigidbody>().useGravity = false;
+        
+        roundInChamberFlag = true;
+    }
+    
     public Boolean isRoundInChamber() {
-        return roundInChamber;
+        return roundInChamberFlag;
     }
     
     [SerializeField] private float recoilDuration = 0.01f;
@@ -196,7 +213,9 @@ public class PistolScript : MonoBehaviour {
     }
     
     public void removeRoundFromChamber(bool manual) {
-        roundInChamber = false;
+        roundInChamberFlag = false;
+        Destroy(roundInChamber);
+        roundInChamber = null;
 
         GameObject caseOrRound = null;
         
@@ -237,7 +256,7 @@ public class PistolScript : MonoBehaviour {
         
         roundRigidbody.velocity = direction.normalized * (roundThrowSpeed * forceMultiplier);
         
-        Destroy(caseOrRound, 20);
+        Destroy(caseOrRound, 15);
     }
 
     public void setMagazineLocked(Boolean magazineLocked) {
