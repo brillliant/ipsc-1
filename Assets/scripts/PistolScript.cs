@@ -3,6 +3,9 @@ using System.Collections;
 using UnityEngine;
 
 public class PistolScript : MonoBehaviour {
+    public ParticleSystem muzzleFlash; 
+    public ParticleSystem splash; 
+    
     [SerializeField] 
     private float bulletSpeed;
     public  float roundThrowSpeed;
@@ -128,6 +131,8 @@ public class PistolScript : MonoBehaviour {
         transform1.position = bulletPoint.position;
         transform1.rotation = bulletPoint.rotation;
 
+        visualEffect();
+
         shotSound.PlayOneShot(shotSound.clip);
         bulletRigidbody.velocity = bulletPoint.forward * bulletSpeed;
         recoil();
@@ -136,6 +141,11 @@ public class PistolScript : MonoBehaviour {
         
         Destroy(bullet, 3);
         slideScript.runSliderAnimation();
+    }
+
+    private void visualEffect() {
+        muzzleFlash.Play();
+        splash.Play();
     }
 
     public void moveRoundFromMagazineToChamber() {
@@ -151,7 +161,7 @@ public class PistolScript : MonoBehaviour {
         return roundInChamber;
     }
     
-    [SerializeField] private float recoilDuration = 0.07f;
+    [SerializeField] private float recoilDuration = 0.01f;
     [SerializeField] private float returnDuration = 0.15f;
     
     [SerializeField] private float recoilUp = 10f;
