@@ -31,7 +31,7 @@ public class PistolScript : MonoBehaviour {
     
     private Boolean roundInChamberFlag = false;
     private Boolean firedRound = false;
-    private Boolean magazineLocked = true;
+    private Boolean magazineLockedInPistol = true;
     private Boolean inShooting = false;
 
     private Quaternion originalRotation;
@@ -87,14 +87,14 @@ public class PistolScript : MonoBehaviour {
     }
 
     private void releaseMagazine() {
-        if (magazineLocked) {
+        if (magazineLockedInPistol) {
             //todo сделать чтобы эти вещи сетались когда магазин установлен.
             magazine = findMagazine(magazineRootTransform)?.gameObject;
             magazineScript = magazine.GetComponent<MagazineScript>();
             
             magazineOutSound.PlayOneShot(magazineOutSound.clip);
             
-            magazineLocked = false;
+            magazineLockedInPistol = false;
             magazine.GetComponent<Rigidbody>().isKinematic = false;
             magazine.GetComponent<Rigidbody>().useGravity = true;
 
@@ -150,12 +150,16 @@ public class PistolScript : MonoBehaviour {
     }
 
     public void moveRoundFromMagazineToChamber() {
-        if (magazineLocked && magazineScript.getRoundCount() > 0) {
+        if (magazineLockedInPistol && magazineScript.getRoundCount() > 0) {
             setRoundToChamber();
             firedRound = false;
             magazineScript.decrementRoundCount();
             inShooting = false;
         }
+    }
+
+    public bool shouldSliderLock() {
+        return magazineScript.getRoundCount() == 0 && magazineLockedInPistol;
     }
     
     private void setRoundToChamber() {
@@ -265,7 +269,7 @@ public class PistolScript : MonoBehaviour {
             magazineScript = magazine.GetComponent<MagazineScript>();
             magazineInSound.PlayOneShot(magazineInSound.clip);
         } 
-        this.magazineLocked = magazineLocked;
+        this.magazineLockedInPistol = magazineLocked;
     }
 
     void Template() {

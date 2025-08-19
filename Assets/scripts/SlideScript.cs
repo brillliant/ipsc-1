@@ -13,6 +13,8 @@ public class SlideScript : MonoBehaviour {
     private Animator sliderAnimator;
     private Boolean sliderAnimationRunning;
     
+    private ConfigurableJoint configurableJoint;
+    
     private void Awake() {
         sliderAnimator = GetComponent<Animator>();
         sliderAnimator.enabled = false;
@@ -20,6 +22,8 @@ public class SlideScript : MonoBehaviour {
         localRotation0 = transform.localEulerAngles;
         
         pistolScript = GetComponentInParent<PistolScript>();
+        
+        configurableJoint = GetComponent<ConfigurableJoint>();
     }
 
     public void runSliderAnimation() {
@@ -45,13 +49,15 @@ public class SlideScript : MonoBehaviour {
         
         transform.localPosition = new Vector3(localPosition0.x, localPosition0.y, localPosition0.z + dz);
         transform.localEulerAngles = localRotation0;
+        
+        DetectSlidePull(); // проверяем, было ли полное передёргивание
     }
 
     private bool hasTriggeredPullEvent = false;  // флаг, что затвор дёрнули назад
     private float slidePullThreshold = 0.0085f;  // насколько нужно оттянуть, чтобы считать, что затвор дёрнули
 
     private void LateUpdate() {
-        DetectSlidePull(); // проверяем, было ли полное передёргивание
+        //DetectSlidePull(); // проверяем, было ли полное передёргивание
     }
 
     private void sliderMovedBackActions(bool manual) {
@@ -78,11 +84,13 @@ public class SlideScript : MonoBehaviour {
                 sliderReleaseSound.PlayOneShot(sliderReleaseSound.clip);
             }
             
-            tryChamberRound(); // пробуем дослать патрон
+            tryMoveRoundToChamber(); // пробуем дослать патрон
         }
     }
 
     public void DetectSlidePull() {
+        //checkSliderLock();
+        
         if (!sliderAnimationRunning) {
             float dz = transform.localPosition.z - localPosition0.z;
 
@@ -95,8 +103,21 @@ public class SlideScript : MonoBehaviour {
             }
         }
     }
+    
+    private void checkSliderLock() {
+        if (pistolScript.shouldSliderLock()) {
+            float dz = transform.localPosition.z - localPosition0.z;
+            if (dz >= slidePullThreshold) {
+                sliderAnimator.enabled = false;
 
-    private void tryChamberRound() {
+                JointDrive drive = configurableJoint.xDrive; // получить текущие настройки
+                drive.positionSpring = 0f; // сила пружины
+                configurableJoint.xDrive = drive; // записать обратно
+            }
+        }
+    }
+
+    private void tryMoveRoundToChamber() {
         pistolScript.moveRoundFromMagazineToChamber();//пытаемся досылать патрон, если он есть
     }
     
