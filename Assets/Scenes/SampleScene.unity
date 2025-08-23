@@ -40294,8 +40294,8 @@ Rigidbody:
   m_GameObject: {fileID: 7163563658345455521}
   serializedVersion: 4
   m_Mass: 0.2
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_Drag: 1.5
+  m_AngularDrag: 0.5
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -40966,7 +40966,7 @@ ConfigurableJoint:
   m_TargetVelocity: {x: 0, y: 0, z: 0}
   m_XDrive:
     serializedVersion: 4
-    positionSpring: 100000000
+    positionSpring: 3.4028233e+38
     positionDamper: 50
     maximumForce: 1000000
     useAcceleration: 0
@@ -41026,6 +41026,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 400ef58724d6fcc4fa2b1996042541fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  oneGrabTranslateTransformer: {fileID: 2049096872}
   sliderBackSound: {fileID: 30437493}
   sliderReleaseSound: {fileID: 1908943726}
   shouldSliderLockTempFlagDebbug: 1

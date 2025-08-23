@@ -1,8 +1,10 @@
 using System;
+using Oculus.Interaction;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class SlideScript : MonoBehaviour {
+    [SerializeField] private OneGrabTranslateTransformer oneGrabTranslateTransformer;
+    
     private Vector3 localPosition0;
     private Vector3 localRotation0;
     private PistolScript pistolScript;
@@ -14,7 +16,6 @@ public class SlideScript : MonoBehaviour {
     private Animator sliderAnimator;
     private Boolean sliderAnimationRunning;
     private bool slideLockedFlag = false;
-    public bool shouldSliderLockTempFlagDebbug;
     private bool pendingLock;
     //private JointDrive savedDrive;
     
@@ -59,19 +60,13 @@ public class SlideScript : MonoBehaviour {
         
         transform.localPosition = new Vector3(localPosition0.x, localPosition0.y, localPosition0.z + dz);
         transform.localEulerAngles = localRotation0;
-        
-        DetectSlidePull(); // проверяем, было ли полное передёргивание
-        
-        //todo yp temp log
-        var d = configurableJoint.xDrive;
-        Debug.Log($"spring={d.positionSpring}, damper={d.positionDamper}, maxF={d.maximumForce}, proj={configurableJoint.projectionMode}");
     }
 
     private bool hasTriggeredPullEvent = false;  // флаг, что затвор дёрнули назад
     private float slidePullThreshold = 0.0085f;  // насколько нужно оттянуть, чтобы считать, что затвор дёрнули
 
     private void LateUpdate() {
-        //DetectSlidePull(); // проверяем, было ли полное передёргивание
+        DetectSlidePull(); // проверяем, было ли полное передёргивание
     }
 
     private void sliderMovedBackActions(bool manual) {
@@ -88,12 +83,21 @@ public class SlideScript : MonoBehaviour {
             }
         } else if (slideLockedFlag) {
             // снятие с задержки при дотяжке назад
-            if (slideLockedFlag && /*!shouldSliderLockTempFlagDebbug*/ !pistolScript.shouldSliderLock()  /* dz >= lockDz + releaseOffset*/) {
+            if (slideLockedFlag && !pistolScript.shouldSliderLock()) {
                 slideLockedFlag = false;
-                //if (configurableJoint) configurableJoint.xDrive = savedDrive; // вернуть пружину
-                slideLockRangeMove(0);
+                setSlideUnLocked();
             }
         }
+    }
+
+    private void setSlideLockedDelay() {
+        slideLockRangeMove(0.008f);
+        oneGrabTranslateTransformer.Constraints.MinZ.Value = -0.0143f;
+    }
+    
+    private void setSlideUnLocked() {
+        slideLockRangeMove(0);
+        oneGrabTranslateTransformer.Constraints.MinZ.Value = -0.02058057f;
     }
 
     private void sliderReturnedActions() {
@@ -157,16 +161,8 @@ public class SlideScript : MonoBehaviour {
         sliderAnimator.enabled = false;
         sliderAnimationRunning = false;
 
-        slideLockRangeMove(0.008f);
-        //ApplyFrontStop();
-
-        /*JointDrive drive = configurableJoint.xDrive; // получить текущие настройки  //todo надо взять общий. что в переменных
-        drive.positionSpring = 0f; // сила пружины
-        configurableJoint.xDrive = drive; // записать обратно*/
-
-        /*var pos = transform.localPosition;
-        pos.z = -0.01290196f;
-        transform.localPosition = pos;*/
+        setSlideLockedDelay();
+        hasTriggeredPullEvent = true;
     }
     
     private void slideLockRangeMove(float newLimit) {
@@ -177,7 +173,6 @@ public class SlideScript : MonoBehaviour {
         var linearLimit = configurableJoint.linearLimit; 
         linearLimit.limit = newLimit; 
         configurableJoint.linearLimit = linearLimit; // ±half => окно [rear, rear+travel]
-        //configurableJoint.targetPosition = Vector3.zero;// цель = центр окна
     }
     
     private void tryMoveRoundToChamber() {
