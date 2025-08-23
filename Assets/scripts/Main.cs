@@ -48,6 +48,10 @@ public class Main : MonoBehaviour {
         menuList.Add(menuItem1_stage);
         menuList.Add(menuItem2_shoot);
         menuList.Add(menuItem3_noShot);
+        
+#if UNITY_EDITOR
+    changeMenu();
+#endif
     }
     
     void SetHandColliderLayer() {
@@ -72,7 +76,9 @@ public class Main : MonoBehaviour {
         } else if (isNoShotSetUpMenuActivated) {
             setUpTargets(previewPrefabNoShot, prefabNoShot);
         } else {
-            currentPreview.SetActive(false);
+            if (currentPreview is not null) {
+                currentPreview.SetActive(false);
+            }
         }
         //menu change
         if (Input.GetKeyUp(KeyCode.Y) || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickUp) || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickDown)) changeMenu();
@@ -138,17 +144,7 @@ public class Main : MonoBehaviour {
     private void changeMenu() {
         int index = getNextIndex();
 
-        for (int i = 0; i < menuList.Count; i++) {
-            if (i == index) {
-                menuList[i].fontSize = 8;
-                menuList[i].fontStyle = FontStyles.Bold;
-                menuList[i].color = Color.red;
-            } else {
-                menuList[i].fontSize = 5;
-                menuList[i].fontStyle = FontStyles.Normal;
-                menuList[i].color = Color.gray;
-            }
-        }
+        highlightNecessaryMenuItem(index);
 
         if (currentIndex == 0) {
             isTargetSetUpMenuActivated = true;
@@ -159,6 +155,20 @@ public class Main : MonoBehaviour {
         } else {
             isTargetSetUpMenuActivated = false;
             isNoShotSetUpMenuActivated = false;
+        }
+    }
+
+    private void highlightNecessaryMenuItem(int index) {
+        for (int i = 0; i < menuList.Count; i++) {
+            if (i == index) {
+                menuList[i].fontSize = 8;
+                menuList[i].fontStyle = FontStyles.Bold;
+                menuList[i].color = Color.red;
+            } else {
+                menuList[i].fontSize = 5;
+                menuList[i].fontStyle = FontStyles.Normal;
+                menuList[i].color = Color.gray;
+            }
         }
     }
 

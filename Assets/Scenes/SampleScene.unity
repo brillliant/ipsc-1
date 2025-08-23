@@ -40937,7 +40937,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_LinearLimit:
-    limit: 0.02
+    limit: 0.03
     bounciness: 0
     contactDistance: 0
   m_AngularXLimitSpring:
@@ -41028,6 +41028,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sliderBackSound: {fileID: 30437493}
   sliderReleaseSound: {fileID: 1908943726}
+  shouldSliderLockTempFlagDebbug: 1
 --- !u!95 &7255613752231056642
 Animator:
   serializedVersion: 5

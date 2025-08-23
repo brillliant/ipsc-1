@@ -8,7 +8,7 @@ public class MagazineScript : MonoBehaviour {
     private PistolScript pistolScript;
     private GameObject reloadPoint1;
     private Main mainScript;
-    private int roundCount = 16;
+    private int roundCount = 3;
     private Boolean isMagazineMovingInGun;
 
     private Vector3 localInitRotation0 = new(21.90f, 0.083f, 0.069f);
