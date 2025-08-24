@@ -63,7 +63,7 @@ public class SlideScript : MonoBehaviour {
     }
 
     private bool hasTriggeredPullEvent = false;  // флаг, что затвор дёрнули назад
-    private float slidePullThreshold = 0.0085f;  // насколько нужно оттянуть, чтобы считать, что затвор дёрнули
+    private float slidePullThreshold = 0.0088f;  // насколько нужно оттянуть, чтобы считать, что затвор дёрнули
 
     private void LateUpdate() {
         DetectSlidePull(); // проверяем, было ли полное передёргивание
@@ -92,6 +92,7 @@ public class SlideScript : MonoBehaviour {
 
     private void setSlideLockedDelay() {
         slideLockRangeMove(0.008f);
+        //todo temp disabled
         oneGrabTranslateTransformer.Constraints.MinZ.Value = -0.0143f;
     }
     

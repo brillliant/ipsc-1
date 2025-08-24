@@ -40966,9 +40966,9 @@ ConfigurableJoint:
   m_TargetVelocity: {x: 0, y: 0, z: 0}
   m_XDrive:
     serializedVersion: 4
-    positionSpring: 3.4028233e+38
-    positionDamper: 50
-    maximumForce: 1000000
+    positionSpring: 50000
+    positionDamper: 500
+    maximumForce: 5000000
     useAcceleration: 0
   m_YDrive:
     serializedVersion: 4
@@ -41029,7 +41029,6 @@ MonoBehaviour:
   oneGrabTranslateTransformer: {fileID: 2049096872}
   sliderBackSound: {fileID: 30437493}
   sliderReleaseSound: {fileID: 1908943726}
-  shouldSliderLockTempFlagDebbug: 1
 --- !u!95 &7255613752231056642
 Animator:
   serializedVersion: 5
