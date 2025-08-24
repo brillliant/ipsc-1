@@ -40966,9 +40966,9 @@ ConfigurableJoint:
   m_TargetVelocity: {x: 0, y: 0, z: 0}
   m_XDrive:
     serializedVersion: 4
-    positionSpring: 50000
-    positionDamper: 500
-    maximumForce: 5000000
+    positionSpring: 500000000
+    positionDamper: 500000
+    maximumForce: 500000000
     useAcceleration: 0
   m_YDrive:
     serializedVersion: 4
@@ -41004,8 +41004,8 @@ ConfigurableJoint:
     maximumForce: 3.4028233e+38
     useAcceleration: 0
   m_ProjectionMode: 1
-  m_ProjectionDistance: 0.1
-  m_ProjectionAngle: 180
+  m_ProjectionDistance: 0.001
+  m_ProjectionAngle: 1
   m_ConfiguredInWorldSpace: 0
   m_SwapBodies: 0
   m_BreakForce: Infinity

@@ -159,7 +159,7 @@ public class PistolScript : MonoBehaviour {
     }
 
     public bool shouldSliderLock() {
-        return magazineScript.getRoundCount() == 0 && magazineLockedInPistol;
+        return magazineLockedInPistol && magazineScript.getRoundCount() == 0;
     }
     
     private void setRoundToChamber() {
