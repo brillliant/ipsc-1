@@ -24,7 +24,7 @@ public class MagazinesBagScript : MonoBehaviour {
         mainScript = codeObject.GetComponent<Main>();
     }
 
-    void Update() {
+    private void Update() {
         //temp for debug
         if (Input.GetKeyUp(KeyCode.O)) {
             instantiateMagazineInHand();
