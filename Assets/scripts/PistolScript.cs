@@ -1,10 +1,15 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PistolScript : MonoBehaviour {
     public ParticleSystem muzzleFlash; 
     public ParticleSystem splash; 
+    
+    [SerializeField] private int maxMagHistory = 4;
+    private readonly Queue<GameObject> magQueue = new();
+    private readonly HashSet<GameObject> magSet = new();
     
     [SerializeField] 
     private float bulletSpeed;
@@ -60,6 +65,40 @@ public class PistolScript : MonoBehaviour {
 #if UNITY_EDITOR
         roundInChamberFlag = true;
 #endif
+    }
+    
+    public void RememberMagazine(GameObject magGO) {
+        if (!magGO) return;
+        PurgeNulls();                         // чистим мёртвые ссылки
+        if (!magSet.Add(magGO)) return;       // уже есть — не добавляем
+        magQueue.Enqueue(magGO);
+        if (magQueue.Count > maxMagHistory) EvictOldest();
+    }
+    
+    private void EvictOldest() {
+        while (magQueue.Count > 0) {
+            var oldest = magQueue.Dequeue();
+            if (!oldest) continue;            // пропускаем уничтоженные
+            magSet.Remove(oldest);
+            if (oldest == magazine) break;    // текущий вставленный не трогаем
+            Destroy(oldest);                  // удаляем из сцены
+            break;
+        }
+    }
+    
+    // удаляем null из очереди и пересобираем set
+    private void PurgeNulls() {
+        if (magQueue.Count == 0) return;
+        int n = magQueue.Count;
+        bool needRebuild = false;
+        for (int i = 0; i < n; i++) {
+            var go = magQueue.Dequeue();
+            if (go) magQueue.Enqueue(go); else needRebuild = true;
+        }
+        if (needRebuild) {
+            magSet.Clear();
+            foreach (var go in magQueue) magSet.Add(go);
+        }
     }
 
     private OVRInput.HapticsAmplitudeEnvelopeVibration _vibration = new OVRInput.HapticsAmplitudeEnvelopeVibration();

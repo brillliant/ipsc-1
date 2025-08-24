@@ -124,6 +124,7 @@ public class MagazineScript : MonoBehaviour {
             }
 
             rb.constraints = RigidbodyConstraints.FreezeRotation;
+            pistolScript.RememberMagazine(gameObject);
         }
     }
 

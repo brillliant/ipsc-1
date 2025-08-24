@@ -1856,6 +1856,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   muzzleFlash: {fileID: 1242819455}
   splash: {fileID: 1062515727}
+  maxMagHistory: 2
   bulletSpeed: 450
   roundThrowSpeed: 1.8
   triggerPressed: 0
