@@ -5,14 +5,30 @@ using UnityEngine;
 /*todo на работает. создал. не пригодилось пока. идея чтобы рука знала, есть ли у нее касание с чем либо.*/
 public class HandScript : MonoBehaviour {
     public GameObject cube;
-    
+    private GameObject pistol;
+    private PistolScript pistolScript;
+    private GameObject pushHandPoint;
+
+    void Awake() {
+        if (pistol == null) {
+            pistol = GameObject.Find("Glock17");
+        }
+        pushHandPoint = pistol.transform.Find("pushHandPoint").gameObject;
+        pistolScript = pistol.GetComponent<PistolScript>();
+    }
+
     void OnTriggerEnter(Collider other) {
+        if (other.gameObject.name == "pushHandPoint" 
+            && pistolScript.hasMagazineChild() && !pistolScript.isMagazineLocked()) {
+            pistolScript.getMagazineScript().magazineLock();            
+        }
+        
         //if (other.gameObject.name == "reloadPoint1" && !isSetUp) {
             //if (transform.parent is not null) {
-                ToggleColor();
+                /*ToggleColor();
                 transform.SetParent(null);
                 gameObject.GetComponent<Rigidbody>().isKinematic = false;
-                gameObject.GetComponent<Rigidbody>().useGravity = true;
+                gameObject.GetComponent<Rigidbody>().useGravity = true;*/
             //}
         //}
     }

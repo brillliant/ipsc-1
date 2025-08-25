@@ -73,7 +73,7 @@ public class MagazineScript : MonoBehaviour {
         }
     }
 
-    private void magazineLock() {
+    public void magazineLock() {
         rb.isKinematic = true;
         rb.useGravity = false;
 
@@ -103,12 +103,13 @@ public class MagazineScript : MonoBehaviour {
         enteredPoint1 = false;
         handGrabInteraction.SetActive(true);
         rb.constraints = RigidbodyConstraints.None;
+        pistolScript.removeMagazineLink();
     }
     
     void OnTriggerEnter(Collider other) {
         if (!enteredPoint1 &&
             other.gameObject.name == "reloadPoint1" 
-            && !isMagazineMovingInGun && magazineRoot.transform.childCount == 0) {
+            && !isMagazineMovingInGun && !pistolScript.hasMagazineChild()) {
 
             enteredPoint1 = true;
             ToggleColor();
@@ -124,7 +125,7 @@ public class MagazineScript : MonoBehaviour {
             }
 
             rb.constraints = RigidbodyConstraints.FreezeRotation;
-            pistolScript.RememberMagazine(gameObject);
+            pistolScript.setMagazineToPistolHierarchy(gameObject);
         }
     }
 
@@ -152,7 +153,7 @@ public class MagazineScript : MonoBehaviour {
         Debug.DrawRay(transform.position, rb.velocity, Color.red); // линейная скорость
         Debug.DrawRay(transform.position, rb.angularVelocity, Color.green); // угловая скорость
         
-        Debug.Log($"Velocity: {rb.velocity}, Angular: {rb.angularVelocity}");
+        //Debug.Log($"Velocity: {rb.velocity}, Angular: {rb.angularVelocity}");
     }
     
     void OnCollisionStay(Collision collision) {

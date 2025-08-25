@@ -7,7 +7,7 @@ public class PistolScript : MonoBehaviour {
     public ParticleSystem muzzleFlash; 
     public ParticleSystem splash; 
     
-    [SerializeField] private int maxMagHistory = 4;
+    [SerializeField] private int maxMagHistory = 2;
     private readonly Queue<GameObject> magQueue = new();
     private readonly HashSet<GameObject> magSet = new();
     
@@ -58,7 +58,8 @@ public class PistolScript : MonoBehaviour {
     private void Awake() {
         magazineRootTransform = transform.Find("MagazineRoot");
         
-        magazine = findMagazine(magazineRootTransform).gameObject;
+        magazine = findMagazine().gameObject;
+        rememberMagazine(magazine);
         slideScript = transform.Find("Slide").GetComponent<SlideScript>();
         throwRoundPoint = transform.Find("throwRoundPoint").transform;
         
@@ -67,11 +68,34 @@ public class PistolScript : MonoBehaviour {
 #endif
     }
     
-    public void RememberMagazine(GameObject magGO) {
-        if (!magGO) return;
+    public bool isMagazineLocked() {
+        return magazineLocked;
+    }
+
+    public MagazineScript getMagazineScript() {
+        return magazineScript;
+    }
+    
+    public void removeMagazineLink() {
+        magazine = null;
+    }
+    
+    public bool hasMagazineChild() {
+        return magazine != null;
+    }
+
+    public void setMagazineToPistolHierarchy(GameObject magazine) {
+        magazineScript = magazine.GetComponent<MagazineScript>();
+        this.magazine = magazine;
+        
+        rememberMagazine(magazine);
+    }
+    
+    public void rememberMagazine(GameObject magazine) {
+        if (!magazine) return;
         PurgeNulls();                         // чистим мёртвые ссылки
-        if (!magSet.Add(magGO)) return;       // уже есть — не добавляем
-        magQueue.Enqueue(magGO);
+        if (!magSet.Add(magazine)) return;       // уже есть — не добавляем
+        magQueue.Enqueue(magazine);
         if (magQueue.Count > maxMagHistory) EvictOldest();
     }
     
@@ -115,9 +139,9 @@ public class PistolScript : MonoBehaviour {
         }
     }
 
-    private Transform findMagazine(Transform parent) {
-        foreach (Transform child in parent.GetComponentsInChildren<Transform>(false)) {
-            if (child == parent) continue; 
+    public Transform findMagazine() {
+        foreach (Transform child in magazineRootTransform.GetComponentsInChildren<Transform>(false)) {
+            if (child == magazineRootTransform) continue; 
             if (child.name.Contains("Magazine")) {
                 return child;
             }
@@ -128,7 +152,7 @@ public class PistolScript : MonoBehaviour {
     private void releaseMagazine() {
         if (magazineLocked) {
             //todo сделать чтобы эти вещи сетались когда магазин установлен.
-            magazine = findMagazine(magazineRootTransform)?.gameObject;
+            magazine = findMagazine()?.gameObject;
             magazineScript = magazine.GetComponent<MagazineScript>();
             
             magazineOutSound.PlayOneShot(magazineOutSound.clip);
@@ -300,7 +324,7 @@ public class PistolScript : MonoBehaviour {
 
     public void setMagazineLocked(Boolean magazineLocked) {
         if (magazineLocked) {
-            magazine = findMagazine(transform.Find("MagazineRoot"))?.gameObject;
+            magazine = findMagazine()?.gameObject;
             magazineScript = magazine.GetComponent<MagazineScript>();
             magazineInSound.PlayOneShot(magazineInSound.clip);
         } 
