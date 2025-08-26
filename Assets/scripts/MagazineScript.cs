@@ -118,8 +118,6 @@ public class MagazineScript : MonoBehaviour {
     private float _prevAxisDist;
     private bool  _hasPrevAxisDist;
     private bool isMagazineApproachValid() {
-        //todo вынести позже в старт
-        
         float cosTol = Mathf.Cos(orientationToleranceDegrees * Mathf.Deg2Rad);
 
         if (Vector3.Dot(insertPointAndAxisMag.forward, reloadAxisTransform.forward) < cosTol) return false;
@@ -132,10 +130,6 @@ public class MagazineScript : MonoBehaviour {
         Vector3 lateral = offset - Vector3.Project(offset, reloadAxisTransform.forward);
         if (lateral.sqrMagnitude > maximumLateralOffsetMeters * maximumLateralOffsetMeters) return false;
 
-        // float v = Vector3.Dot(rb != null ? rb.velocity : Vector3.zero, reloadAxisTransform.forward);
-        // return v >= minimumApproachSpeedMetersPerSecond;
-        
-        // --- SPEED PATCH (вставь в конец твоей isMagazineApproachValid) ---
         float curAxisDist = Vector3.Dot(
             insertPointAndAxisMag.position - reloadAxisTransform.position,
             reloadAxisTransform.forward
@@ -164,7 +158,7 @@ public class MagazineScript : MonoBehaviour {
         if (isMagazineApproachValid()) {
             approachStableTimer += Time.fixedDeltaTime; // физика → fixed
             if (approachStableTimer >= approachStabilitySeconds) {
-                startInsertion(); // вынеси твой блок вставки сюда
+                startInsertion();
                 insertionStarted = true;
             }
         } else {
@@ -190,13 +184,8 @@ public class MagazineScript : MonoBehaviour {
     }
     
     void OnTriggerExit(Collider other) {
-        // если проверяешь конкретный триггер — замени условие на свой
-        // if (other == reloadPoint1Trigger) { ... }
         if (other.gameObject.name != "reloadPoint1") {
-            // 1) таймер стабильности (как ты его назвал: approachStableTimer / stableTimer)
             approachStableTimer = 0f; // если используешь Stay+таймер
-
-            // 2) кэш для ручного расчёта скорости вдоль оси
             _hasPrevAxisDist = false;
             _prevAxisDist = 0f; // опционально
         }
