@@ -134,7 +134,7 @@ public class PistolScript : MonoBehaviour {
                 triggerPressed = false;
             }
             
-            if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) mainScript.clearHoles();
+            if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch)) mainScript.clearHoles();
             if (Input.GetKeyUp(KeyCode.U) || OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.RTouch)) releaseMagazine();
         }
     }

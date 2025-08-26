@@ -60,6 +60,8 @@ public class SlideScript : MonoBehaviour {
         
         transform.localPosition = new Vector3(localPosition0.x, localPosition0.y, localPosition0.z + dz);
         transform.localEulerAngles = localRotation0;
+        
+        if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) setSlideUnLocked();
     }
 
     private bool hasTriggeredPullEvent = false;  // флаг, что затвор дёрнули назад
@@ -84,19 +86,20 @@ public class SlideScript : MonoBehaviour {
         } else if (slideLockedFlag) {
             // снятие с задержки при дотяжке назад
             if (slideLockedFlag && !pistolScript.shouldSliderLock()) {
-                slideLockedFlag = false;
                 setSlideUnLocked();
             }
         }
     }
 
     private void setSlideLockedDelay() {
+        slideLockedFlag = true;
         slideLockRangeMove(0.008f);
         //todo temp disabled
         oneGrabTranslateTransformer.Constraints.MinZ.Value = -0.0143f;
     }
     
     private void setSlideUnLocked() {
+        slideLockedFlag = false;
         slideLockRangeMove(0);
         oneGrabTranslateTransformer.Constraints.MinZ.Value = -0.02058057f;
     }
@@ -158,12 +161,10 @@ public class SlideScript : MonoBehaviour {
     }
 
     public void slideLock() {
-        slideLockedFlag = true;
         sliderAnimator.enabled = false;
         sliderAnimationRunning = false;
-
-        setSlideLockedDelay();
         hasTriggeredPullEvent = true;
+        setSlideLockedDelay();
     }
     
     private void slideLockRangeMove(float newLimit) {
