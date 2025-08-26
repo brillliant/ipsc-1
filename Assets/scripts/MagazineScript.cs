@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class MagazineScript : MonoBehaviour {
@@ -104,9 +105,104 @@ public class MagazineScript : MonoBehaviour {
         handGrabInteraction.SetActive(true);
         rb.constraints = RigidbodyConstraints.None;
         pistolScript.removeMagazineLink();
+        insertionStarted = false;
     }
     
-    void OnTriggerEnter(Collider other) {
+    [SerializeField] Transform insertPointAndAxisMag;
+    float orientationToleranceDegrees = 15f;
+    float maximumLateralOffsetMeters = 0.055f;
+    float minimumApproachSpeedMetersPerSecond = 0.0000005f; //todo можно выпилить
+    [SerializeField] Vector3 allowedApproachDirectionLocal = new Vector3(0f, -1f, 0f);
+    [SerializeField] private Transform reloadAxisTransform;
+    
+    private float _prevAxisDist;
+    private bool  _hasPrevAxisDist;
+    private bool isMagazineApproachValid() {
+        //todo вынести позже в старт
+        
+        float cosTol = Mathf.Cos(orientationToleranceDegrees * Mathf.Deg2Rad);
+
+        if (Vector3.Dot(insertPointAndAxisMag.forward, reloadAxisTransform.forward) < cosTol) return false;
+        if (Vector3.Dot(insertPointAndAxisMag.up,      reloadAxisTransform.up)      < cosTol) return false;
+
+        Vector3 offset = insertPointAndAxisMag.position - reloadPoint1.transform.position;
+        Vector3 allowedWorld = reloadAxisTransform.TransformDirection(allowedApproachDirectionLocal).normalized;
+        if (Vector3.Dot(offset, allowedWorld) <= 0f) return false;
+
+        Vector3 lateral = offset - Vector3.Project(offset, reloadAxisTransform.forward);
+        if (lateral.sqrMagnitude > maximumLateralOffsetMeters * maximumLateralOffsetMeters) return false;
+
+        // float v = Vector3.Dot(rb != null ? rb.velocity : Vector3.zero, reloadAxisTransform.forward);
+        // return v >= minimumApproachSpeedMetersPerSecond;
+        
+        // --- SPEED PATCH (вставь в конец твоей isMagazineApproachValid) ---
+        float curAxisDist = Vector3.Dot(
+            insertPointAndAxisMag.position - reloadAxisTransform.position,
+            reloadAxisTransform.forward
+        );
+
+        float v;
+        if (rb != null && !rb.isKinematic) {
+            v = Vector3.Dot(rb.velocity, reloadAxisTransform.forward);
+        } else {
+            if (!_hasPrevAxisDist) { _prevAxisDist = curAxisDist; _hasPrevAxisDist = true; v = 0f; }
+            else { v = (_prevAxisDist - curAxisDist) / Time.fixedDeltaTime; _prevAxisDist = curAxisDist; }
+        }
+
+        return v >= minimumApproachSpeedMetersPerSecond;
+    }
+    
+    float approachStabilitySeconds = 0.006f; // таймер
+    float approachStableTimer = 0f;
+    bool insertionStarted = false;
+    
+    void OnTriggerStay(Collider other) {
+        if (insertionStarted) return;
+        if (other.gameObject.name != "reloadPoint1") { return; }
+        if (isMagazineMovingInGun || pistolScript.hasMagazineChild()) { approachStableTimer = 0f; return; }
+    
+        if (isMagazineApproachValid()) {
+            approachStableTimer += Time.fixedDeltaTime; // физика → fixed
+            if (approachStableTimer >= approachStabilitySeconds) {
+                startInsertion(); // вынеси твой блок вставки сюда
+                insertionStarted = true;
+            }
+        } else {
+            approachStableTimer = 0f;
+        }
+    }
+    
+    void startInsertion() {
+        enteredPoint1 = true;
+        handGrabInteraction.SetActive(false);
+        mainScript.isHandKeepingMagazine = false;
+        isMagazineMovingInGun = true;
+
+        rb.isKinematic = false;
+        rb.useGravity = true;
+
+        if (ReferenceEquals(transform.parent, null) || !transform.parent.name.Contains("Root"))
+            transform.SetParent(magazineRoot.transform);
+
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
+        pistolScript.setMagazineToPistolHierarchy(gameObject);
+        insertionStarted = false;
+    }
+    
+    void OnTriggerExit(Collider other) {
+        // если проверяешь конкретный триггер — замени условие на свой
+        // if (other == reloadPoint1Trigger) { ... }
+        if (other.gameObject.name != "reloadPoint1") {
+            // 1) таймер стабильности (как ты его назвал: approachStableTimer / stableTimer)
+            approachStableTimer = 0f; // если используешь Stay+таймер
+
+            // 2) кэш для ручного расчёта скорости вдоль оси
+            _hasPrevAxisDist = false;
+            _prevAxisDist = 0f; // опционально
+        }
+    }
+    
+    /*void OnTriggerEnter(Collider other) {
         if (!enteredPoint1 &&
             other.gameObject.name == "reloadPoint1" 
             && !isMagazineMovingInGun && !pistolScript.hasMagazineChild()) {
@@ -126,7 +222,7 @@ public class MagazineScript : MonoBehaviour {
             rb.constraints = RigidbodyConstraints.FreezeRotation;
             pistolScript.setMagazineToPistolHierarchy(gameObject);
         }
-    }
+    }*/
 
     private void keepMagazineOnRailsIfNeeded() {
         if (isMagazineMovingInGun) {
