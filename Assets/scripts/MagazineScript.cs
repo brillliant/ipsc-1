@@ -112,7 +112,6 @@ public class MagazineScript : MonoBehaviour {
             && !isMagazineMovingInGun && !pistolScript.hasMagazineChild()) {
 
             enteredPoint1 = true;
-            ToggleColor();
             handGrabInteraction.SetActive(false);
             mainScript.isHandKeepingMagazine = false;
             isMagazineMovingInGun = true;
@@ -152,7 +151,6 @@ public class MagazineScript : MonoBehaviour {
         Debug.DrawRay(transform.position, Physics.gravity, Color.blue); // сила гравита
         Debug.DrawRay(transform.position, rb.velocity, Color.red); // линейная скорость
         Debug.DrawRay(transform.position, rb.angularVelocity, Color.green); // угловая скорость
-        
         //Debug.Log($"Velocity: {rb.velocity}, Angular: {rb.angularVelocity}");
     }
     
@@ -170,21 +168,7 @@ public class MagazineScript : MonoBehaviour {
             Debug.Log("Impulse: " + col.impulse);
         }
     }
-      
-    private bool isColor1Active = true;
-    private Color color1 = Color.red;
-    private Color color2 = Color.magenta;
-    
-    private void ToggleColor() {
-        Renderer renderer = GetComponent<Renderer>();
-        if (renderer != null) {
-            renderer.material.color = isColor1Active ? color1 : color2;
-            isColor1Active = !isColor1Active;
-        } else {
-            Debug.LogWarning("У объекта нет компонента Renderer!");
-        }
-    }
-  
+ 
     public int getRoundCount() {
         return roundCount;
     }

@@ -52,7 +52,6 @@ public class PistolScript : MonoBehaviour {
         shotSound.volume = 1.0f;
 
         mainScript = codeObject.GetComponent<Main>();
-        //Time.timeScale = 0.1f;
     }
 
     private void Awake() {
@@ -93,13 +92,13 @@ public class PistolScript : MonoBehaviour {
     
     public void rememberMagazine(GameObject magazine) {
         if (!magazine) return;
-        PurgeNulls();                         // чистим мёртвые ссылки
+        purgeNulls();                         // чистим мёртвые ссылки
         if (!magSet.Add(magazine)) return;       // уже есть — не добавляем
         magQueue.Enqueue(magazine);
-        if (magQueue.Count > maxMagHistory) EvictOldest();
+        if (magQueue.Count > maxMagHistory) evictOldest();
     }
     
-    private void EvictOldest() {
+    private void evictOldest() {
         while (magQueue.Count > 0) {
             var oldest = magQueue.Dequeue();
             if (!oldest) continue;            // пропускаем уничтоженные
@@ -111,7 +110,7 @@ public class PistolScript : MonoBehaviour {
     }
     
     // удаляем null из очереди и пересобираем set
-    private void PurgeNulls() {
+    private void purgeNulls() {
         if (magQueue.Count == 0) return;
         int n = magQueue.Count;
         bool needRebuild = false;
@@ -304,8 +303,6 @@ public class PistolScript : MonoBehaviour {
         
         roundRigidbody.angularVelocity = UnityEngine.Random.insideUnitSphere * 7f;
 
-        //shotSound.PlayOneShot(shotSound.clip);
-        
         // Генерация направления с отклонением до 40°
         Vector3 direction = throwRoundPoint.forward;
         Quaternion tiltX = Quaternion.AngleAxis(UnityEngine.Random.Range(-20f, 20f), throwRoundPoint.right);
