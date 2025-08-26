@@ -111,7 +111,7 @@ public class MagazineScript : MonoBehaviour {
     [SerializeField] Transform insertPointAndAxisMag;
     float orientationToleranceDegrees = 15f;
     float maximumLateralOffsetMeters = 0.055f;
-    float minimumApproachSpeedMetersPerSecond = 0.0000005f; //todo можно выпилить
+    float minimumApproachSpeedMetersPerSecond = 0.000000005f; //todo можно выпилить
     [SerializeField] Vector3 allowedApproachDirectionLocal = new Vector3(0f, -1f, 0f);
     [SerializeField] private Transform reloadAxisTransform;
     
@@ -130,20 +130,81 @@ public class MagazineScript : MonoBehaviour {
         Vector3 lateral = offset - Vector3.Project(offset, reloadAxisTransform.forward);
         if (lateral.sqrMagnitude > maximumLateralOffsetMeters * maximumLateralOffsetMeters) return false;
 
-        float curAxisDist = Vector3.Dot(
-            insertPointAndAxisMag.position - reloadAxisTransform.position,
-            reloadAxisTransform.forward
-        );
+        return true;
+    }
 
-        float v;
-        if (rb != null && !rb.isKinematic) {
-            v = Vector3.Dot(rb.velocity, reloadAxisTransform.forward);
-        } else {
-            if (!_hasPrevAxisDist) { _prevAxisDist = curAxisDist; _hasPrevAxisDist = true; v = 0f; }
-            else { v = (_prevAxisDist - curAxisDist) / Time.fixedDeltaTime; _prevAxisDist = curAxisDist; }
+    private bool gateCrossed = false;  // была ли уже пересечена плоскость
+    private bool hasPrevDist = false;  // инициализирован ли prevDist
+    private float prevDist;            // прошлое скалярное расстояние
+    
+    /// <summary>
+    /// Проверка: магазин пересёк входную плоскость шахты с правильной стороны.
+    /// Работает по принципу "снаружи → внутрь".
+    /// </summary>
+    /// <param name="insertPointAndAxisMag">Точка на магазине (insertPointAndAxisMag)</param>
+    /// <param name="reloadPoint1">Вход шахты (reloadPoint1)</param>
+    /// <param name="reloadAxisTransform">Трансформ шахты, forward должен смотреть внутрь</param>
+    /// <param name="gateCrossed">Флаг-защёлка: однажды пересёк → остаётся true</param>
+    /// <param name="hasPrevDist">Был ли уже рассчитан предыдущий d</param>
+    /// <param name="prevDist">Предыдущее расстояние до плоскости</param>
+    /// <returns>true, если пересечение снаружи → внутрь уже произошло</returns>
+    public bool CrossedEntryFromOutside(
+        Transform insertPointAndAxisMag,
+        GameObject reloadPoint1,
+        Transform reloadAxisTransform
+    ) {
+        // ось шахты
+        Vector3 axis = reloadAxisTransform.forward.normalized;
+
+        // скалярное расстояние точки магазина до входной плоскости
+        float d = Vector3.Dot(insertPointAndAxisMag.position - reloadPoint1.transform.position, axis);
+
+        // первый кадр — только инициализация
+        if (!hasPrevDist) { 
+            prevDist = d; 
+            hasPrevDist = true; 
+            return false; 
         }
 
-        return v >= minimumApproachSpeedMetersPerSecond;
+        // если раньше было "снаружи" (d > 0), а теперь "внутри" (d <= 0) → засчитываем пересечение
+        if (!gateCrossed && prevDist > 0f && d <= 0f) 
+            gateCrossed = true; // ⚠ если forward у axisTransform наружу, условие инвертировать
+
+        // обновляем кэш
+        prevDist = d;
+
+        // возвращаем состояние защёлки
+        return gateCrossed;
+    }
+
+    //public Transform heel;
+    public float radiusMeters = 0.01f;
+    //private float minDepthMeters = 0.01f;
+    
+    // 2) ВОРОНКА ВХОДА (отсечь «сбоку»): оба контрольных пункта должны быть в цилиндре у оси
+    public bool entryInRadius() {
+        Vector3 axis = reloadAxisTransform.forward.normalized;
+
+        Vector3 pTip = insertPointAndAxisMag.position - reloadPoint1.transform.position;
+        //Vector3 pHeel = heel.position - reloadPoint1.transform.position;
+
+        float dTip = Vector3.Dot(pTip,  axis);                  // проекция на ось (глубина)
+        //float dHeel = Vector3.Dot(pHeel, axis);
+
+        Vector3 rTip = pTip  - dTip  * axis;                    // радиальная компонента
+        //Vector3 rHeel = pHeel - dHeel * axis;
+
+        float r2 = radiusMeters * radiusMeters;
+
+        // оба пункта внутри радиуса
+        if (rTip.sqrMagnitude  > r2) return false;
+        //if (rHeel.sqrMagnitude > r2) return false;
+
+        // оба пункта достаточно глубоко «внутри» (при соглашении d<=0 — внутри)
+        //if (dTip  > -minDepthMeters)  return false;
+        //if (dHeel > -minDepthMeters)  return false;
+
+        return true;
     }
     
     float approachStabilitySeconds = 0.006f; // таймер
@@ -155,7 +216,10 @@ public class MagazineScript : MonoBehaviour {
         if (other.gameObject.name != "reloadPoint1") { return; }
         if (isMagazineMovingInGun || pistolScript.hasMagazineChild()) { approachStableTimer = 0f; return; }
     
-        if (isMagazineApproachValid()) {
+        if (isMagazineApproachValid() 
+            && CrossedEntryFromOutside(insertPointAndAxisMag, reloadPoint1, reloadAxisTransform)
+            && entryInRadius()) {
+            
             approachStableTimer += Time.fixedDeltaTime; // физика → fixed
             if (approachStableTimer >= approachStabilitySeconds) {
                 startInsertion();
