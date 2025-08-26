@@ -19,7 +19,7 @@ public class HandScript : MonoBehaviour {
 
     void OnTriggerEnter(Collider other) {
         if (other.gameObject.name == "pushHandPoint" 
-            && pistolScript.hasMagazineChild() && !pistolScript.isMagazineLocked()) {
+            && pistolScript.hasMagazineChild() && !pistolScript.isMagazineLockedInPistol()) {
             pistolScript.getMagazineScript().magazineLock();            
         }
         

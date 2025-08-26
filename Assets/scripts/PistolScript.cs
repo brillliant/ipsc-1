@@ -68,8 +68,8 @@ public class PistolScript : MonoBehaviour {
 #endif
     }
     
-    public bool isMagazineLocked() {
-        return magazineLocked;
+    public bool isMagazineLockedInPistol() {
+        return magazineLockedInPistol;
     }
 
     public MagazineScript getMagazineScript() {
