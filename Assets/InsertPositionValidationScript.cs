@@ -5,33 +5,33 @@ using UnityEngine.Serialization;
 public class InsertPositionValidationScript : MonoBehaviour {
     private MagazineScript magazineScript;
     private PistolScript pistolScript;
-    private GameObject reloadPoint1;
+    private GameObject reloadPoint2;
 
     private void Start() {
         magazineScript = GetComponentInParent<MagazineScript>();
-        reloadPoint1 = magazineScript.reloadPoint1;
+        reloadPoint2 = magazineScript.reloadPoint2;
         pistolScript = magazineScript.pistolScript;
         
         magazineRootTransform = magazineScript.magazineRoot.transform;
     }
 
     void OnTriggerEnter(Collider other) {
-        if (!magazineScript.isMagazineMovingInGun && other.gameObject.name == "pre-entry") {
-            // гарантируем старт «снаружи» (d < 0)
-            hasPrevDist = true;
-            prevDist = -0.002f;
-            gateCrossed = false;
+        if (!magazineScript.isMagazineMovingInGun && other.gameObject.name == "reloadPoint1") {
+            if (!reloadPoint2Touched) {
+                reloadPoint1Touched = true;
+            }
+
             approachStableTimer = 0f;
         }
     }
     
     void OnTriggerStay(Collider other) {
         if (insertionStarted) return;
-        if (other.gameObject.name != "reloadPoint1") { return; }
+        if (other.gameObject.name != "reloadPoint2") { return; }
         if (magazineScript.isMagazineMovingInGun || pistolScript.hasMagazineChild()) { approachStableTimer = 0f; return; }
     
         if (isMagazineApproachValid() 
-            && CrossedEntryFromOutside()
+            && touchedReloadPoint2After1()
             && entryInRadius()) {
             
             approachStableTimer += Time.fixedDeltaTime;
@@ -55,7 +55,7 @@ public class InsertPositionValidationScript : MonoBehaviour {
         if (Vector3.Dot(transform.forward, magazineRootTransform.forward) < cosTol) return false;
         if (Vector3.Dot(transform.up,      magazineRootTransform.up)      < cosTol) return false;
 
-        Vector3 offset = transform.position - reloadPoint1.transform.position;
+        Vector3 offset = transform.position - reloadPoint2.transform.position;
         Vector3 allowedWorld = magazineRootTransform.TransformDirection(allowedApproachDirectionLocal).normalized;
         if (Vector3.Dot(offset, allowedWorld) <= 0f) return false;
 
@@ -65,43 +65,21 @@ public class InsertPositionValidationScript : MonoBehaviour {
         return true;
     }
 
-    private bool gateCrossed = false;  // была ли уже пересечена плоскость
-    private bool hasPrevDist = false;  // инициализирован ли prevDist
-    private float prevDist;            // прошлое скалярное расстояние
+    private bool reloadPoint1Touched = false;  // инициализирован ли prevDist
+    private bool reloadPoint2Touched = false;  // инициализирован ли prevDist
     
-    /// Проверка: магазин пересёк входную плоскость шахты с правильной стороны.
-    /// Работает по принципу "снаружи → внутрь".
-    /// <param name="insertPointAndAxisMag">Точка на магазине (insertPointAndAxisMag)</param>
-    /// <param name="reloadPoint1">Вход шахты (reloadPoint1)</param>
-    /// <param name="reloadAxisTransform">Трансформ шахты, forward должен смотреть внутрь</param>
-    /// <param name="gateCrossed">Флаг-защёлка: однажды пересёк → остаётся true</param>
-    /// <param name="hasPrevDist">Был ли уже рассчитан предыдущий d</param>
-    /// <param name="prevDist">Предыдущее расстояние до плоскости</param>
-    /// <returns>true, если пересечение снаружи → внутрь уже произошло</returns>
-    public bool CrossedEntryFromOutside() {
-        // ось шахты
-        Vector3 axis = magazineRootTransform.up.normalized;
-        // скалярное расстояние точки магазина до входной плоскости
-        float d = Vector3.Dot(transform.position - reloadPoint1.transform.position, axis);
-        // первый кадр — только инициализация
-        if (!hasPrevDist) { 
-            prevDist = d; 
-            hasPrevDist = true; 
-            return false; 
+    public bool touchedReloadPoint2After1() {
+        if (reloadPoint1Touched) {
+            reloadPoint2Touched = true;
         }
-        // если раньше было "снаружи" (d < 0), а теперь "внутри" (d >= 0) → засчитываем пересечение
-        if (!gateCrossed && prevDist < 0f && d >= 0f) 
-            gateCrossed = true; // ⚠ если forward у axisTransform наружу, условие инвертировать
-        // обновляем кэш
-        prevDist = d;
-        return gateCrossed;
+        return reloadPoint2Touched;
     }
     
     void OnDrawGizmos() {
-        if (magazineRootTransform == null || reloadPoint1 == null) return;
+        if (magazineRootTransform == null || reloadPoint2 == null) return;
 
         Vector3 n = magazineRootTransform.up.normalized; // нормаль
-        Vector3 center = reloadPoint1.transform.position;
+        Vector3 center = reloadPoint2.transform.position;
 
         // ищем два вектора, лежащие в плоскости (любые перпендикулярные к n)
         Vector3 tangent = Vector3.Cross(n, Vector3.right);
@@ -129,7 +107,7 @@ public class InsertPositionValidationScript : MonoBehaviour {
     // 2) ВОРОНКА ВХОДА (отсечь «сбоку»): оба контрольных пункта должны быть в цилиндре у оси
     public bool entryInRadius() {
         Vector3 axis = magazineRootTransform.forward.normalized;
-        Vector3 pTip = transform.position - reloadPoint1.transform.position;
+        Vector3 pTip = transform.position - reloadPoint2.transform.position;
         float dTip = Vector3.Dot(pTip,  axis);                  // проекция на ось (глубина)
         Vector3 rTip = pTip  - dTip  * axis;                    // радиальная компонента
         float r2 = radiusMeters * radiusMeters;
@@ -142,18 +120,13 @@ public class InsertPositionValidationScript : MonoBehaviour {
     float approachStableTimer = 0f;
     bool insertionStarted = false;
     
-
-    
-
-    
     void OnTriggerExit(Collider other) {
-        if (other.gameObject.name != "reloadPoint1") {
-            approachStableTimer = 0f; // если используешь Stay+таймер
-            
+        if (other.gameObject.name != "reloadPoint2") {
+            approachStableTimer = 0f;
             //резет флаги для пересейчения плоскости
-            hasPrevDist = false; 
-            gateCrossed = false; 
-            prevDist = 0;
+            reloadPoint1Touched = false;
+            reloadPoint2Touched = false;
+            //todo вот тут можно не убирать.посомтрим. а то гистерезис получился
             
             insertionStarted = false;
         }

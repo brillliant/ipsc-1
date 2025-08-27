@@ -7,7 +7,7 @@ public class MagazineScript : MonoBehaviour {
     public GameObject codeObject;
     public GameObject pistol;
     [HideInInspector] public PistolScript pistolScript;
-    [HideInInspector] public GameObject reloadPoint1;
+    [HideInInspector] public GameObject reloadPoint2;
     private Main mainScript;
     private int roundCount = 8;
     public Boolean isMagazineMovingInGun;
@@ -27,7 +27,7 @@ public class MagazineScript : MonoBehaviour {
         if (pistol == null) {
             pistol = GameObject.Find("Glock17");
         }
-        reloadPoint1 = pistol.transform.Find("reloadPoint1").gameObject;
+        reloadPoint2 = pistol.transform.Find("reloadPoint2").gameObject;
         
         pistolScript = pistol.GetComponent<PistolScript>();
         magazineRoot = pistol.transform.Find("MagazineRoot").gameObject;
@@ -127,7 +127,7 @@ public class MagazineScript : MonoBehaviour {
     
     /*void OnTriggerEnter(Collider other) {
         if (!enteredPoint1 &&
-            other.gameObject.name == "reloadPoint1" 
+            other.gameObject.name == "reloadPoint2" 
             && !isMagazineMovingInGun && !pistolScript.hasMagazineChild()) {
 
             enteredPoint1 = true;
@@ -159,9 +159,9 @@ public class MagazineScript : MonoBehaviour {
         Debug.Log($"local Y {transform.localPosition.y}");
         
         transform.localPosition = new Vector3(
-            reloadPoint1.transform.localPosition.x,
+            reloadPoint2.transform.localPosition.x,
             transform.localPosition.y,
-            reloadPoint1.transform.localPosition.z
+            reloadPoint2.transform.localPosition.z
         );
         transform.localEulerAngles = localInitRotation0;
     }
