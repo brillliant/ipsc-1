@@ -122,7 +122,6 @@ public class MagazineScript : MonoBehaviour {
 
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         pistolScript.setMagazineToPistolHierarchy(gameObject);
-        //insertionStarted = false;
     }
     
     /*void OnTriggerEnter(Collider other) {
@@ -173,6 +172,8 @@ public class MagazineScript : MonoBehaviour {
         //Debug.Log($"Velocity: {rb.velocity}, Angular: {rb.angularVelocity}");
     }
     
+#if UNITY_EDITOR
+    //бьет по производительности
     void OnCollisionStay(Collision collision) {
         foreach (ContactPoint contact in collision.contacts) {
             Vector3 force = collision.impulse / Time.fixedDeltaTime;
@@ -187,7 +188,8 @@ public class MagazineScript : MonoBehaviour {
             Debug.Log("Impulse: " + col.impulse);
         }
     }
- 
+#endif
+    
     public int getRoundCount() {
         return roundCount;
     }
