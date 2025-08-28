@@ -41116,8 +41116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aabfa0e8040b24443abfb46aafc79da0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slideColliders:
-  - {fileID: 2131453085}
+  slideCollider: {fileID: 2131453085}
 --- !u!1001 &8932269935699604729
 PrefabInstance:
   m_ObjectHideFlags: 0
