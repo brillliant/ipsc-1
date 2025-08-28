@@ -31,7 +31,6 @@ public class MagazinesBagScript : MonoBehaviour {
         }
     }
 
-    //private Quaternion offsetRotation = Quaternion.Euler(230f, 100f, 160f); 
     void LateUpdate() {
         //положение бокса для магазинов
         Transform cameraTransform = camera.transform;
@@ -56,9 +55,7 @@ public class MagazinesBagScript : MonoBehaviour {
     
     void OnTriggerEnter(Collider other) {
         //todo сделать для руки.
-        //if (collision.gameObject.name == "mixamorig:LeftHand") {
-
-            
+        //if (other.gameObject.name == "LeftHandCollider") {
             //todo удалить после отладки
             ToggleColor();
             
