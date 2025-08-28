@@ -36,12 +36,15 @@ public class Main : MonoBehaviour {
     
     private string targetLayer = "Character";
     
+    private LineRenderer line;
+    private Transform bulletPoint;
+    
     void Start() {
         InvokeRepeating(nameof(SetHandColliderLayer), 1f, 1f); // кажду секунду пробуем задать слой для левой руки
+        bulletPoint = GameObject.Find("Glock17").GetComponent<PistolScript>().bulletPoint;
         
         objectDataList = new List<ObjectData>();
         установленныеМишени = new List<GameObject>();
-        //currentPreview = Instantiate(previewPrefab);
         effectMeshScript = effectMeshObject.GetComponent<EffectMesh>();
 
         menuList = new List<TextMeshProUGUI>();
@@ -71,6 +74,8 @@ public class Main : MonoBehaviour {
     }
 
     void Update() {
+        paintRay();
+        
         if (isTargetSetUpMenuActivated) {
             setUpTargets(previewPrefab, targetPrefab);
         } else if (isNoShotSetUpMenuActivated) {
@@ -99,9 +104,8 @@ public class Main : MonoBehaviour {
         if (!currentPreview) currentPreview = Instantiate(previewPrefab);
         if (currentPreview && !currentPreview.activeSelf) currentPreview.SetActive(true);
 
-        Ray ray = new Ray(OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch),
-            OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch) * Vector3.forward);
-
+        Ray ray = new Ray(bulletPoint.position, bulletPoint.forward); 
+        
         if (Physics.Raycast(ray, out RaycastHit hit)
             && !hit.collider.gameObject.name.Equals("emptyObjectForCollider")
             && !hit.collider.gameObject.name.Equals("Glock17")) {
@@ -130,6 +134,23 @@ public class Main : MonoBehaviour {
             RemoveAllObjects();
         if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch)) 
             LoadObjects();
+    }
+
+    private void paintRay() {
+        if (!line) {
+            var rayGameObject = new GameObject("DebugRay");
+            rayGameObject.transform.SetParent(bulletPoint, false);
+            line = rayGameObject.AddComponent<LineRenderer>();
+            line.startWidth = 0.005f;
+            line.endWidth   = 0.001f;
+            line.material = new Material(Shader.Find("Unlit/Color"));
+            line.material.color = Color.red;
+            line.positionCount = 2;
+            line.useWorldSpace = true;
+        }
+
+        line.SetPosition(0, bulletPoint.position);               // визуализация того же луча
+        line.SetPosition(1, bulletPoint.position + bulletPoint.forward * 10f);
     }
 
     private int getNextIndex() {
@@ -211,7 +232,6 @@ public class Main : MonoBehaviour {
                 Destroy(пробоина);
             }
         }
-
         пробоины.Clear();
     }
 

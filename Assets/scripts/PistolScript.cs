@@ -28,7 +28,7 @@ public class PistolScript : MonoBehaviour {
     
     private SlideScript slideScript;
 
-    [SerializeField] private Transform bulletPoint;
+    [SerializeField] public Transform bulletPoint;
     private Transform throwRoundPoint;
     public GameObject codeObject;
     private Main mainScript;
