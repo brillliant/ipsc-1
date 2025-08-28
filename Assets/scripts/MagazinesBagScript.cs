@@ -54,29 +54,12 @@ public class MagazinesBagScript : MonoBehaviour {
     }
     
     void OnTriggerEnter(Collider other) {
-        //todo сделать для руки.
-        //if (other.gameObject.name == "LeftHandCollider") {
-            //todo удалить после отладки
-            ToggleColor();
-            
-            takeMagazine(other);
-        //}
+        //todo удалить после отладки
+        ToggleColor();
+        takeMagazine(other);
     }
 
     private void takeMagazine(Collider other) {
-        //Debug.Log("========" + other.gameObject.name);
-        
-        //todo доработать условие. чтобы тольео если ЛЕВАЯ рука попадает в куб - тогда в ней появится магазин.
-        //пока, что даже пистолет.
-        //other.gameObject.name = "leftHand";
-        //if (!isHandKeepingMagazine) {
-        /*if (other.gameObject.name.Contains("Hand") || other.gameObject.name.Contains("Rigidbody")
-                                                   || other.gameObject.name.Contains("PinchArea")
-                                                   || other.gameObject.name.Contains("Visuals")
-                                                   || other.gameObject.name.Contains("a")
-                                                   || true
-                                                   ) {*/
-        
         if (other.gameObject.name == "LeftHandCollider") {
             if (!mainScript.isHandKeepingMagazine) {
                 instantiateMagazineInHand();
