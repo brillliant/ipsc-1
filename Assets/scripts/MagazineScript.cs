@@ -16,7 +16,7 @@ public class MagazineScript : MonoBehaviour {
     [HideInInspector] public GameObject magazineRoot;
     private Rigidbody rb; 
     
-    private GameObject handGrabInteraction;
+    public GameObject handGrabInteraction;
 
     private Boolean enteredPoint1;
     private Boolean readyToLock;
@@ -123,28 +123,6 @@ public class MagazineScript : MonoBehaviour {
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         pistolScript.setMagazineToPistolHierarchy(gameObject);
     }
-    
-    /*void OnTriggerEnter(Collider other) {
-        if (!enteredPoint1 &&
-            other.gameObject.name == "reloadPoint2" 
-            && !isMagazineMovingInGun && !pistolScript.hasMagazineChild()) {
-
-            enteredPoint1 = true;
-            handGrabInteraction.SetActive(false);
-            mainScript.isHandKeepingMagazine = false;
-            isMagazineMovingInGun = true;
-            
-            rb.isKinematic = false;
-            rb.useGravity = true;
-            
-            if (ReferenceEquals(transform.parent, null) || !transform.parent.name.Contains("Root")) {
-                transform.SetParent(magazineRoot.transform);
-            }
-
-            rb.constraints = RigidbodyConstraints.FreezeRotation;
-            pistolScript.setMagazineToPistolHierarchy(gameObject);
-        }
-    }*/
 
     private void keepMagazineOnRailsIfNeeded() {
         if (isMagazineMovingInGun) {
@@ -155,8 +133,6 @@ public class MagazineScript : MonoBehaviour {
     private void setLimitedPositionAndRotation() {
         transform.localScale = Vector3.one;
         
-        Debug.Log($"local Y {transform.localPosition.y}");
-        
         transform.localPosition = new Vector3(
             reloadPoint2.transform.localPosition.x,
             transform.localPosition.y,
@@ -166,10 +142,12 @@ public class MagazineScript : MonoBehaviour {
     }
 
     void FixedUpdate() {
+#if UNITY_EDITOR
         Debug.DrawRay(transform.position, Physics.gravity, Color.blue); // сила гравита
         Debug.DrawRay(transform.position, rb.velocity, Color.red); // линейная скорость
         Debug.DrawRay(transform.position, rb.angularVelocity, Color.green); // угловая скорость
         //Debug.Log($"Velocity: {rb.velocity}, Angular: {rb.angularVelocity}");
+#endif
     }
     
 #if UNITY_EDITOR

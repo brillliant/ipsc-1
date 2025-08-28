@@ -89,8 +89,8 @@ public class PistolScript : MonoBehaviour {
         
         rememberMagazine(magazine);
     }
-    
-    public void rememberMagazine(GameObject magazine) {
+
+    private void rememberMagazine(GameObject magazine) {
         if (!magazine) return;
         purgeNulls();                         // чистим мёртвые ссылки
         if (!magSet.Add(magazine)) return;       // уже есть — не добавляем
@@ -157,9 +157,13 @@ public class PistolScript : MonoBehaviour {
             magazineOutSound.PlayOneShot(magazineOutSound.clip);
             
             magazineLockedInPistol = false;
-            magazine.GetComponent<Rigidbody>().isKinematic = false;
-            magazine.GetComponent<Rigidbody>().useGravity = true;
-
+            var magazineRigidbody = magazine.GetComponent<Rigidbody>();
+            magazineRigidbody.isKinematic = false;
+            magazineRigidbody.useGravity = true;
+            
+            //magazine.transform.SetParent(null);
+            //magazineScript.handGrabInteraction.SetActive(true);//todo temp
+            
             magazineScript.setIsMagazineMovingInGunTrue();
         } else {
             //todo yp сделать другой звук
@@ -233,9 +237,10 @@ public class PistolScript : MonoBehaviour {
         roundInChamber.transform.localPosition = localPos;
         roundInChamber.transform.localRotation = localRot;
         roundInChamber.transform.localScale   = localScale;
-        
-        roundInChamber.GetComponent<Rigidbody>().isKinematic = true;
-        roundInChamber.GetComponent<Rigidbody>().useGravity = false;
+
+        var roundInChamberRigidbody = roundInChamber.GetComponent<Rigidbody>();
+        roundInChamberRigidbody.isKinematic = true;
+        roundInChamberRigidbody.useGravity = false;
         
         roundInChamberFlag = true;
     }
@@ -329,7 +334,7 @@ public class PistolScript : MonoBehaviour {
             magazineScript = magazine.GetComponent<MagazineScript>();
             magazineInSound.PlayOneShot(magazineInSound.clip);
         } 
-        this.magazineLockedInPistol = magazineLocked;
+        magazineLockedInPistol = magazineLocked;
     }
 
     void Template() {
