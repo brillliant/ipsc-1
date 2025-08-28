@@ -74,13 +74,14 @@ public class Main : MonoBehaviour {
     }
 
     void Update() {
-        paintRay();
-        
         if (isTargetSetUpMenuActivated) {
+            paintRay();
             setUpTargets(previewPrefab, targetPrefab);
         } else if (isNoShotSetUpMenuActivated) {
+            paintRay();
             setUpTargets(previewPrefabNoShot, prefabNoShot);
         } else {
+            hideRay();
             if (currentPreview is not null) {
                 currentPreview.SetActive(false);
             }
@@ -138,19 +139,27 @@ public class Main : MonoBehaviour {
 
     private void paintRay() {
         if (!line) {
-            var rayGameObject = new GameObject("DebugRay");
+            var rayGameObject = new GameObject("Ray");
             rayGameObject.transform.SetParent(bulletPoint, false);
             line = rayGameObject.AddComponent<LineRenderer>();
             line.startWidth = 0.005f;
             line.endWidth   = 0.001f;
-            line.material = new Material(Shader.Find("Unlit/Color"));
+            line.material = new Material(Shader.Find("Sprites/Default")); // стерео-совместимый
             line.material.color = Color.red;
             line.positionCount = 2;
             line.useWorldSpace = true;
+            line.alignment = LineAlignment.View;
         }
+        
+        if (!line.enabled) line.enabled = true;
 
         line.SetPosition(0, bulletPoint.position);               // визуализация того же луча
         line.SetPosition(1, bulletPoint.position + bulletPoint.forward * 10f);
+    }
+    
+    private void hideRay() {
+        if (!line) return;
+        line.enabled = false;
     }
 
     private int getNextIndex() {
