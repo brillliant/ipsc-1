@@ -15,7 +15,6 @@ public class Main : MonoBehaviour {
     public Boolean isHandKeepingMagazine = false;
     
     private GameObject currentPreview;
-    //private GameObject currentNoShotPreview;
     private EffectMesh effectMeshScript;
     
     public TextMeshProUGUI menuItem1_stage;

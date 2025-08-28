@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class MagazineScript : MonoBehaviour {
@@ -91,7 +90,7 @@ public class MagazineScript : MonoBehaviour {
     //рушение: переписать все тригеры на ручную проверку координаты и выставление флага.
     private void checkPositionIfNeeded() {
         if (isMagazineMovingInGun && !rb.isKinematic && rb.useGravity) {
-            if (transform.localPosition.y < -0.035f) { //todo yp после полировки вынести в константу
+            if (transform.localPosition.y < -0.032f) { //todo yp после полировки вынести в константу
                 magazineFullEjection();
             }
         }
@@ -105,7 +104,6 @@ public class MagazineScript : MonoBehaviour {
         handGrabInteraction.SetActive(true);
         rb.constraints = RigidbodyConstraints.None;
         pistolScript.removeMagazineLink();
-
     }
     
     public void startInsertion() {
