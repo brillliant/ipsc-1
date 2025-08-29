@@ -5,7 +5,7 @@ public class BulletScript : MonoBehaviour {
     public GameObject bulletHolePrefab; // Префаб пробоины
     private Main mainScript;
     private double min = 0.0001;
-    private double max = 0.001;
+    private double max = 0.0009;
         
     void Start() {
         codeObject = GameObject.Find("codeObject");

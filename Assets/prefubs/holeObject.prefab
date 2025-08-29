@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7187036121868991816}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: holeObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 878795155102523847}
   - component: {fileID: 9076599582567975821}
   - component: {fileID: 7142403045109893703}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Quad
   m_TagString: Untagged
   m_Icon: {fileID: 0}

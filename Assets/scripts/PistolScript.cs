@@ -194,9 +194,8 @@ public class PistolScript : MonoBehaviour {
         OVRInput.SetControllerHapticsAmplitudeEnvelope(_vibration, OVRInput.Controller.RTouch);
         var bullet = Instantiate(bulletPrefub);
         var bulletRigidbody = bullet.GetComponent<Rigidbody>();
-        var transform1 = bullet.transform;
-        transform1.position = bulletPoint.position;
-        transform1.rotation = bulletPoint.rotation;
+        bullet.transform.position = bulletPoint.position;
+        bullet.transform.rotation = bulletPoint.rotation;
 
         visualEffect();
 
