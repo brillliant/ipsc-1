@@ -21219,7 +21219,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2296141232796561049, guid: cee191920b8eb41b0960b1082a393a3e, type: 3}
       propertyPath: hideMesh
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2296141232796561049, guid: cee191920b8eb41b0960b1082a393a3e, type: 3}
       propertyPath: Colliders
@@ -39972,10 +39972,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132149147182654}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.9962221, z: -0, w: -0.08684276}
-  m_LocalPosition: {x: 0.005, y: -0.026, z: -0.04}
-  m_LocalScale: {x: 3.0999982, y: 3.1, z: 3.0999982}
-  m_ConstrainProportionsScale: 0
+  m_LocalRotation: {x: 0.019013407, y: -0.98779136, z: -0.15451926, w: -0.0055253105}
+  m_LocalPosition: {x: 0.009, y: -0.0182, z: -0.0378}
+  m_LocalScale: {x: 3.2699997, y: 3.2699997, z: 3.2699997}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4144468436102475726}
   - {fileID: 2238042363386343825}
@@ -39986,7 +39986,7 @@ Transform:
   - {fileID: 104025056}
   - {fileID: 627365556}
   m_Father: {fileID: 1828601336}
-  m_LocalEulerAnglesHint: {x: 81.822, y: -189.964, z: 0}
+  m_LocalEulerAnglesHint: {x: -17.787, y: -180.303, z: -2.158}
 --- !u!1 &919132149147182654
 GameObject:
   m_ObjectHideFlags: 0
@@ -40244,7 +40244,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0.005513532, z: 0}
   m_Axis: {x: 0, y: 0, z: 1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.000030000321, y: 0.022016041, z: -0.020580577}
+  m_ConnectedAnchor: {x: 0.000029999946, y: 0.022016041, z: -0.02058057}
   serializedVersion: 3
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 1

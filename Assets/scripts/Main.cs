@@ -73,6 +73,13 @@ public class Main : MonoBehaviour {
     }
 
     void Update() {
+        //todo test task 38
+        /*if (Input.GetKeyUp(KeyCode.U) ||
+            OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch)) {
+
+            Debug.LogWarning("Second controller");
+        }*/
+        
         if (isTargetSetUpMenuActivated) {
             paintRay();
             setUpTargets(previewPrefab, targetPrefab);
