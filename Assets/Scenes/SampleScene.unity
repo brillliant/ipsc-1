@@ -39858,7 +39858,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.020292457, y: -0.9889601, z: -0.14675047, w: 0.0032327545}
   m_LocalPosition: {x: 0.0086, y: -0.009100005, z: -0.035000004}
-  m_LocalScale: {x: 3.45, y: 3.45, z: 3.45}
+  m_LocalScale: {x: 3.41, y: 3.41, z: 3.41}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4144468436102475726}
@@ -40128,7 +40128,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0.005513532, z: 0}
   m_Axis: {x: 0, y: 0, z: 1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.0000300001, y: 0.022016043, z: -0.020580573}
+  m_ConnectedAnchor: {x: 0.000029999926, y: 0.022016045, z: -0.020580577}
   serializedVersion: 3
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 1

@@ -93,7 +93,7 @@ public class Main : MonoBehaviour {
             }
         }
         //menu change
-        if (Input.GetKeyUp(KeyCode.Y) || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickUp) || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickDown)) changeMenu();
+        if (Input.GetKeyUp(KeyCode.Y) ||/* OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickUp) ||*/ OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickRight)) changeMenu();
         if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft)) showHideWalls();
     }
 

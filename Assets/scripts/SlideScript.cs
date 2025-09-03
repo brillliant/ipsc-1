@@ -21,12 +21,16 @@ public class SlideScript : MonoBehaviour {
     
     private ConfigurableJoint configurableJoint;
     private Vector3 connectedAnchor;
-    
+    private const float погрешностьМеханизма = 0.001f;
+
     private void Awake() {
         sliderAnimator = GetComponent<Animator>();
         sliderAnimator.enabled = false;
         localPosition0 = transform.localPosition;
         localRotation0 = transform.localEulerAngles;
+        
+        startZ = localPosition0.z;
+        backZ = startZ + maxOffset + погрешностьМеханизма;
         
         pistolScript = GetComponentInParent<PistolScript>();
         
@@ -54,14 +58,47 @@ public class SlideScript : MonoBehaviour {
     }
 	
     void Update () {
-        Vector3 currentLocal = transform.localPosition;
-        float dz = currentLocal.z - localPosition0.z;
-        dz = Mathf.Clamp(dz, 0f, maxOffset);
+        if (sliderAnimationRunning) return;
         
-        transform.localPosition = new Vector3(localPosition0.x, localPosition0.y, localPosition0.z + dz);
+        Vector2 stick = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, OVRInput.Controller.RTouch);
+        float down = Mathf.Max(0f, -stick.y);
+        
+        if (down > 0.05f) {
+            if (oneGrabTranslateTransformer) oneGrabTranslateTransformer.enabled = false;
+            if (slideLockedFlag) {
+                if (down > 0.8f) {//порог срабатывания выше, если стоим на задержке. диапазон 0-1
+                    slideBackMove();
+                }
+            } else {
+                // стик рулит — ручной кламп не трогаем
+                slideBackMove();
+            }
+        } else {
+            // ручное перетягивание — только кламп
+            if (oneGrabTranslateTransformer) oneGrabTranslateTransformer.enabled = true;
+
+            Vector3 currentLocal = transform.localPosition;
+            float dz = currentLocal.z - localPosition0.z;
+            dz = Mathf.Clamp(currentLocal.z - localPosition0.z, 0f, maxOffset);
+
+            transform.localPosition = new Vector3(localPosition0.x, localPosition0.y, localPosition0.z + dz);
+        }
         transform.localEulerAngles = localRotation0;
-        
+
         if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) setSlideUnLocked();
+    }
+    
+    private float startZ;        // положение вперёд
+    //private float backZ = -0.01148f;  // положение назад (например -0.01148f)
+    private float backZ;
+
+    private void slideBackMove() {
+        // получаем ось стика
+        Vector2 stick = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, OVRInput.Controller.RTouch);
+        float down = Mathf.Max(0f, -stick.y); // вниз = минус → делаем положительное значение
+
+        float z = Mathf.Lerp(startZ, backZ, down);
+        transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, z);
     }
 
     private bool hasTriggeredPullEvent = false;  // флаг, что затвор дёрнули назад
