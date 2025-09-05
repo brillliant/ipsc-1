@@ -61,13 +61,17 @@ public class MagazinesBagScript : MonoBehaviour {
 
     private void takeMagazine(Collider other) {
         if (other.gameObject.name == "LeftHandCollider") {
-            if (!mainScript.isHandKeepingMagazine) {
-                instantiateMagazineInHand();
-            }
-            else {
-                Destroy(magazine);
-                mainScript.isHandKeepingMagazine = false;
-            }
+            getReturnMag();
+        }
+    }
+
+    public void getReturnMag() {
+        if (!mainScript.isHandKeepingMagazine) {
+            instantiateMagazineInHand();
+        }
+        else {
+            Destroy(magazine);
+            mainScript.isHandKeepingMagazine = false;
         }
     }
 
