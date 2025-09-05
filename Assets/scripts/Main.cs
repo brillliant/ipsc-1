@@ -1,10 +1,12 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using DefaultNamespace;
 using Meta.XR.MRUtilityKit;
 using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Main : MonoBehaviour {
     public GameObject targetPrefab;
@@ -37,10 +39,17 @@ public class Main : MonoBehaviour {
     
     private LineRenderer line;
     private Transform bulletPoint;
+
+    private TextMeshProUGUI readyText;
+    private TextMeshProUGUI hintText;
+    private bool gameStarted = false;
     
     void Start() {
         InvokeRepeating(nameof(SetHandColliderLayer), 1f, 1f); // кажду секунду пробуем задать слой для левой руки
         bulletPoint = GameObject.Find("Glock17").GetComponent<PistolScript>().bulletPoint;
+        
+        readyText = GameObject.Find("ready").GetComponent<TextMeshProUGUI>();
+        hintText = GameObject.Find("hint").GetComponent<TextMeshProUGUI>();
         
         objectDataList = new List<ObjectData>();
         установленныеМишени = new List<GameObject>();
@@ -73,28 +82,60 @@ public class Main : MonoBehaviour {
     }
 
     void Update() {
-        //todo test task 38
-        /*if (Input.GetKeyUp(KeyCode.U) ||
-            OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch)) {
-
-            Debug.LogWarning("Second controller");
-        }*/
-        
         if (isTargetSetUpMenuActivated) {
             paintRay();
             setUpTargets(previewPrefab, targetPrefab);
+            
+            readyText.gameObject.SetActive(false);
+            hintText.gameObject.SetActive(false);
         } else if (isNoShotSetUpMenuActivated) {
             paintRay();
             setUpTargets(previewPrefabNoShot, prefabNoShot);
-        } else {
+            
+            readyText.gameObject.SetActive(false);
+            hintText.gameObject.SetActive(false);
+        }
+        else {
             hideRay();
             if (currentPreview is not null) {
                 currentPreview.SetActive(false);
             }
+
+            if (!gameStarted) {
+                //sound "Load and make ready"
+                readyText.gameObject.SetActive(true);
+                hintText.gameObject.SetActive(true);
+            }
         }
+        
         //menu change
-        if (Input.GetKeyUp(KeyCode.Y) ||/* OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickUp) ||*/ OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickRight)) changeMenu();
+        if (Input.GetKeyUp(KeyCode.J) || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickRight)) changeMenu();
         if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft)) showHideWalls();
+        
+        if (!(isTargetSetUpMenuActivated && isNoShotSetUpMenuActivated) && (OVRInput.Get(OVRInput.RawAxis1D.LIndexTrigger) > 0 
+                                                                            || Input.GetKeyDown(KeyCode.Z))) {
+            startGame();
+        }
+    }
+
+    private void startGame() {
+        gameStarted = true;
+        //sound "Are you ready?"
+        readyText.text = "Are you ready?";
+        hintText.gameObject.SetActive(false);
+        
+        Invoke(nameof(standBy), 3f);
+        Invoke(nameof(startTimer), Random.Range(3f, 5f));
+    }
+    
+    private void standBy() {
+        //sound "Stand by!"
+        readyText.text = "Stand by!";
+    }
+    
+    private void startTimer() {
+        //sound "beep!"
+        readyText.gameObject.SetActive(false);
     }
 
     private void showHideWalls() {
