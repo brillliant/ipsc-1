@@ -208,7 +208,7 @@ public class Main : MonoBehaviour {
     }
 
     private void showLoadAndMakeReadyCommand() {
-        hintText.gameObject.SetActive(true);
+        readyText.gameObject.SetActive(true);
         hintText.gameObject.SetActive(true);
         
         //todo sound Load And Make Ready
