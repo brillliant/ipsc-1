@@ -13,7 +13,6 @@ public class Main : MonoBehaviour {
     public GameObject previewPrefab;
     public GameObject previewPrefabNoShot;
     public GameObject prefabNoShot;
-    public GameObject cube2Temp;
     public Boolean isHandKeepingMagazine = false;
     
     private GameObject currentPreview;
@@ -43,9 +42,19 @@ public class Main : MonoBehaviour {
     private TextMeshProUGUI readyText;
     private TextMeshProUGUI hintText;
     private bool gameStarted = false;
+
+    public AudioSource loadAndMakeReadySound;
+    public AudioSource areYouReadySound;
+    public AudioSource standByySound;
+    public AudioSource beepSound;
+    
+    private bool running;
+    private float startTime;
+    private float lastShotTime;
+    private bool inprocessCommand;
     
     void Start() {
-        InvokeRepeating(nameof(SetHandColliderLayer), 1f, 1f); // кажду секунду пробуем задать слой для левой руки
+        InvokeRepeating(nameof(setHandColliderLayer), 1f, 1f); // кажду секунду пробуем задать слой для левой руки
         bulletPoint = GameObject.Find("Glock17").GetComponent<PistolScript>().bulletPoint;
         
         readyText = GameObject.Find("ready").GetComponent<TextMeshProUGUI>();
@@ -65,13 +74,42 @@ public class Main : MonoBehaviour {
 #endif
     }
     
-    void SetHandColliderLayer() {
+    private void startTimer() {
+        startTime = Time.realtimeSinceStartup;
+        lastShotTime = 0f;
+        running = true;
+    }
+    public void registerShot() {
+        if (!running) return;
+        lastShotTime = Time.realtimeSinceStartup - startTime;
+    }
+    private void stopTimer() {
+        running = false;
+    }
+    
+    // текущее время с момента старта (для дисплея)
+    private float elapsed() {
+        return running ? Time.realtimeSinceStartup - startTime : lastShotTime;
+    }
+    
+    // итоговое время (равно последнему зафиксированному выстрелу)
+    public string showTotalTime() {
+        return formatTime(lastShotTime);
+    }
+    
+    public string formatTime(float t) {
+        int minutes = (int)(t / 60f);
+        float seconds = t % 60f;
+        return $"{minutes:00}:{seconds:00.00}";
+    }
+    
+    void setHandColliderLayer() {
         GameObject capsules = GameObject.Find("Capsules");
         if (capsules == null) return;
 
         int layer = LayerMask.NameToLayer(targetLayer);
         SetLayerRecursive(capsules, layer);
-        CancelInvoke(nameof(SetHandColliderLayer)); // один раз хватит
+        CancelInvoke(nameof(setHandColliderLayer)); // один раз хватит
     }
 
     void SetLayerRecursive(GameObject obj, int layer) {
@@ -103,8 +141,8 @@ public class Main : MonoBehaviour {
 
             if (!gameStarted) {
                 //sound "Load and make ready"
-                readyText.gameObject.SetActive(true);
-                hintText.gameObject.SetActive(true);
+                //readyText.gameObject.SetActive(true);
+                //hintText.gameObject.SetActive(true);
             }
         }
         
@@ -112,39 +150,104 @@ public class Main : MonoBehaviour {
         if (Input.GetKeyUp(KeyCode.J) || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickRight)) changeMenu();
         if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft)) showHideWalls();
         
-        if (!(isTargetSetUpMenuActivated && isNoShotSetUpMenuActivated) && (OVRInput.Get(OVRInput.RawAxis1D.LIndexTrigger) > 0 
-                                                                            || Input.GetKeyDown(KeyCode.Z))) {
+        if (!(isTargetSetUpMenuActivated && isNoShotSetUpMenuActivated) 
+            && !gameStarted
+            && !inprocessCommand
+            && (OVRInput.Get(OVRInput.RawAxis1D.LIndexTrigger) > 0 
+            || Input.GetKeyDown(KeyCode.Z))) {
+            
             startGame();
         }
+        
+        if (!(isTargetSetUpMenuActivated && isNoShotSetUpMenuActivated) 
+            && gameStarted 
+            && !inprocessCommand
+            && (OVRInput.Get(OVRInput.RawAxis1D.LIndexTrigger) > 0 
+            || Input.GetKeyDown(KeyCode.Z))) {
+            
+            stopGame();
+        }
+        
+        //temp
+        if (OVRInput.Get(OVRInput.RawAxis1D.LIndexTrigger) > 0) {
+             Debug.LogWarning("left controller clicked");
+        }
+    }
+    
+    private void stopGame() {
+        gameStarted = false;
+        inprocessCommand = true;
+        stopTimer();
+        
+        //todo 
+        //sound "If you are finished, unload and show clear?"
+        readyText.text = "If you are finished, unload and show clear";
+        readyText.gameObject.SetActive(true);
+        
+        Invoke(nameof(sayHolsterCommand), 4f);
+    }
+
+    private void sayHolsterCommand() {
+        //todo 
+        //sound "If clear, hammer down and holster"
+        readyText.text = "If clear, hammer down and holster";
+        
+        Invoke(nameof(clearHintShotTime), 4f);
+    }
+    
+    private void clearHintShotTime() {
+        inprocessCommand = false;
+        readyText.text = showTotalTime();
     }
 
     private void startGame() {
+        inprocessCommand = true;
         gameStarted = true;
+
+        showLoadAndMakeReadyCommand();
+    }
+
+    private void showLoadAndMakeReadyCommand() {
+        hintText.gameObject.SetActive(true);
+        hintText.gameObject.SetActive(true);
+        
+        //todo sound Load And Make Ready
+        readyText.text = "Load and make ready";
+        hintText.text = "(press left trigger when ready)";
+        
+        
+        Invoke(nameof(showAreYouReadyCommand), 4f);
+    }
+    
+    private void showAreYouReadyCommand() {
+        //todo 
         //sound "Are you ready?"
         readyText.text = "Are you ready?";
         hintText.gameObject.SetActive(false);
         
-        Invoke(nameof(standBy), 3f);
-        Invoke(nameof(startTimer), Random.Range(3f, 5f));
+        Invoke(nameof(standBy), 2f);
     }
     
     private void standBy() {
+        //todo 
         //sound "Stand by!"
         readyText.text = "Stand by!";
+        Invoke(nameof(beepAndStartTimer), Random.Range(2f, 4f));
     }
     
-    private void startTimer() {
-        //sound "beep!"
+    private void beepAndStartTimer() {
         readyText.gameObject.SetActive(false);
+        beepSound.PlayOneShot(beepSound.clip);
+        
+        startTimer();
+        inprocessCommand = false;
     }
 
     private void showHideWalls() {
         if (effectMeshScript.HideMesh) {
             effectMeshScript.HideMesh = false;
-            tempColorChange();
         } else {
             effectMeshScript.HideMesh = true;
-            tempColorChange();
         }
     }
 
@@ -318,23 +421,6 @@ public class Main : MonoBehaviour {
                   Debug.LogWarning("Prefab not found: " + data.prefabName);
                 }
             }
-        }
-    }
-
-    //todo удалить после отладки
-    private Color color1 = Color.red;
-    private Color color2 = Color.blue;
-    
-    private bool isColor1Active = true;
-    
-    //todo удалить позже
-    private void tempColorChange() {
-        Renderer renderer = cube2Temp.GetComponent<Renderer>();
-        if (renderer != null) {
-            renderer.material.color = isColor1Active ? color1 : color2;
-            isColor1Active = !isColor1Active;
-        } else {
-            Debug.LogWarning("У объекта нет компонента Renderer!");
         }
     }
 }

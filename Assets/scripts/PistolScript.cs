@@ -200,6 +200,7 @@ public class PistolScript : MonoBehaviour {
         visualEffect();
 
         shotSound.PlayOneShot(shotSound.clip);
+        mainScript.registerShot();
         bulletRigidbody.velocity = bulletPoint.forward * bulletSpeed;
         recoil();
         
