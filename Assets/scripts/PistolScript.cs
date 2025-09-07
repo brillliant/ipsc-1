@@ -186,8 +186,18 @@ public class PistolScript : MonoBehaviour {
         }
     }
 
+    /**
+    * если была команда судьей, то делаем пустой спуск крючка для судьи
+    */
+    private void triggerPushForRangeOfficerIfNeeded() {
+        if (mainScript.hummerDownCommandGiven) {
+            mainScript.clearHintShotTime();
+        }
+    }
+
     private void emptyShoot() {
         emptyShotSound.PlayOneShot(emptyShotSound.clip);
+        triggerPushForRangeOfficerIfNeeded();
     }
     
     private void shoot() {
@@ -335,6 +345,17 @@ public class PistolScript : MonoBehaviour {
             magazineInSound.PlayOneShot(magazineInSound.clip);
         } 
         magazineLockedInPistol = magazineLocked;
+    }
+
+    /**
+     * moving or locked
+     */
+    public bool isMagazineInPistol() {
+        if (magazine is null) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     void Template() {

@@ -22,6 +22,7 @@ public class SlideScript : MonoBehaviour {
     private ConfigurableJoint configurableJoint;
     private Vector3 connectedAnchor;
     private const float погрешностьМеханизма = 0.001f;
+    private Main mainScript;
 
     private void Awake() {
         sliderAnimator = GetComponent<Animator>();
@@ -39,6 +40,8 @@ public class SlideScript : MonoBehaviour {
         
         configurableJoint.autoConfigureConnectedAnchor = false;
         connectedAnchor = configurableJoint.connectedAnchor;
+        
+        mainScript = GameObject.Find("codeObject").GetComponent<Main>();;
     }
 
     public void runSliderAnimation() {
@@ -53,6 +56,9 @@ public class SlideScript : MonoBehaviour {
         sliderAnimationRunning = false;
     }
     
+    /**
+     * оттянул назад
+     */
     public void onRunSliderMovedBack() {
         sliderMovedBackActions(false);
     }
@@ -103,9 +109,36 @@ public class SlideScript : MonoBehaviour {
 
     private bool hasTriggeredPullEvent = false;  // флаг, что затвор дёрнули назад
     private float slidePullThreshold = 0.0088f;  // насколько нужно оттянуть, чтобы считать, что затвор дёрнули
+    private float slidePullShowСhamberThreshold = 0.006f;  // насколько нужно оттянуть, чтобы считать, что затвор дёрнули
 
     private void LateUpdate() {
-        DetectSlidePull(); // проверяем, было ли полное передёргивание
+        checkEmptyBackHold(); // проверяем показал ли патронник судье? (если надо)
+        detectSlidePull(); // проверяем, было ли полное передёргивание
+    }
+
+    private float holdSlideTimer = 0f;
+    private const float delayToShowEmptyChamber = 2f;
+    
+    /**
+     * если была команда судьей, вынял ли магазин и показал ли пустой патронник?
+     */
+    private void checkEmptyBackHold() {
+        if (mainScript.unloadAndShowClearCommandGiven && !pistolScript.isMagazineInPistol()) {
+            if (!sliderAnimationRunning) {
+                float dz = transform.localPosition.z - localPosition0.z;
+
+                if (dz >= slidePullShowСhamberThreshold && !pistolScript.isRoundInChamber()) {
+                    holdSlideTimer += Time.deltaTime;
+                    
+                    if (holdSlideTimer >= delayToShowEmptyChamber) {
+                        mainScript.sayHolsterCommand();
+                        holdSlideTimer = 0f;
+                    }
+                } else {
+                    holdSlideTimer = 0f;
+                }
+            }
+        }
     }
 
     private void sliderMovedBackActions(bool manual) {
@@ -131,7 +164,6 @@ public class SlideScript : MonoBehaviour {
     private void setSlideLockedDelay() {
         slideLockedFlag = true;
         slideLockRangeMove(0.008f);
-        //todo temp disabled
         oneGrabTranslateTransformer.Constraints.MinZ.Value = -0.0143f;
     }
     
@@ -154,7 +186,7 @@ public class SlideScript : MonoBehaviour {
         }
     }
 
-    public void DetectSlidePull() {
+    public void detectSlidePull() {
         checkSlideLock();
         
         if (!sliderAnimationRunning) {

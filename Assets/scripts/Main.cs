@@ -6,6 +6,7 @@ using DefaultNamespace;
 using Meta.XR.MRUtilityKit;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class Main : MonoBehaviour {
@@ -52,6 +53,8 @@ public class Main : MonoBehaviour {
     private float startTime;
     private float lastShotTime;
     private bool inprocessCommand;
+    public bool unloadAndShowClearCommandGiven = false;
+    public bool hummerDownCommandGiven = false;
     
     void Start() {
         InvokeRepeating(nameof(setHandColliderLayer), 1f, 1f); // кажду секунду пробуем задать слой для левой руки
@@ -183,21 +186,28 @@ public class Main : MonoBehaviour {
         //sound "If you are finished, unload and show clear?"
         readyText.text = "If you are finished, unload and show clear";
         readyText.gameObject.SetActive(true);
-        
-        Invoke(nameof(sayHolsterCommand), 4f);
+
+        unloadAndShowClearCommandGiven = true;
     }
 
-    private void sayHolsterCommand() {
+    public void sayHolsterCommand() {
+        unloadAndShowClearCommandGiven = false;
         //todo 
         //sound "If clear, hammer down and holster"
+        readyText.gameObject.SetActive(true);
         readyText.text = "If clear, hammer down and holster";
-        
-        Invoke(nameof(clearHintShotTime), 4f);
+
+        hummerDownCommandGiven = true;
     }
     
-    private void clearHintShotTime() {
+    public void clearHintShotTime() {
         inprocessCommand = false;
-        readyText.text = showTotalTime();
+        hummerDownCommandGiven = false;
+        Invoke(nameof(showTimeOnTheScreen), 4f);
+    }
+
+    private void showTimeOnTheScreen() {
+        readyText.text = "Your time: " + showTotalTime();
     }
 
     private void startGame() {
@@ -213,8 +223,8 @@ public class Main : MonoBehaviour {
         
         //todo sound Load And Make Ready
         readyText.text = "Load and make ready";
-        hintText.text = "(press left trigger when ready)";
-        
+        //todo продумтаь логику запуска сорев
+        //hintText.text = "(press left trigger when ready)";
         
         Invoke(nameof(showAreYouReadyCommand), 4f);
     }
