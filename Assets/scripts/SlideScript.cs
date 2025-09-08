@@ -153,6 +153,8 @@ public class SlideScript : MonoBehaviour {
             if (pistolScript.isRoundInChamber()) {
                 ejectRound(manual); // выброс патрона
             }
+
+            pistolScript.hammerDown = false;
         } else if (slideLockedFlag) {
             // снятие с задержки при дотяжке назад
             if (slideLockedFlag && !pistolScript.shouldSliderLock()) {

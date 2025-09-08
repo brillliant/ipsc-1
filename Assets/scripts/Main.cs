@@ -60,6 +60,7 @@ public class Main : MonoBehaviour {
     public bool hummerDownCommandGiven = false;
 
     private GameObject pistol;
+    private PistolScript pistolScript;
 
     private MeshRenderer pushHandPointOnPistolMesh;
 
@@ -69,7 +70,8 @@ public class Main : MonoBehaviour {
     void Start() {
         InvokeRepeating(nameof(setHandColliderLayer), 1f, 1f); // кажду секунду пробуем задать слой для левой руки
         pistol = GameObject.Find("Glock17");
-        bulletPoint = pistol.GetComponent<PistolScript>().bulletPoint;
+        pistolScript = pistol.GetComponent<PistolScript>();
+        bulletPoint = pistolScript.bulletPoint;
 
         readyText = GameObject.Find("ready").GetComponent<TextMeshProUGUI>();
         hintText = GameObject.Find("hint").GetComponent<TextMeshProUGUI>();
@@ -158,7 +160,6 @@ public class Main : MonoBehaviour {
             }
         }
         
-        //menu change
         if (Input.GetKeyUp(KeyCode.J) || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickRight)) changeMenu();
         if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft)) showHideDebugMesh();
         
@@ -178,11 +179,6 @@ public class Main : MonoBehaviour {
             || Input.GetKeyDown(KeyCode.Z))) {
             
             stopGame();
-        }
-        
-        //temp
-        if (OVRInput.Get(OVRInput.RawAxis1D.LIndexTrigger) > 0) {
-             Debug.LogWarning("left controller clicked");
         }
     }
     
@@ -206,14 +202,16 @@ public class Main : MonoBehaviour {
         ifClearHammerDownAndHolster.PlayOneShot(ifClearHammerDownAndHolster.clip);
 
         hummerDownCommandGiven = true;
+        pistolScript.hammerDown = false;
     }
     
     public void clearHintShotTime() {
-        rangeIsClear.PlayOneShot(rangeIsClear.clip);
-        
         inprocessCommand = false;
         hummerDownCommandGiven = false;
-        Invoke(nameof(showTimeOnTheScreen), 4f);
+        
+        rangeIsClear.PlayOneShot(rangeIsClear.clip);
+
+        showTimeOnTheScreen();
     }
 
     private void showTimeOnTheScreen() {

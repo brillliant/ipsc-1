@@ -40,8 +40,10 @@ public class PistolScript : MonoBehaviour {
     private Boolean inShooting = false;
 
     private Quaternion originalRotation;
-
     private Transform magazineRootTransform;
+
+    public bool hammerDown = false;
+    const float tolDeg = 25f;
     
     void Start() {
         originalRotation = transform.localRotation;
@@ -137,6 +139,22 @@ public class PistolScript : MonoBehaviour {
             if (Input.GetKeyUp(KeyCode.U) || OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.RTouch)) releaseMagazine();
         }
     }
+    
+    /*
+     * проверяю позицию, если пистолет накланен вниз. типа в кобуре
+     */
+    private void checkIfPistolInHolster() {
+        if (mainScript.hummerDownCommandGiven) {
+            Vector3 barrelDir = -transform.forward;
+            if (Vector3.Angle(barrelDir, Vector3.down) <= tolDeg) {
+                mainScript.clearHintShotTime();
+            }
+        }
+    }
+
+    private void LateUpdate() {
+        checkIfPistolInHolster();
+    }
 
     public Transform findMagazine() {
         foreach (Transform child in magazineRootTransform.GetComponentsInChildren<Transform>(false)) {
@@ -186,18 +204,11 @@ public class PistolScript : MonoBehaviour {
         }
     }
 
-    /**
-    * если была команда судьей, то делаем пустой спуск крючка для судьи
-    */
-    private void triggerPushForRangeOfficerIfNeeded() {
-        if (mainScript.hummerDownCommandGiven) {
-            mainScript.clearHintShotTime();
-        }
-    }
-
     private void emptyShoot() {
         emptyShotSound.PlayOneShot(emptyShotSound.clip);
-        triggerPushForRangeOfficerIfNeeded();
+        if (mainScript.hummerDownCommandGiven) {
+            hammerDown = true;
+        }
     }
     
     private void shoot() {
