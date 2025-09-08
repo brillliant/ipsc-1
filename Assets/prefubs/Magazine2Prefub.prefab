@@ -316,8 +316,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 3.3000002, y: 3.3000002, z: 3.3000002}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 549650658532867229}
   - {fileID: 744474428795194860}
@@ -416,6 +416,7 @@ MonoBehaviour:
   reloadPoint2: {fileID: 0}
   isMagazineMovingInGun: 0
   magazineRoot: {fileID: 0}
+  handGrabInteraction: {fileID: 0}
 --- !u!1 &8833268814856096607
 GameObject:
   m_ObjectHideFlags: 0
@@ -461,9 +462,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac619bccc9641eb4bb663c529697cb8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allowedApproachDirectionLocal: {x: 0, y: 1, z: 0}
-  magazineRootTransform: {fileID: 0}
-  radiusMeters: 0.01
 --- !u!136 &454262896743157792
 CapsuleCollider:
   m_ObjectHideFlags: 0

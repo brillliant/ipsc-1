@@ -55,11 +55,19 @@ public class Main : MonoBehaviour {
     private bool inprocessCommand;
     public bool unloadAndShowClearCommandGiven = false;
     public bool hummerDownCommandGiven = false;
+
+    private GameObject pistol;
+
+    private MeshRenderer pushHandPointOnPistolMesh;
+
+    private GameObject leftHand;
+    private MeshRenderer pushMagazinePointOnHandMesh;
     
     void Start() {
         InvokeRepeating(nameof(setHandColliderLayer), 1f, 1f); // кажду секунду пробуем задать слой для левой руки
-        bulletPoint = GameObject.Find("Glock17").GetComponent<PistolScript>().bulletPoint;
-        
+        pistol = GameObject.Find("Glock17");
+        bulletPoint = pistol.GetComponent<PistolScript>().bulletPoint;
+
         readyText = GameObject.Find("ready").GetComponent<TextMeshProUGUI>();
         hintText = GameObject.Find("hint").GetComponent<TextMeshProUGUI>();
         
@@ -75,6 +83,10 @@ public class Main : MonoBehaviour {
 #if UNITY_EDITOR
     changeMenu();
 #endif
+        
+        pushHandPointOnPistolMesh = pistol.transform.Find("pushHandPoint/Sphere").gameObject.GetComponent<MeshRenderer>();
+        pushMagazinePointOnHandMesh = GameObject.Find("pushMagazinePointOnHand").gameObject.GetComponent<MeshRenderer>();
+        leftHand = GameObject.Find("OpenXRLeftHand").transform.Find("LeftHand").gameObject;
     }
     
     private void startTimer() {
@@ -141,17 +153,11 @@ public class Main : MonoBehaviour {
             if (currentPreview is not null) {
                 currentPreview.SetActive(false);
             }
-
-            if (!gameStarted) {
-                //sound "Load and make ready"
-                //readyText.gameObject.SetActive(true);
-                //hintText.gameObject.SetActive(true);
-            }
         }
         
         //menu change
         if (Input.GetKeyUp(KeyCode.J) || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickRight)) changeMenu();
-        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft)) showHideWalls();
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft)) showHideDebugMesh();
         
         if (!(isTargetSetUpMenuActivated && isNoShotSetUpMenuActivated) 
             && !gameStarted
@@ -253,12 +259,11 @@ public class Main : MonoBehaviour {
         inprocessCommand = false;
     }
 
-    private void showHideWalls() {
-        if (effectMeshScript.HideMesh) {
-            effectMeshScript.HideMesh = false;
-        } else {
-            effectMeshScript.HideMesh = true;
-        }
+    private void showHideDebugMesh() {
+        effectMeshScript.HideMesh = !effectMeshScript.HideMesh;
+        pushHandPointOnPistolMesh.enabled = !pushHandPointOnPistolMesh.enabled;
+        leftHand.SetActive(!leftHand.activeSelf);
+        pushMagazinePointOnHandMesh.enabled = !pushMagazinePointOnHandMesh.enabled;
     }
 
     protected void setUpTargets(GameObject previewPrefab, GameObject prefab) {
