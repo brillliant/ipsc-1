@@ -48,6 +48,9 @@ public class Main : MonoBehaviour {
     public AudioSource areYouReadySound;
     public AudioSource standByySound;
     public AudioSource beepSound;
+    public AudioSource ifYouAreFinishedUnloadAndShowClear;
+    public AudioSource ifClearHammerDownAndHolster;
+    public AudioSource rangeIsClear;
     
     private bool running;
     private float startTime;
@@ -188,9 +191,8 @@ public class Main : MonoBehaviour {
         inprocessCommand = true;
         stopTimer();
         
-        //todo 
-        //sound "If you are finished, unload and show clear?"
         readyText.text = "If you are finished, unload and show clear";
+        ifYouAreFinishedUnloadAndShowClear.PlayOneShot(ifYouAreFinishedUnloadAndShowClear.clip);
         readyText.gameObject.SetActive(true);
 
         unloadAndShowClearCommandGiven = true;
@@ -198,15 +200,17 @@ public class Main : MonoBehaviour {
 
     public void sayHolsterCommand() {
         unloadAndShowClearCommandGiven = false;
-        //todo 
-        //sound "If clear, hammer down and holster"
+        
         readyText.gameObject.SetActive(true);
         readyText.text = "If clear, hammer down and holster";
+        ifClearHammerDownAndHolster.PlayOneShot(ifClearHammerDownAndHolster.clip);
 
         hummerDownCommandGiven = true;
     }
     
     public void clearHintShotTime() {
+        rangeIsClear.PlayOneShot(rangeIsClear.clip);
+        
         inprocessCommand = false;
         hummerDownCommandGiven = false;
         Invoke(nameof(showTimeOnTheScreen), 4f);
@@ -227,27 +231,24 @@ public class Main : MonoBehaviour {
         readyText.gameObject.SetActive(true);
         hintText.gameObject.SetActive(true);
         
-        //todo sound Load And Make Ready
         readyText.text = "Load and make ready";
-        //todo продумтаь логику запуска сорев
+        loadAndMakeReadySound.PlayOneShot(loadAndMakeReadySound.clip);
         //hintText.text = "(press left trigger when ready)";
         
         Invoke(nameof(showAreYouReadyCommand), 4f);
     }
     
     private void showAreYouReadyCommand() {
-        //todo 
-        //sound "Are you ready?"
         readyText.text = "Are you ready?";
+        areYouReadySound.PlayOneShot(areYouReadySound.clip);
         hintText.gameObject.SetActive(false);
         
         Invoke(nameof(standBy), 2f);
     }
     
     private void standBy() {
-        //todo 
-        //sound "Stand by!"
         readyText.text = "Stand by!";
+        standByySound.PlayOneShot(standByySound.clip);
         Invoke(nameof(beepAndStartTimer), Random.Range(2f, 4f));
     }
     
