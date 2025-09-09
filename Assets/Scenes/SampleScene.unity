@@ -10971,7 +10971,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   halfSizeMeters: 5
   addCollider: 1
-  highlight: 1
+  highlight: 0
   effectMaterial: {fileID: 2100000, guid: 599b01c5f1d17436c89b88cc04257314, type: 2}
 --- !u!1 &1044434607
 GameObject:

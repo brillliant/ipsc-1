@@ -66,11 +66,13 @@ public class Main : MonoBehaviour {
 
     private GameObject leftHand;
     private MeshRenderer pushMagazinePointOnHandMesh;
+    private FloorScript floorScript;
     
     void Start() {
         InvokeRepeating(nameof(setHandColliderLayer), 1f, 1f); // кажду секунду пробуем задать слой для левой руки
         pistol = GameObject.Find("Glock17");
         pistolScript = pistol.GetComponent<PistolScript>();
+        floorScript = GetComponent<FloorScript>();
         bulletPoint = pistolScript.bulletPoint;
 
         readyText = GameObject.Find("ready").GetComponent<TextMeshProUGUI>();
@@ -263,6 +265,7 @@ public class Main : MonoBehaviour {
         pushHandPointOnPistolMesh.enabled = !pushHandPointOnPistolMesh.enabled;
         leftHand.SetActive(!leftHand.activeSelf);
         pushMagazinePointOnHandMesh.enabled = !pushMagazinePointOnHandMesh.enabled;
+        floorScript.highlight = !floorScript.highlight;
     }
 
     protected void setUpTargets(GameObject previewPrefab, GameObject prefab) {

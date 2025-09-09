@@ -8,7 +8,7 @@ public class FloorScript : MonoBehaviour {
     [SerializeField] private bool addCollider = true;
 
     [Header("Highlight like EffectMesh")]
-    [SerializeField] private bool highlight = true;                // вкл/выкл в рантайме
+    [SerializeField] public bool highlight = true;                // вкл/выкл в рантайме
     [SerializeField] private Material effectMaterial;              // присвой сюда RoomBoxEffects из MRUK
 
     private GameObject megaFloor;
@@ -29,7 +29,7 @@ public class FloorScript : MonoBehaviour {
     void CreateAt(Vector3 center, Vector3 normal, Quaternion? exactRot = null) {
         megaFloor = GameObject.CreatePrimitive(PrimitiveType.Plane);     // 10×10
         megaFloor.name = "MegaFloor";
-        megaFloor.transform.position = center;
+        megaFloor.transform.position = center + normal.normalized * 0.203f;;
         megaFloor.transform.rotation = exactRot ?? Quaternion.FromToRotation(Vector3.up, normal);
 
         float scale = (halfSizeMeters * 2f) / 10f;                        // перевод в масштаб
