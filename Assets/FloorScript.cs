@@ -4,45 +4,42 @@ using UnityEngine;
 using Meta.XR.MRUtilityKit;
 
 public class FloorScript : MonoBehaviour {
-    [SerializeField] private float halfSizeMeters = 5f; // расстояние в каждую сторону
+    [SerializeField] private float halfSizeMeters = 5f;
     [SerializeField] private bool addCollider = true;
-    [SerializeField] private bool highlight = true;     // включать ли подсветку
-    [SerializeField] private Color highlightColor = Color.magenta; // цвет подсветки
+
+    [Header("Highlight like EffectMesh")]
+    [SerializeField] private bool highlight = true;                // вкл/выкл в рантайме
+    [SerializeField] private Material effectMaterial;              // присвой сюда RoomBoxEffects из MRUK
 
     private GameObject megaFloor;
-    private MeshRenderer renderer;
-    private Material mat;
+    private MeshRenderer meshRenderer;
+    private Material runtimeMat;
 
     void Start() {
         MRUKRoom room = MRUK.Instance?.GetCurrentRoom();
-        if (room == null) { 
-            CreateAt(Vector3.zero, Vector3.up); 
-            return; 
-        }
+        if (room == null) { CreateAt(Vector3.zero, Vector3.up); return; }
 
-        MRUKAnchor floor = room.GetFloorAnchor(); 
-        if (floor == null) { 
-            CreateAt(room.transform.position, room.transform.up); 
-            return; 
-        }
+        MRUKAnchor floor = room.GetFloorAnchor();
+        if (floor == null) { CreateAt(room.transform.position, room.transform.up); return; }
 
-        Transform pose = floor.transform; 
+        Transform pose = floor.transform;
         CreateAt(pose.position, pose.up, pose.rotation);
     }
 
     void CreateAt(Vector3 center, Vector3 normal, Quaternion? exactRot = null) {
-        megaFloor = GameObject.CreatePrimitive(PrimitiveType.Plane); 
+        megaFloor = GameObject.CreatePrimitive(PrimitiveType.Plane);     // 10×10
         megaFloor.name = "MegaFloor";
         megaFloor.transform.position = center;
         megaFloor.transform.rotation = exactRot ?? Quaternion.FromToRotation(Vector3.up, normal);
 
-        float scale = (halfSizeMeters * 2f) / 10f;
+        float scale = (halfSizeMeters * 2f) / 10f;                        // перевод в масштаб
         megaFloor.transform.localScale = new Vector3(scale, 1f, scale);
 
-        renderer = megaFloor.GetComponent<MeshRenderer>();
-        if (renderer != null) {
-            mat = new Material(Shader.Find("Standard"));
-            renderer.material = mat;
+        meshRenderer = megaFloor.GetComponent<MeshRenderer>();
+        if (meshRenderer != null) {
+            // инстанс, чтобы не править оригинальный материал в проекте
+            runtimeMat = effectMaterial != null ? new Material(effectMaterial) : null;
+            if (runtimeMat != null) meshRenderer.material = runtimeMat;
         }
 
         Collider col = megaFloor.GetComponent<Collider>();
@@ -51,16 +48,14 @@ public class FloorScript : MonoBehaviour {
         } else {
             if (col != null) Destroy(col);
         }
+
+        ApplyHighlight();
     }
 
-    void Update() {
-        if (renderer == null || mat == null) return;
+    void Update() => ApplyHighlight();
 
-        if (highlight) {
-            mat.color = highlightColor; // включена подсветка
-            renderer.enabled = true;
-        } else {
-            renderer.enabled = false;   // подсветка выключена
-        }
+    private void ApplyHighlight() {
+        if (meshRenderer == null) return;
+        meshRenderer.enabled = highlight && runtimeMat != null;
     }
 }
