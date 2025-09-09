@@ -261,7 +261,7 @@ public class Main : MonoBehaviour {
     }
 
     private void showHideDebugMesh() {
-        effectMeshScript.HideMesh = !effectMeshScript.HideMesh;
+        //effectMeshScript.HideMesh = !effectMeshScript.HideMesh;
         pushHandPointOnPistolMesh.enabled = !pushHandPointOnPistolMesh.enabled;
         leftHand.SetActive(!leftHand.activeSelf);
         pushMagazinePointOnHandMesh.enabled = !pushMagazinePointOnHandMesh.enabled;

@@ -4,7 +4,7 @@ public class InsertPositionValidationScript : MonoBehaviour {
     private MagazineScript magazineScript;
     private PistolScript pistolScript;
     private GameObject reloadPoint2;
-    private const float orientationToleranceDegrees = 30f;
+    private const float orientationToleranceDegrees = 35f;
     private Transform magazineRootTransform;
 
     private void Start() {
