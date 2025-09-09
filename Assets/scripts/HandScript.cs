@@ -22,7 +22,7 @@ public class HandScript : MonoBehaviour {
     }
 
     void Update() {
-        if (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch)) {
+        if (Input.GetKeyUp(KeyCode.X) || OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch)) {
             magazinesBagScript.getReturnMag();
         }
     }
