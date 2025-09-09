@@ -1698,6 +1698,7 @@ MonoBehaviour:
   magazineInSound: {fileID: 386960257}
   bulletPoint: {fileID: 947667043}
   codeObject: {fileID: 1043981333}
+  hammerDown: 0
   recoilDuration: 0.01
   returnDuration: 0.15
   recoilUp: 10
@@ -10897,6 +10898,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1043981335}
   - component: {fileID: 1043981334}
+  - component: {fileID: 1043981336}
   m_Layer: 0
   m_Name: codeObject
   m_TagString: Untagged
@@ -10955,6 +10957,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1043981336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1043981333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4cc586f97af9ea4e9e8def31aa1d92a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  halfSizeMeters: 5
+  addCollider: 1
+  highlight: 1
+  highlightColor: {r: 1, g: 0, b: 1, a: 1}
 --- !u!1 &1044434607
 GameObject:
   m_ObjectHideFlags: 0
@@ -17551,7 +17569,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2296141232796561049, guid: cee191920b8eb41b0960b1082a393a3e, type: 3}
       propertyPath: Labels
-      value: 16383
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2296141232796561049, guid: cee191920b8eb41b0960b1082a393a3e, type: 3}
       propertyPath: CutHoles
