@@ -258,6 +258,7 @@ public class PistolScript : MonoBehaviour {
         roundInChamber.transform.localPosition = localPos;
         roundInChamber.transform.localRotation = localRot;
         roundInChamber.transform.localScale   = localScale;
+        roundInChamber.GetComponent<CapsuleCollider>().enabled = false;
 
         var roundInChamberRigidbody = roundInChamber.GetComponent<Rigidbody>();
         roundInChamberRigidbody.isKinematic = true;

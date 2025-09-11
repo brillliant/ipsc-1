@@ -4,7 +4,7 @@ using UnityEngine;
 using Meta.XR.MRUtilityKit;
 
 public class FloorScript : MonoBehaviour {
-    [SerializeField] private float halfSizeMeters = 5f;
+    private float halfSizeMeters = 15f;
     [SerializeField] private bool addCollider = true;
 
     [Header("Highlight like EffectMesh")]

@@ -17,12 +17,15 @@ public class SlideScript : MonoBehaviour {
     private Boolean sliderAnimationRunning;
     private bool slideLockedFlag = false;
     private bool pendingLock;
-    //private JointDrive savedDrive;
     
     private ConfigurableJoint configurableJoint;
     private Vector3 connectedAnchor;
     private const float погрешностьМеханизма = 0.001f;
     private Main mainScript;
+    private BoxCollider boxCollider;
+    
+    private float holdSlideTimer = 0f;
+    private const float delayToShowEmptyChamber = 2f;
 
     private void Awake() {
         sliderAnimator = GetComponent<Animator>();
@@ -36,12 +39,12 @@ public class SlideScript : MonoBehaviour {
         pistolScript = GetComponentInParent<PistolScript>();
         
         configurableJoint = GetComponent<ConfigurableJoint>();
-        //savedDrive = configurableJoint.xDrive;
         
         configurableJoint.autoConfigureConnectedAnchor = false;
         connectedAnchor = configurableJoint.connectedAnchor;
         
         mainScript = GameObject.Find("codeObject").GetComponent<Main>();;
+        boxCollider = GetComponent<BoxCollider>();
     }
 
     public void runSliderAnimation() {
@@ -64,12 +67,22 @@ public class SlideScript : MonoBehaviour {
     }
 	
     void Update () {
+        moveSlideBySticker();
+
+        if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) setSlideUnLocked();
+    }
+
+    /**
+     * двигать слайдер через стик
+     */
+    private void moveSlideBySticker() {
         if (sliderAnimationRunning) return;
         
         Vector2 stick = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, OVRInput.Controller.RTouch);
         float down = Mathf.Max(0f, -stick.y);
         
         if (down > 0.05f) {
+            boxCollider.enabled = false;
             if (oneGrabTranslateTransformer) oneGrabTranslateTransformer.enabled = false;
             if (slideLockedFlag) {
                 if (down > 0.8f) {//порог срабатывания выше, если стоим на задержке. диапазон 0-1
@@ -80,6 +93,7 @@ public class SlideScript : MonoBehaviour {
                 slideBackMove();
             }
         } else {
+            boxCollider.enabled = true;
             // ручное перетягивание — только кламп
             if (oneGrabTranslateTransformer) oneGrabTranslateTransformer.enabled = true;
 
@@ -90,12 +104,9 @@ public class SlideScript : MonoBehaviour {
             transform.localPosition = new Vector3(localPosition0.x, localPosition0.y, localPosition0.z + dz);
         }
         transform.localEulerAngles = localRotation0;
-
-        if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) setSlideUnLocked();
     }
-    
+
     private float startZ;        // положение вперёд
-    //private float backZ = -0.01148f;  // положение назад (например -0.01148f)
     private float backZ;
 
     private void slideBackMove() {
@@ -115,9 +126,6 @@ public class SlideScript : MonoBehaviour {
         checkEmptyBackHold(); // проверяем показал ли патронник судье? (если надо)
         detectSlidePull(); // проверяем, было ли полное передёргивание
     }
-
-    private float holdSlideTimer = 0f;
-    private const float delayToShowEmptyChamber = 2f;
     
     /**
      * если была команда судьей, вынял ли магазин и показал ли пустой патронник?
