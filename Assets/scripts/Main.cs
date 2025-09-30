@@ -168,8 +168,8 @@ public class Main : MonoBehaviour {
         if (!(isTargetSetUpMenuActivated && isNoShotSetUpMenuActivated) 
             && !gameStarted
             && !inprocessCommand
-            && (OVRInput.Get(OVRInput.RawAxis1D.LIndexTrigger) > 0 
-            || Input.GetKeyDown(KeyCode.Z))) {
+            && (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch)  
+                || Input.GetKeyDown(KeyCode.Z))) {
             
             startGame();
         }
@@ -177,11 +177,37 @@ public class Main : MonoBehaviour {
         if (!(isTargetSetUpMenuActivated && isNoShotSetUpMenuActivated) 
             && gameStarted 
             && !inprocessCommand
-            && (OVRInput.Get(OVRInput.RawAxis1D.LIndexTrigger) > 0 
-            || Input.GetKeyDown(KeyCode.Z))) {
+            && (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch)  
+                || Input.GetKeyDown(KeyCode.Z))) {
             
             stopGame();
         }
+        
+        if (!(isTargetSetUpMenuActivated && isNoShotSetUpMenuActivated) 
+            && gameStarted 
+            && (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.LTouch)  
+                || Input.GetKeyDown(KeyCode.LeftShift))) {
+            
+            interruptGame();
+        }
+    }
+    
+    private void interruptGame() {
+        CancelInvoke();
+        stopTimer();
+        
+        AudioSource[] allAudioSources = FindObjectsOfType<AudioSource>();
+        foreach (AudioSource source in allAudioSources) {
+            source.Stop();
+        }
+        readyText.gameObject.SetActive(false);
+        hintText.gameObject.SetActive(false);
+        
+        gameStarted = false;
+        unloadAndShowClearCommandGiven = false;
+        hummerDownCommandGiven = false;
+        inprocessCommand = false;
+        pistolScript.hammerDown = false;
     }
     
     private void stopGame() {
