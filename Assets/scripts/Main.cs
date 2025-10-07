@@ -42,8 +42,8 @@ public class Main : MonoBehaviour {
 
     private TextMeshProUGUI readyText;
     private TextMeshProUGUI hintText;
-    private bool gameStarted = false;
-
+    private bool stageStarted = false;  //это выполнение упражнения. стейдж.
+                                        //а Attempt - это все, пока пистолет не опустится назад в кобуру и судья не скажет "рендж клиар"
     public AudioSource loadAndMakeReadySound;
     public AudioSource areYouReadySound;
     public AudioSource standByySound;
@@ -154,8 +154,7 @@ public class Main : MonoBehaviour {
             
             readyText.gameObject.SetActive(false);
             hintText.gameObject.SetActive(false);
-        }
-        else {
+        } else {
             hideRay();
             if (currentPreview is not null) {
                 currentPreview.SetActive(false);
@@ -166,33 +165,33 @@ public class Main : MonoBehaviour {
         if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft)) showHideDebugMesh();
         
         if (!(isTargetSetUpMenuActivated && isNoShotSetUpMenuActivated) 
-            && !gameStarted
+            && !stageStarted
             && !inprocessCommand
             && (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch)  
                 || Input.GetKeyDown(KeyCode.Z))) {
             
-            startGame();
+            startStage();
         }
         
         if (!(isTargetSetUpMenuActivated && isNoShotSetUpMenuActivated) 
-            && gameStarted 
+            && stageStarted 
             && !inprocessCommand
             && (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch)  
                 || Input.GetKeyDown(KeyCode.Z))) {
             
-            stopGame();
+            stopStage();
         }
         
         if (!(isTargetSetUpMenuActivated && isNoShotSetUpMenuActivated) 
-            && gameStarted 
+            //&& stageStarted  выключить можно всегда.  если что. добавить флаг. AttemptStarted
             && (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.LTouch)  
                 || Input.GetKeyDown(KeyCode.LeftShift))) {
             
-            interruptGame();
+            interruptAttempt();
         }
     }
     
-    private void interruptGame() {
+    private void interruptAttempt() {
         CancelInvoke();
         stopTimer();
         
@@ -203,15 +202,15 @@ public class Main : MonoBehaviour {
         readyText.gameObject.SetActive(false);
         hintText.gameObject.SetActive(false);
         
-        gameStarted = false;
+        stageStarted = false;
         unloadAndShowClearCommandGiven = false;
         hummerDownCommandGiven = false;
         inprocessCommand = false;
         pistolScript.hammerDown = false;
     }
     
-    private void stopGame() {
-        gameStarted = false;
+    private void stopStage() {
+        stageStarted = false;
         inprocessCommand = true;
         stopTimer();
         
@@ -246,9 +245,9 @@ public class Main : MonoBehaviour {
         readyText.text = "Your time: " + showTotalTime();
     }
 
-    private void startGame() {
+    private void startStage() {
         inprocessCommand = true;
-        gameStarted = true;
+        stageStarted = true;
 
         showLoadAndMakeReadyCommand();
     }

@@ -69,7 +69,7 @@ public class SlideScript : MonoBehaviour {
     void Update () {
         moveSlideBySticker();
 
-        if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) setSlideUnLocked();
+        if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch)) setSlideUnLocked();
     }
 
     /**
