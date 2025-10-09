@@ -169,6 +169,10 @@ public class MagazineScript : MonoBehaviour {
     public int getRoundCount() {
         return roundCount;
     }
+    
+    public void setRoundCount(int roundCount) {
+        this.roundCount = roundCount;
+    }
 
     public void decrementRoundCount() {
         roundCount--;

@@ -22,6 +22,7 @@ public class Main : MonoBehaviour {
     public TextMeshProUGUI menuItem1_stage;
     public TextMeshProUGUI menuItem2_shoot;
     public TextMeshProUGUI menuItem3_noShot;
+    public TextMeshProUGUI menuItem4_dryFire;
 
     public List<ObjectData> objectDataList;
     public List<GameObject> установленныеМишени;
@@ -86,6 +87,7 @@ public class Main : MonoBehaviour {
         menuList.Add(menuItem1_stage);
         menuList.Add(menuItem2_shoot);
         menuList.Add(menuItem3_noShot);
+        menuList.Add(menuItem4_dryFire);
         
 #if UNITY_EDITOR
     changeMenu();
@@ -378,6 +380,12 @@ public class Main : MonoBehaviour {
             isTargetSetUpMenuActivated = false;
             isNoShotSetUpMenuActivated = false;
         }
+
+        if (currentIndex == 1) {
+            pistolScript.setMagRoundCount(15);
+        } else if (currentIndex == 3) {
+            pistolScript.setMagRoundCount(int.MaxValue);
+        }
     }
 
     private void highlightNecessaryMenuItem(int index) {
@@ -434,6 +442,10 @@ public class Main : MonoBehaviour {
             }
         }
         пробоины.Clear();
+    }
+
+    public int getCurrentIndex() {
+        return currentIndex;
     }
 
     public void LoadObjects() {

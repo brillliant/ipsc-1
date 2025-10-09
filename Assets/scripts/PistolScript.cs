@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PistolScript : MonoBehaviour {
     public ParticleSystem muzzleFlash; 
@@ -90,6 +91,10 @@ public class PistolScript : MonoBehaviour {
         this.magazine = magazine;
         
         rememberMagazine(magazine);
+    }
+
+    public void setMagRoundCount(int roundCount) {
+        magazineScript.setRoundCount(roundCount);
     }
 
     private void rememberMagazine(GameObject magazine) {
@@ -240,7 +245,9 @@ public class PistolScript : MonoBehaviour {
         if (magazineLockedInPistol && magazineScript.getRoundCount() > 0) {
             setRoundToChamber();
             firedRound = false;
-            magazineScript.decrementRoundCount();
+            if (mainScript.getCurrentIndex() != 3) { //не декременчу патроны, если dryFire mode
+                magazineScript.decrementRoundCount();
+            }
             inShooting = false;
         }
     }
