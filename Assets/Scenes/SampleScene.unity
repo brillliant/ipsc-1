@@ -6714,7 +6714,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.925, y: 1.477}
+  m_AnchoredPosition: {x: 0.925, y: 1.474}
   m_SizeDelta: {x: 7, y: 7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &585372784
@@ -11186,11 +11186,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcdd147bf4b34e7439c4d3216e4bb33d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetPrefab: {fileID: 6177415639674001883, guid: 5847aea319e2f66478e7bfcab82fb829, type: 3}
-  previewPrefab: {fileID: 1331760992598048564, guid: 15ad2d59c491b454691adaf5c0d5065d, type: 3}
-  previewPrefabNoShot: {fileID: 6177415639674001883, guid: 300c54dc5b8e29f4ba1e41e6de7c0353, type: 3}
+  ipscTargetPreview: {fileID: 1331760992598048564, guid: 15ad2d59c491b454691adaf5c0d5065d, type: 3}
+  ipscTargetPrefab: {fileID: 6177415639674001883, guid: 5847aea319e2f66478e7bfcab82fb829, type: 3}
+  ipscTargetNoShotPreview: {fileID: 6177415639674001883, guid: 300c54dc5b8e29f4ba1e41e6de7c0353, type: 3}
+  ipscTargetNoShotPrefab: {fileID: 6177415639674001883, guid: 9c6851a973f752f459740328bbd243c2, type: 3}
   barrelPrefub: {fileID: 3088521259239529439, guid: c2bb8cf9b1c729b4e901b6d669b4ad31, type: 3}
-  prefabNoShot: {fileID: 6177415639674001883, guid: 9c6851a973f752f459740328bbd243c2, type: 3}
   isHandKeepingMagazine: 0
   menuItem1_stage: {fileID: 1521864574}
   menuItem2_shoot: {fileID: 585372784}

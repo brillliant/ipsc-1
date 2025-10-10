@@ -10,11 +10,14 @@ using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class Main : MonoBehaviour {
-    public GameObject targetPrefab;
-    public GameObject previewPrefab;
-    public GameObject previewPrefabNoShot;
+    public GameObject ipscTargetPreview;
+    public GameObject ipscTargetPrefab;
+
+    public GameObject ipscTargetNoShotPreview;
+    public GameObject ipscTargetNoShotPrefab;
+    
     public GameObject barrelPrefub;
-    public GameObject prefabNoShot;
+
     public Boolean isHandKeepingMagazine = false;
     
     private GameObject currentPreview;
@@ -104,13 +107,13 @@ public class Main : MonoBehaviour {
     void Update() {
         if (isTargetSetUpMenuActivated) {
             paintRay();
-            setUpObject(previewPrefab, targetPrefab);
+            setUpObject(ipscTargetPreview, ipscTargetPrefab);
             
             readyText.gameObject.SetActive(false);
             hintText.gameObject.SetActive(false);
         } else if (isNoShotSetUpMenuActivated) {
             paintRay();
-            setUpObject(previewPrefabNoShot, prefabNoShot);
+            setUpObject(ipscTargetNoShotPreview, ipscTargetNoShotPrefab);
             
             readyText.gameObject.SetActive(false);
             hintText.gameObject.SetActive(false);
