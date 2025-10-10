@@ -309,13 +309,14 @@ public class Main : MonoBehaviour {
         if (Physics.Raycast(ray, out RaycastHit hit) && !hit.collider.gameObject.name.Equals("emptyObjectForCollider")
                                                      && !hit.collider.gameObject.name.Equals("Glock17")) {
             
-            currentPreview.transform.position = hit.point;
-            currentPreview.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+            placeToSurface(currentPreview, hit);
+            
+            // currentPreview.transform.position = hit.point;
+            // currentPreview.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
 
             // Поворот модели лицом к камере
             Vector3 cameraPosition = Camera.main.transform.position;
-            currentPreview.transform.LookAt(new Vector3(cameraPosition.x, currentPreview.transform.position.y,
-                cameraPosition.z));
+            currentPreview.transform.LookAt(new Vector3(cameraPosition.x, currentPreview.transform.position.y, cameraPosition.z));
 
             if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Input.GetKeyUp(KeyCode.Space)) {
                 triggerPressed = false;
@@ -324,7 +325,7 @@ public class Main : MonoBehaviour {
             if (!triggerPressed &&
                 (Input.GetKeyDown(KeyCode.Space) || OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0.5)
                 ) {
-                placeATarget(hit, currentPreview, prefab);
+                placeATarget(currentPreview, prefab);
             }
         }
 
@@ -412,9 +413,9 @@ public class Main : MonoBehaviour {
         }
     }
 
-    private void placeATarget(RaycastHit hit, GameObject previewPrefab, GameObject prefab) {
+    private void placeATarget(GameObject preview, GameObject prefab) {
         triggerPressed = true;
-        установленныеМишени.Add(Instantiate(prefab, hit.point, previewPrefab.transform.rotation));
+        установленныеМишени.Add(Instantiate(prefab, preview.transform.position, preview.transform.rotation));
     }
 
     public void SaveObjects() {
@@ -486,5 +487,30 @@ public class Main : MonoBehaviour {
                 }
             }
         }
+    }
+    
+    private void placeToSurface(GameObject go, RaycastHit hit, float pad = 0.002f) {
+        var n = hit.normal.normalized;
+
+        // выровнять "вверх" по нормали
+        go.transform.rotation = Quaternion.FromToRotation(Vector3.up, n);
+
+        // взять границы: сначала из коллайдеров, иначе из рендереров
+        Bounds b;
+        var cols = go.GetComponentsInChildren<Collider>(true);
+        if (cols.Length > 0) {
+            Physics.SyncTransforms();
+            b = cols[0].bounds; for (int i = 1; i < cols.Length; i++) b.Encapsulate(cols[i].bounds);
+        } else {
+            var rs = go.GetComponentsInChildren<Renderer>(true);
+            if (rs.Length == 0) { go.transform.position = hit.point + n * pad; return; }
+            b = rs[0].bounds; for (int i = 1; i < rs.Length; i++) b.Encapsulate(rs[i].bounds);
+        }
+
+        Vector3 ext = b.extents;
+        float rN = Vector3.Dot(ext, new Vector3(Mathf.Abs(n.x), Mathf.Abs(n.y), Mathf.Abs(n.z)));
+        float pivotToCenterN = Vector3.Dot(b.center - go.transform.position, n);
+
+        go.transform.position = hit.point + n * (rN - pivotToCenterN + pad);
     }
 }
