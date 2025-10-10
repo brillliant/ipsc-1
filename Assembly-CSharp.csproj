@@ -113,7 +113,6 @@
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
-    <None Include="Assets\Resources\source\Pokemon XY\Diglett\Tag.txt" />
     <None Include="Assets\Samples\Meta Movement\69.0.0\Body Tracking Samples\HighFidelity\Presets\HighFidelityBlendshapeModifierPreset.json" />
     <None Include="Assets\TextMesh Pro\Sprites\EmojiOne.json" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Sprite.shader" />
