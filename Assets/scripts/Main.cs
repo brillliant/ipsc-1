@@ -21,7 +21,6 @@ public class Main : MonoBehaviour {
     public Boolean isHandKeepingMagazine = false;
     
     private GameObject currentPreview;
-    private EffectMesh effectMeshScript;
     
     public TextMeshProUGUI menuItem1_stage;
     public TextMeshProUGUI menuItem2_shoot;
@@ -86,7 +85,6 @@ public class Main : MonoBehaviour {
         
         objectDataList = new List<ObjectData>();
         установленныеМишени = new List<GameObject>();
-        effectMeshScript = effectMeshObject.GetComponent<EffectMesh>();
 
         menuList = new List<TextMeshProUGUI>();
         menuList.Add(menuItem1_stage);
@@ -300,7 +298,6 @@ public class Main : MonoBehaviour {
     }
 
     private void showHideDebugMesh() {
-        //effectMeshScript.HideMesh = !effectMeshScript.HideMesh;
         pushHandPointOnPistolMesh.enabled = !pushHandPointOnPistolMesh.enabled;
         leftHand.SetActive(!leftHand.activeSelf);
         pushMagazinePointOnHandMesh.enabled = !pushMagazinePointOnHandMesh.enabled;
