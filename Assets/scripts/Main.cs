@@ -13,6 +13,7 @@ public class Main : MonoBehaviour {
     public GameObject targetPrefab;
     public GameObject previewPrefab;
     public GameObject previewPrefabNoShot;
+    public GameObject barrelPrefub;
     public GameObject prefabNoShot;
     public Boolean isHandKeepingMagazine = false;
     
@@ -23,6 +24,7 @@ public class Main : MonoBehaviour {
     public TextMeshProUGUI menuItem2_shoot;
     public TextMeshProUGUI menuItem3_noShot;
     public TextMeshProUGUI menuItem4_dryFire;
+    public TextMeshProUGUI menuItem5_barrel;
 
     public List<ObjectData> objectDataList;
     public List<GameObject> установленныеМишени;
@@ -88,14 +90,71 @@ public class Main : MonoBehaviour {
         menuList.Add(menuItem2_shoot);
         menuList.Add(menuItem3_noShot);
         menuList.Add(menuItem4_dryFire);
+        menuList.Add(menuItem5_barrel);
         
 #if UNITY_EDITOR
-    changeMenu();
+        //changeMenu();
 #endif
         
         pushHandPointOnPistolMesh = pistol.transform.Find("pushHandPoint/Sphere").gameObject.GetComponent<MeshRenderer>();
         pushMagazinePointOnHandMesh = GameObject.Find("pushMagazinePointOnHand").gameObject.GetComponent<MeshRenderer>();
         leftHand = GameObject.Find("OpenXRLeftHand").transform.Find("LeftHand").gameObject;
+    }
+    
+    void Update() {
+        if (isTargetSetUpMenuActivated) {
+            paintRay();
+            setUpObject(previewPrefab, targetPrefab);
+            
+            readyText.gameObject.SetActive(false);
+            hintText.gameObject.SetActive(false);
+        } else if (isNoShotSetUpMenuActivated) {
+            paintRay();
+            setUpObject(previewPrefabNoShot, prefabNoShot);
+            
+            readyText.gameObject.SetActive(false);
+            hintText.gameObject.SetActive(false);
+        } else if (currentIndex == 4) {//barrel
+            paintRay();
+            setUpObject(barrelPrefub, barrelPrefub);
+            
+            readyText.gameObject.SetActive(false);
+            hintText.gameObject.SetActive(false);
+        } else {
+            hideRay();
+            if (currentPreview is not null) {
+                currentPreview.SetActive(false);
+            }
+        }
+        
+        if (Input.GetKeyUp(KeyCode.J) || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickRight)) changeMenu();
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft)) showHideDebugMesh();
+        
+        if (!(isTargetSetUpMenuActivated && isNoShotSetUpMenuActivated) 
+            && !stageStarted
+            && !inprocessCommand
+            && (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch)  
+                || Input.GetKeyDown(KeyCode.Z))) {
+            
+            startStage();
+        }
+        
+        if (!(isTargetSetUpMenuActivated && isNoShotSetUpMenuActivated) 
+            && stageStarted 
+            && !inprocessCommand
+            && (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch)  
+                || Input.GetKeyDown(KeyCode.Z))) {
+            
+            stopStage();
+        }
+        
+        if (!(isTargetSetUpMenuActivated && isNoShotSetUpMenuActivated) 
+            //&& stageStarted  выключить можно всегда.  если что. добавить флаг. AttemptStarted
+            && (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.LTouch)  
+                || Input.GetKeyDown(KeyCode.LeftShift))) {
+            
+            interruptAttempt();
+        }
     }
     
     private void startTimer() {
@@ -143,56 +202,6 @@ public class Main : MonoBehaviour {
         }
     }
 
-    void Update() {
-        if (isTargetSetUpMenuActivated) {
-            paintRay();
-            setUpTargets(previewPrefab, targetPrefab);
-            
-            readyText.gameObject.SetActive(false);
-            hintText.gameObject.SetActive(false);
-        } else if (isNoShotSetUpMenuActivated) {
-            paintRay();
-            setUpTargets(previewPrefabNoShot, prefabNoShot);
-            
-            readyText.gameObject.SetActive(false);
-            hintText.gameObject.SetActive(false);
-        } else {
-            hideRay();
-            if (currentPreview is not null) {
-                currentPreview.SetActive(false);
-            }
-        }
-        
-        if (Input.GetKeyUp(KeyCode.J) || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickRight)) changeMenu();
-        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft)) showHideDebugMesh();
-        
-        if (!(isTargetSetUpMenuActivated && isNoShotSetUpMenuActivated) 
-            && !stageStarted
-            && !inprocessCommand
-            && (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch)  
-                || Input.GetKeyDown(KeyCode.Z))) {
-            
-            startStage();
-        }
-        
-        if (!(isTargetSetUpMenuActivated && isNoShotSetUpMenuActivated) 
-            && stageStarted 
-            && !inprocessCommand
-            && (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch)  
-                || Input.GetKeyDown(KeyCode.Z))) {
-            
-            stopStage();
-        }
-        
-        if (!(isTargetSetUpMenuActivated && isNoShotSetUpMenuActivated) 
-            //&& stageStarted  выключить можно всегда.  если что. добавить флаг. AttemptStarted
-            && (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.LTouch)  
-                || Input.GetKeyDown(KeyCode.LeftShift))) {
-            
-            interruptAttempt();
-        }
-    }
-    
     private void interruptAttempt() {
         CancelInvoke();
         stopTimer();
@@ -295,7 +304,7 @@ public class Main : MonoBehaviour {
         floorScript.highlight = !floorScript.highlight;
     }
 
-    protected void setUpTargets(GameObject previewPrefab, GameObject prefab) {
+    protected void setUpObject(GameObject previewPrefab, GameObject prefab) {
         if (!currentPreview) currentPreview = Instantiate(previewPrefab);
         if (currentPreview && !currentPreview.activeSelf) currentPreview.SetActive(true);
 

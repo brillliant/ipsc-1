@@ -46,6 +46,8 @@ public class PistolScript : MonoBehaviour {
     public bool hammerDown = false;
     const float tolDeg = 25f;
     
+    private OVRInput.HapticsAmplitudeEnvelopeVibration _vibration = new OVRInput.HapticsAmplitudeEnvelopeVibration();
+    
     void Start() {
         originalRotation = transform.localRotation;
         magazineScript = magazine.GetComponent<MagazineScript>();
@@ -55,6 +57,18 @@ public class PistolScript : MonoBehaviour {
         shotSound.volume = 1.0f;
 
         mainScript = codeObject.GetComponent<Main>();
+    }
+    
+    void Update() {
+        if (!mainScript.isTargetSetUpMenuActivated && !mainScript.isNoShotSetUpMenuActivated && mainScript.getCurrentIndex() != 4) {
+            shootActionIfNeeded();
+            if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Input.GetKeyUp(KeyCode.Space)) {
+                triggerPressed = false;
+            }
+            
+            if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.LTouch)) mainScript.clearHoles();
+            if (Input.GetKeyUp(KeyCode.U) || OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) releaseMagazine();
+        }
     }
 
     private void Awake() {
@@ -131,20 +145,6 @@ public class PistolScript : MonoBehaviour {
         }
     }
 
-    private OVRInput.HapticsAmplitudeEnvelopeVibration _vibration = new OVRInput.HapticsAmplitudeEnvelopeVibration();
-
-    void Update() {
-        if (!mainScript.isTargetSetUpMenuActivated && !mainScript.isNoShotSetUpMenuActivated) {
-            shootActionIfNeeded();
-            if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Input.GetKeyUp(KeyCode.Space)) {
-                triggerPressed = false;
-            }
-            
-            if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.LTouch)) mainScript.clearHoles();
-            if (Input.GetKeyUp(KeyCode.U) || OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) releaseMagazine();
-        }
-    }
-    
     /*
      * проверяю позицию, если пистолет накланен вниз. типа в кобуре
      */
