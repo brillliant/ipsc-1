@@ -123,8 +123,10 @@ public class Main : MonoBehaviour {
             hintText.gameObject.SetActive(false);
         } else {
             hideRay();
-            if (currentPreview is not null) {
+            if (currentPreview) {
                 currentPreview.SetActive(false);
+                Destroy(currentPreview); 
+                //currentPreview = null;
             }
         }
         
