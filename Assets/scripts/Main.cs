@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using DefaultNamespace;
-using Meta.XR.MRUtilityKit;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -16,13 +14,14 @@ public class Main : MonoBehaviour {
     public GameObject ipscTargetNoShotPreview;
     public GameObject ipscTargetNoShotPrefab;
     
+    public GameObject barrelPreview;
     public GameObject barrelPrefub;
 
     public Boolean isHandKeepingMagazine = false;
     
     private GameObject currentPreview;
     
-    public TextMeshProUGUI menuItem1_stage;
+    public TextMeshProUGUI menuItem1_target;
     public TextMeshProUGUI menuItem2_shoot;
     public TextMeshProUGUI menuItem3_noShot;
     public TextMeshProUGUI menuItem4_dryFire;
@@ -87,7 +86,7 @@ public class Main : MonoBehaviour {
         установленныеМишени = new List<GameObject>();
 
         menuList = new List<TextMeshProUGUI>();
-        menuList.Add(menuItem1_stage);
+        menuList.Add(menuItem1_target);
         menuList.Add(menuItem2_shoot);
         menuList.Add(menuItem3_noShot);
         menuList.Add(menuItem4_dryFire);
@@ -117,17 +116,12 @@ public class Main : MonoBehaviour {
             hintText.gameObject.SetActive(false);
         } else if (currentIndex == 4) {//barrel
             paintRay();
-            setUpObject(barrelPrefub, barrelPrefub);
+            setUpObject(barrelPreview, barrelPrefub);
             
             readyText.gameObject.SetActive(false);
             hintText.gameObject.SetActive(false);
         } else {
             hideRay();
-            if (currentPreview) {
-                currentPreview.SetActive(false);
-                Destroy(currentPreview); 
-                //currentPreview = null;
-            }
         }
         
         if (Input.GetKeyUp(KeyCode.J) || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickRight)) changeMenu();
@@ -306,15 +300,15 @@ public class Main : MonoBehaviour {
         floorScript.highlight = !floorScript.highlight;
     }
 
-    protected void setUpObject(GameObject previewPrefab, GameObject prefab) {
-        if (!currentPreview) currentPreview = Instantiate(previewPrefab);
+    protected void setUpObject(GameObject preview, GameObject prefab) {
+        if (!currentPreview) currentPreview = Instantiate(preview);
         if (currentPreview && !currentPreview.activeSelf) currentPreview.SetActive(true);
 
         Ray ray = new Ray(bulletPoint.position, bulletPoint.forward); 
         
-        if (Physics.Raycast(ray, out RaycastHit hit)
-            && !hit.collider.gameObject.name.Equals("emptyObjectForCollider")
-            && !hit.collider.gameObject.name.Equals("Glock17")) {
+        if (Physics.Raycast(ray, out RaycastHit hit) && !hit.collider.gameObject.name.Equals("emptyObjectForCollider")
+                                                     && !hit.collider.gameObject.name.Equals("Glock17")) {
+            
             currentPreview.transform.position = hit.point;
             currentPreview.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
 
@@ -377,6 +371,11 @@ public class Main : MonoBehaviour {
     }
 
     private void changeMenu() {
+        if (currentPreview) {
+            currentPreview.SetActive(false);
+            Destroy(currentPreview); 
+        }
+        
         int index = getNextIndex();
 
         highlightNecessaryMenuItem(index);

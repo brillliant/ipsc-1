@@ -1565,7 +1565,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.925, y: 0.961}
+  m_AnchoredPosition: {x: 0.925, y: 0.9642}
   m_SizeDelta: {x: 7, y: 7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &111391209
@@ -11190,9 +11190,10 @@ MonoBehaviour:
   ipscTargetPrefab: {fileID: 6177415639674001883, guid: 5847aea319e2f66478e7bfcab82fb829, type: 3}
   ipscTargetNoShotPreview: {fileID: 6177415639674001883, guid: 300c54dc5b8e29f4ba1e41e6de7c0353, type: 3}
   ipscTargetNoShotPrefab: {fileID: 6177415639674001883, guid: 9c6851a973f752f459740328bbd243c2, type: 3}
-  barrelPrefub: {fileID: 3088521259239529439, guid: c2bb8cf9b1c729b4e901b6d669b4ad31, type: 3}
+  barrelPreview: {fileID: 3088521259239529439, guid: 26c83bac2209f2c4597e822cb3f1ea6e, type: 3}
+  barrelPrefub: {fileID: 3088521259239529439, guid: 2d2d6e1510e6abd4c9164230ca0169f7, type: 3}
   isHandKeepingMagazine: 0
-  menuItem1_stage: {fileID: 1521864574}
+  menuItem1_target: {fileID: 1521864574}
   menuItem2_shoot: {fileID: 585372784}
   menuItem3_noShot: {fileID: 1044434609}
   menuItem4_dryFire: {fileID: 185446468}
