@@ -4,7 +4,6 @@ using System.IO;
 using DefaultNamespace;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class Main : MonoBehaviour {
@@ -16,6 +15,9 @@ public class Main : MonoBehaviour {
     
     public GameObject barrelPreview;
     public GameObject barrelPrefub;
+    
+    public GameObject wallPreview;
+    public GameObject wallPrefub;
 
     public Boolean isHandKeepingMagazine = false;
     
@@ -26,6 +28,7 @@ public class Main : MonoBehaviour {
     public TextMeshProUGUI menuItem3_noShot;
     public TextMeshProUGUI menuItem4_dryFire;
     public TextMeshProUGUI menuItem5_barrel;
+    public TextMeshProUGUI menuItem6_wall;
 
     public List<ObjectData> objectDataList;
     public List<GameObject> установленныеМишени;
@@ -91,6 +94,7 @@ public class Main : MonoBehaviour {
         menuList.Add(menuItem3_noShot);
         menuList.Add(menuItem4_dryFire);
         menuList.Add(menuItem5_barrel);
+        menuList.Add(menuItem6_wall);
         
 #if UNITY_EDITOR
         //changeMenu();
@@ -117,6 +121,12 @@ public class Main : MonoBehaviour {
         } else if (currentIndex == 4) {//barrel
             paintRay();
             setUpObject(barrelPreview, barrelPrefub);
+            
+            readyText.gameObject.SetActive(false);
+            hintText.gameObject.SetActive(false);
+        } else if (currentIndex == 5) {//wall
+            paintRay();
+            setUpObject(wallPreview, wallPrefub);
             
             readyText.gameObject.SetActive(false);
             hintText.gameObject.SetActive(false);
@@ -457,6 +467,10 @@ public class Main : MonoBehaviour {
 
     public int getCurrentIndex() {
         return currentIndex;
+    }
+    
+    public bool isShootMode() {
+        return currentIndex is 1 or 3;
     }
 
     public void LoadObjects() {

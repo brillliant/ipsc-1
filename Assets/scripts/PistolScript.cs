@@ -60,7 +60,7 @@ public class PistolScript : MonoBehaviour {
     }
     
     void Update() {
-        if (!mainScript.isTargetSetUpMenuActivated && !mainScript.isNoShotSetUpMenuActivated && mainScript.getCurrentIndex() != 4) {
+        if (!mainScript.isTargetSetUpMenuActivated && !mainScript.isNoShotSetUpMenuActivated && mainScript.isShootMode()) {
             shootActionIfNeeded();
             if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Input.GetKeyUp(KeyCode.Space)) {
                 triggerPressed = false;

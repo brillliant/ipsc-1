@@ -975,14 +975,14 @@
     <Reference Include="Oculus.Interaction.OVR">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Oculus.Interaction.OVR.dll</HintPath>
     </Reference>
-    <Reference Include="Meta.VoiceSDK.Mic.Other">
-      <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Meta.VoiceSDK.Mic.Other.dll</HintPath>
+    <Reference Include="Unity.XR.CoreUtils.Editor">
+      <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Unity.XR.CoreUtils.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Meta.XR.Editor.Id">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Meta.XR.Editor.Id.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.XR.CoreUtils.Editor">
-      <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Unity.XR.CoreUtils.Editor.dll</HintPath>
+    <Reference Include="Meta.VoiceSDK.Mic.Other">
+      <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Meta.VoiceSDK.Mic.Other.dll</HintPath>
     </Reference>
     <Reference Include="Unity.AI.Navigation.Editor.ConversionSystem">
       <HintPath>C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\ScriptAssemblies\Unity.AI.Navigation.Editor.ConversionSystem.dll</HintPath>
