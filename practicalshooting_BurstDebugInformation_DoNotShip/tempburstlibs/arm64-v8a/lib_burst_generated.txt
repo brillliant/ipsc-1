@@ -9,7 +9,6 @@ Library: C:\ProjectUnity\OVR-XR2\OVR-XR2\Temp\BurstOutput\tempburstlibs\arm64-v8
 --target-framework=NetFramework
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=C:\ProjectUnity\OVR-XR2\OVR-XR2\Temp\Burst
---debug=Full
 --key-folder=C:/Program Files/Unity/Hub/Editor/2022.3.49f1/Editor/Data/PlaybackEngines/AndroidPlayer
 --decode-folder=C:\ProjectUnity\OVR-XR2\OVR-XR2\Library\Burst
 --output=C:\ProjectUnity\OVR-XR2\OVR-XR2\Temp\BurstOutput\tempburstlibs\arm64-v8a\lib_burst_generated
