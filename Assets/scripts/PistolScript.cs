@@ -215,7 +215,7 @@ public class PistolScript : MonoBehaviour {
             hammerDown = true;
         }
     }
-    
+
     private void shoot() {
         OVRInput.SetControllerHapticsAmplitudeEnvelope(_vibration, OVRInput.Controller.RTouch);
         var bullet = Instantiate(bulletPrefub);
@@ -223,22 +223,22 @@ public class PistolScript : MonoBehaviour {
         bullet.transform.position = bulletPoint.position;
         bullet.transform.rotation = bulletPoint.rotation;
 
-        visualEffect();
+        //todo demo visualEffect();
+        inShooting = false; //todo demo удалить.
 
         shotSound.PlayOneShot(shotSound.clip);
         mainScript.registerShot();
         bulletRigidbody.velocity = bulletPoint.forward * bulletSpeed;
-        recoil();
-        
         firedRound = true;
-        
         Destroy(bullet, 3);
-        slideScript.runSliderAnimation();
     }
 
     private void visualEffect() {
         muzzleFlash.Play();
         splash.Play();
+        
+        recoil();
+        slideScript.runSliderAnimation();
     }
 
     public void moveRoundFromMagazineToChamber() {
