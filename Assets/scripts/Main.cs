@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using DefaultNamespace;
+using Meta.XR.MRUtilityKit;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -74,12 +75,15 @@ public class Main : MonoBehaviour {
     private GameObject leftHand;
     private MeshRenderer pushMagazinePointOnHandMesh;
     private FloorScript floorScript;
+    private EffectMesh effectMeshScript;//todo added for demo
     
     void Start() {
         InvokeRepeating(nameof(setHandColliderLayer), 1f, 1f); // кажду секунду пробуем задать слой для левой руки
         pistol = GameObject.Find("Glock17");
         pistolScript = pistol.GetComponent<PistolScript>();
         floorScript = GetComponent<FloorScript>();
+        
+        effectMeshScript = effectMeshObject.GetComponent<EffectMesh>();//todo added for demo
         bulletPoint = pistolScript.bulletPoint;
 
         readyText = GameObject.Find("ready").GetComponent<TextMeshProUGUI>();
@@ -95,15 +99,6 @@ public class Main : MonoBehaviour {
         menuList.Add(menuItem4_dryFire);
         menuList.Add(menuItem5_barrel);
         menuList.Add(menuItem6_wall);
-        
-        //todo demo temp
-        changeMenu(); changeMenu(); changeMenu();
-        menuItem1_target.enabled = false;
-        menuItem2_shoot.enabled = false;
-        menuItem3_noShot.enabled = false;
-        menuItem4_dryFire.enabled = false;
-        menuItem5_barrel.enabled = false;
-        menuItem6_wall.enabled = false;
         
 #if UNITY_EDITOR
         //changeMenu();
@@ -317,6 +312,12 @@ public class Main : MonoBehaviour {
         leftHand.SetActive(!leftHand.activeSelf);
         pushMagazinePointOnHandMesh.enabled = !pushMagazinePointOnHandMesh.enabled;
         floorScript.highlight = !floorScript.highlight;
+        
+        if (effectMeshScript.HideMesh) {
+            effectMeshScript.HideMesh = false;
+        } else {
+            effectMeshScript.HideMesh = true;
+        }
     }
 
     protected void setUpObject(GameObject preview, GameObject prefab) {

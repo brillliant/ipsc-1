@@ -222,15 +222,14 @@ public class PistolScript : MonoBehaviour {
         var bulletRigidbody = bullet.GetComponent<Rigidbody>();
         bullet.transform.position = bulletPoint.position;
         bullet.transform.rotation = bulletPoint.rotation;
-
-        //todo demo visualEffect();
-        inShooting = false; //todo demo удалить.
-
+        bulletRigidbody.velocity = bulletPoint.forward * bulletSpeed;
+        
         shotSound.PlayOneShot(shotSound.clip);
         mainScript.registerShot();
-        bulletRigidbody.velocity = bulletPoint.forward * bulletSpeed;
+
         firedRound = true;
-        Destroy(bullet, 3);
+        Destroy(bullet, 1);
+        visualEffect();
     }
 
     private void visualEffect() {

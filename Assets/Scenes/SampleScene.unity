@@ -17642,7 +17642,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: e061aac951693cf4f98bb2cf3d04ae64, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.304
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -17977,7 +17977,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2296141232796561049, guid: cee191920b8eb41b0960b1082a393a3e, type: 3}
       propertyPath: Labels
-      value: 1
+      value: 16285
       objectReference: {fileID: 0}
     - target: {fileID: 2296141232796561049, guid: cee191920b8eb41b0960b1082a393a3e, type: 3}
       propertyPath: CutHoles
