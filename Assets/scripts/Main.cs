@@ -101,10 +101,10 @@ public class Main : MonoBehaviour {
         menuList.Add(menuItem6_wall);
         
 #if UNITY_EDITOR
-        changeMenu();
-        changeMenu();
-        changeMenu();
-        changeMenu();
+        // changeMenu();
+        // changeMenu();
+        // changeMenu();
+        // changeMenu();
 #endif
         
         pushHandPointOnPistolMesh = pistol.transform.Find("pushHandPoint/Sphere").gameObject.GetComponent<MeshRenderer>();
