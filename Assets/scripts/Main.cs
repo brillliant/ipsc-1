@@ -101,10 +101,11 @@ public class Main : MonoBehaviour {
         menuList.Add(menuItem6_wall);
         
 #if UNITY_EDITOR
-        // changeMenu();
-        // changeMenu();
-        // changeMenu();
-        // changeMenu();
+        changeMenu();
+        changeMenu();
+        changeMenu();
+        changeMenu();
+        changeMenu();
 #endif
         
         pushHandPointOnPistolMesh = pistol.transform.Find("pushHandPoint/Sphere").gameObject.GetComponent<MeshRenderer>();
@@ -141,8 +142,8 @@ public class Main : MonoBehaviour {
             hideRay();
         }
         
-        if (Input.GetKeyUp(KeyCode.J) || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickRight)) changeMenu();
-        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft)) showHideDebugMesh();
+        if (Input.GetKeyUp(KeyCode.J) || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickRight, OVRInput.Controller.LTouch)) changeMenu();
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft, OVRInput.Controller.LTouch)) showHideDebugMesh();
         
         if (!(isTargetSetUpMenuActivated && isNoShotSetUpMenuActivated) 
             && !stageStarted
@@ -322,6 +323,14 @@ public class Main : MonoBehaviour {
             effectMeshScript.HideMesh = true;
         }
     }
+    
+    private void rotateLeft() {
+        currentPreview.transform.Rotate(0f, -5f, 0f, Space.Self);
+    }
+    
+    private void rotateRight() {
+        currentPreview.transform.Rotate(0f, 5f, 0f, Space.Self);
+    }
 
     protected void setUpObject(GameObject preview, GameObject prefab) {
         if (!currentPreview) currentPreview = Instantiate(preview);
@@ -336,11 +345,15 @@ public class Main : MonoBehaviour {
             
             // currentPreview.transform.position = hit.point;
             // currentPreview.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
-
-            // Поворот модели лицом к камере
-            Vector3 cameraPosition = Camera.main.transform.position;
-            currentPreview.transform.LookAt(new Vector3(cameraPosition.x, currentPreview.transform.position.y, cameraPosition.z));
-
+            
+            if (currentIndex == 5) {
+                if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft, OVRInput.Controller.RTouch)) rotateLeft();
+                if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickRight, OVRInput.Controller.RTouch)) rotateRight();
+            } else {
+                Vector3 cameraPosition = Camera.main.transform.position;
+                currentPreview.transform.LookAt(new Vector3(cameraPosition.x, currentPreview.transform.position.y, cameraPosition.z)); // Поворот модели лицом к камере
+            }
+            
             if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Input.GetKeyUp(KeyCode.Space)) {
                 triggerPressed = false;
             }
@@ -520,7 +533,9 @@ public class Main : MonoBehaviour {
         var n = hit.normal.normalized;
 
         // выровнять "вверх" по нормали
+        float oldY = go.transform.eulerAngles.y;
         go.transform.rotation = Quaternion.FromToRotation(Vector3.up, n);
+        go.transform.rotation = Quaternion.Euler(0f, oldY, 0f);
 
         // взять границы: сначала из коллайдеров, иначе из рендереров
         Bounds b;

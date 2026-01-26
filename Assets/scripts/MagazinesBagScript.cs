@@ -25,8 +25,7 @@ public class MagazinesBagScript : MonoBehaviour {
     }
 
     void Update() {
-        //temp for debug
-        if (Input.GetKeyUp(KeyCode.O)) {
+        if (Input.GetKeyUp(KeyCode.M)) { //for debug
             instantiateMagazineInHand();
         }
     }
