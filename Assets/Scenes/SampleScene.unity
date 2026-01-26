@@ -11506,8 +11506,8 @@ MonoBehaviour:
   ipscTargetPrefab: {fileID: 6177415639674001883, guid: 5847aea319e2f66478e7bfcab82fb829, type: 3}
   ipscTargetNoShotPreview: {fileID: 1331760992598048564, guid: 4cb69c5c7e605ea438d9ba66d3b12ab2, type: 3}
   ipscTargetNoShotPrefab: {fileID: 6177415639674001883, guid: 9c6851a973f752f459740328bbd243c2, type: 3}
-  barrelPreview: {fileID: 3088521259239529439, guid: 26c83bac2209f2c4597e822cb3f1ea6e, type: 3}
-  barrelPrefub: {fileID: 3088521259239529439, guid: 2d2d6e1510e6abd4c9164230ca0169f7, type: 3}
+  barrelPreview: {fileID: 732461573484453045, guid: 882e3e85da415124ea6e21c80934480e, type: 3}
+  barrelPrefub: {fileID: 5271129605900336281, guid: 7f9852de159a3f04a8720b27c894f174, type: 3}
   wallPreview: {fileID: 2909718853566039112, guid: d47d2c3385eaf984ca5b00bc0d56e56c, type: 3}
   wallPrefub: {fileID: 7383469191773269311, guid: 263366030ddb0e949b34971a5a566a01, type: 3}
   isHandKeepingMagazine: 0
