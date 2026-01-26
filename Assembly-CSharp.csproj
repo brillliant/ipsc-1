@@ -1092,6 +1092,9 @@
     <Reference Include="Unity.TestTools.CodeCoverage.Editor.OpenCover.Model">
       <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.TestTools.CodeCoverage.Editor.OpenCover.Model.dll</HintPath>
     </Reference>
+    <Reference Include="Oculus.Interaction.Samples">
+      <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Oculus.Interaction.Samples.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.AI.Navigation.Updater">
       <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.AI.Navigation.Updater.dll</HintPath>
     </Reference>
@@ -1109,9 +1112,6 @@
     </Reference>
     <Reference Include="Unity.Mathematics">
       <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.Mathematics.dll</HintPath>
-    </Reference>
-    <Reference Include="Oculus.Interaction.Samples">
-      <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Oculus.Interaction.Samples.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.TextMeshPro.Editor.dll</HintPath>
