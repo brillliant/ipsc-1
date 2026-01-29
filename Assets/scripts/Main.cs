@@ -104,8 +104,6 @@ public class Main : MonoBehaviour {
         changeMenu();
         changeMenu();
         changeMenu();
-        changeMenu();
-        changeMenu();
 #endif
         
         pushHandPointOnPistolMesh = pistol.transform.Find("pushHandPoint/Sphere").gameObject.GetComponent<MeshRenderer>();
@@ -141,8 +139,8 @@ public class Main : MonoBehaviour {
         } else {
             hideRay();
         }
-        
-        if (Input.GetKeyUp(KeyCode.J) || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickRight, OVRInput.Controller.LTouch)) changeMenu();
+
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickUp, OVRInput.Controller.LTouch)) changeMenu();
         if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft, OVRInput.Controller.LTouch)) showHideDebugMesh();
         
         if (!(isTargetSetUpMenuActivated && isNoShotSetUpMenuActivated) 
