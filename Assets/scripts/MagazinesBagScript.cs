@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class MagazinesBagScript : MonoBehaviour {
-    public GameObject magazineSpawn; 
+    /*public GameObject magazineSpawn; 
     public GameObject magazinePrefub;
     private GameObject codeObject;
     private Main mainScript;
@@ -42,5 +42,5 @@ public class MagazinesBagScript : MonoBehaviour {
         );
         mainScript.isHandKeepingMagazine = true;
         Debug.Log("схватил магазин");
-    }
+    }*/
 }
