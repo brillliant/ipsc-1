@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 public class PistolScript : MonoBehaviour {
@@ -62,12 +63,12 @@ public class PistolScript : MonoBehaviour {
     void Update() {
         if (!mainScript.isTargetSetUpMenuActivated && !mainScript.isNoShotSetUpMenuActivated && mainScript.isShootMode()) {
             shootActionIfNeeded();
-            if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Input.GetKeyUp(KeyCode.Space)) {
+            if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Keyboard.current.spaceKey.wasReleasedThisFrame) {
                 triggerPressed = false;
             }
             
             if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.LTouch)) mainScript.clearHoles();
-            if (Input.GetKeyUp(KeyCode.U) || OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) releaseMagazine();
+            if (Keyboard.current.uKey.wasPressedThisFrame || OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) releaseMagazine();
         }
     }
 
@@ -196,7 +197,7 @@ public class PistolScript : MonoBehaviour {
     void shootActionIfNeeded() {
         if (!triggerPressed && 
             (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0 
-             || Input.GetKeyDown(KeyCode.Space))) {
+             || Keyboard.current.spaceKey.wasPressedThisFrame)) {
             
             triggerPressed = true;
 
@@ -222,7 +223,7 @@ public class PistolScript : MonoBehaviour {
         var bulletRigidbody = bullet.GetComponent<Rigidbody>();
         bullet.transform.position = bulletPoint.position;
         bullet.transform.rotation = bulletPoint.rotation;
-        bulletRigidbody.velocity = bulletPoint.forward * bulletSpeed;
+        bulletRigidbody.linearVelocity = bulletPoint.forward * bulletSpeed;
         
         shotSound.PlayOneShot(shotSound.clip);
         mainScript.registerShot();
@@ -351,7 +352,7 @@ public class PistolScript : MonoBehaviour {
             forceMultiplier = UnityEngine.Random.Range(0.7f, 1.3f);
         }
         
-        roundRigidbody.velocity = direction.normalized * (roundThrowSpeed * forceMultiplier);
+        roundRigidbody.linearVelocity = direction.normalized * (roundThrowSpeed * forceMultiplier);
         
         Destroy(caseOrRound, 15);
     }

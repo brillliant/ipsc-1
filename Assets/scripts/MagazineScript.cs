@@ -142,7 +142,7 @@ public class MagazineScript : MonoBehaviour {
     void FixedUpdate() {
 #if UNITY_EDITOR
         Debug.DrawRay(transform.position, Physics.gravity, Color.blue); // сила гравита
-        Debug.DrawRay(transform.position, rb.velocity, Color.red); // линейная скорость
+        Debug.DrawRay(transform.position, rb.linearVelocity, Color.red); // линейная скорость
         Debug.DrawRay(transform.position, rb.angularVelocity, Color.green); // угловая скорость
         //Debug.Log($"Velocity: {rb.velocity}, Angular: {rb.angularVelocity}");
 #endif

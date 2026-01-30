@@ -9,6 +9,8 @@ UserSettings/
 MemoryCaptures/
 Recordings/
 
+**/.utmp/
+
 # IDE
 .idea/
 .vscode/
@@ -27,3 +29,5 @@ Recordings/
 # OS
 .DS_Store
 Thumbs.db
+
+*.apk

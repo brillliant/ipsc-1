@@ -5,6 +5,7 @@ using DefaultNamespace;
 using Meta.XR.MRUtilityKit;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
 
 public class Main : MonoBehaviour {
@@ -100,12 +101,13 @@ public class Main : MonoBehaviour {
         menuList.Add(menuItem5_barrel);
         menuList.Add(menuItem6_wall);
         
+        changeMenu();
+        changeMenu();
+        changeMenu();
 #if UNITY_EDITOR
+        /*changeMenu();
         changeMenu();
-        changeMenu();
-        changeMenu();
-        changeMenu();
-        changeMenu();
+        changeMenu();*/
 #endif
         
         pushHandPointOnPistolMesh = pistol.transform.Find("pushHandPoint/Sphere").gameObject.GetComponent<MeshRenderer>();
@@ -114,6 +116,8 @@ public class Main : MonoBehaviour {
     }
     
     void Update() {
+        Debug.Log($"OVRPlugin initialized: {OVRPlugin.initialized}, version: {OVRPlugin.version}");
+        
         if (isTargetSetUpMenuActivated) {
             paintRay();
             setUpObject(ipscTargetPreview, ipscTargetPrefab);
@@ -141,15 +145,15 @@ public class Main : MonoBehaviour {
         } else {
             hideRay();
         }
-        
-        if (Input.GetKeyUp(KeyCode.J) || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickRight, OVRInput.Controller.LTouch)) changeMenu();
+
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickUp, OVRInput.Controller.LTouch)) changeMenu();
         if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft, OVRInput.Controller.LTouch)) showHideDebugMesh();
         
         if (!(isTargetSetUpMenuActivated && isNoShotSetUpMenuActivated) 
             && !stageStarted
             && !inprocessCommand
             && (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch)  
-                || Input.GetKeyDown(KeyCode.Z))) {
+                || Keyboard.current.zKey.wasPressedThisFrame)) {
             
             startStage();
         }
@@ -158,7 +162,7 @@ public class Main : MonoBehaviour {
             && stageStarted 
             && !inprocessCommand
             && (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch)  
-                || Input.GetKeyDown(KeyCode.Z))) {
+                || Keyboard.current.zKey.wasPressedThisFrame)) {
             
             stopStage();
         }
@@ -166,7 +170,7 @@ public class Main : MonoBehaviour {
         if (!(isTargetSetUpMenuActivated && isNoShotSetUpMenuActivated) 
             //&& stageStarted  выключить можно всегда.  если что. добавить флаг. AttemptStarted
             && (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.LTouch)  
-                || Input.GetKeyDown(KeyCode.LeftShift))) {
+                || Keyboard.current.leftShiftKey.wasPressedThisFrame)) {
             
             interruptAttempt();
         }
@@ -354,12 +358,12 @@ public class Main : MonoBehaviour {
                 currentPreview.transform.LookAt(new Vector3(cameraPosition.x, currentPreview.transform.position.y, cameraPosition.z)); // Поворот модели лицом к камере
             }
             
-            if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Input.GetKeyUp(KeyCode.Space)) {
+            if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Keyboard.current.spaceKey.wasPressedThisFrame) {
                 triggerPressed = false;
             }
 
             if (!triggerPressed &&
-                (Input.GetKeyDown(KeyCode.Space) || OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0.5)
+                (Keyboard.current.spaceKey.wasPressedThisFrame || OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0.5)
                 ) {
                 placeATarget(currentPreview, prefab);
             }
