@@ -101,9 +101,9 @@ public class Main : MonoBehaviour {
         menuList.Add(menuItem5_barrel);
         menuList.Add(menuItem6_wall);
         
+        /*changeMenu();
         changeMenu();
-        changeMenu();
-        changeMenu();
+        changeMenu();*/
 #if UNITY_EDITOR
         /*changeMenu();
         changeMenu();
