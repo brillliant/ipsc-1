@@ -147,7 +147,8 @@ public class Main : MonoBehaviour {
         }
 
         if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickUp, OVRInput.Controller.LTouch)) changeMenu();
-        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft, OVRInput.Controller.LTouch)) showHideDebugMesh();
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft, OVRInput.Controller.LTouch) || 
+            Keyboard.current.mKey.wasPressedThisFrame) showHideDebugMesh();
         
         if (!(isTargetSetUpMenuActivated && isNoShotSetUpMenuActivated) 
             && !stageStarted
