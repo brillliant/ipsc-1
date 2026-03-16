@@ -169,7 +169,7 @@ public class Main : MonoBehaviour {
         }
         
         if (!(isTargetSetUpMenuActivated && isNoShotSetUpMenuActivated) 
-            //&& stageStarted  выключить можно всегда.  если что. добавить флаг. AttemptStarted
+            //&& stageStarted выключить можно всегда. Если что. Добавить флаг. AttemptStarted
             && (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.LTouch)  
                 || Keyboard.current.leftShiftKey.wasPressedThisFrame)) {
             
