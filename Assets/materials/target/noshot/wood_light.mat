@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: wood_light
-  m_Shader: {fileID: 4800000, guid: 47395cb24808e3943989d4f386225fe5, type: 3}
+  m_Shader: {fileID: 4800000, guid: 79d6280056f472647b62d1e3409e1670, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []

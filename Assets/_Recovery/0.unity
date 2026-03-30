@@ -1289,7 +1289,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9126e32d07ee9834eb4565f229af194c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DepthMaskSetup
-  _maxOcclusionDistance: 0.8
+  _depthManager: {fileID: 92198295}
+  _maskScale: 1.15
 --- !u!1 &94294776
 GameObject:
   m_ObjectHideFlags: 0
@@ -18298,7 +18299,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2296141232796561049, guid: cee191920b8eb41b0960b1082a393a3e, type: 3}
       propertyPath: Labels
-      value: 0
+      value: 442367
       objectReference: {fileID: 0}
     - target: {fileID: 2296141232796561049, guid: cee191920b8eb41b0960b1082a393a3e, type: 3}
       propertyPath: CutHoles
