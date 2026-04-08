@@ -1289,7 +1289,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9126e32d07ee9834eb4565f229af194c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DepthMaskSetup
-  _maxOcclusionDistance: 0.8
+  _maxOcclusionDistance: 0.7
 --- !u!1 &94294776
 GameObject:
   m_ObjectHideFlags: 0
@@ -34294,7 +34294,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7f40b26a729a534468a8d81a5f6d3a7f, type: 2}
+  - {fileID: 2100000, guid: ee4cfcf54170be644a6160a12b340648, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

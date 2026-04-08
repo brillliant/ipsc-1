@@ -5,7 +5,7 @@ using Meta.XR.MRUtilityKit;
 using UnityEngine;
 
 public class DepthMaskSetup : MonoBehaviour {
-    [SerializeField] private float _maxOcclusionDistance = 0.8f;
+    [SerializeField] private float _maxOcclusionDistance = 0.01f; //see unity
 
     void Start() {
         Shader.SetGlobalFloat("_MaxOcclusionDistance", _maxOcclusionDistance);
