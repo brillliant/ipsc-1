@@ -25,6 +25,11 @@ uniform float4x4 _EnvironmentDepthReprojectionMatrices[2];
 uniform float4 _EnvironmentDepthZBufferParams;
 uniform float _MaxOcclusionDistance;
 
+//для вырезки бокса
+uniform float4x4 _ControllerWorldToLocal;
+uniform float3 _ExcludeBoxMin;
+uniform float3 _ExcludeBoxMax;
+
 #define SAMPLE_OFFSET_PIXELS 6.0f
 #define RELATIVE_ERROR_SCALE 0.015f
 #define SOFT_OCCLUSIONS_SCREENSPACE_OFFSET SAMPLE_OFFSET_PIXELS / _EnvironmentDepthTexture_TexelSize.zw
@@ -80,8 +85,7 @@ float CalculateEnvironmentDepthSoftOcclusion(float2 uvCoords, float linearSceneD
   return alpha;
 }
 
-float CalculateEnvironmentDepthOcclusion(float3 worldCoords, float bias)
-{
+float CalculateEnvironmentDepthOcclusion(float3 worldCoords, float bias) {
   const float4 depthSpace =
     mul(_EnvironmentDepthReprojectionMatrices[unity_StereoEyeIndex], float4(worldCoords, 1.0));
 
@@ -94,6 +98,18 @@ float CalculateEnvironmentDepthOcclusion(float3 worldCoords, float bias)
   float envDepth = SampleEnvironmentDepthLinear(uvCoords);
   if (envDepth > _MaxOcclusionDistance)
     return 1.0;
+
+  //для вырезки бокса
+  float3 cameraPos = _WorldSpaceCameraPos;
+  float3 rayDir = worldCoords - cameraPos;
+  float3 realWorldPos = cameraPos + rayDir * (envDepth / linearSceneDepth);
+  float3 localPos = mul(_ControllerWorldToLocal, float4(realWorldPos, 1.0)).xyz;
+  if (all(localPos >= _ExcludeBoxMin) && all(localPos <= _ExcludeBoxMax))
+    return 1.0;
+  
+  /*float3 localPos = mul(_ControllerWorldToLocal, float4(worldCoords, 1.0)).xyz;
+  if (all(localPos >= _ExcludeBoxMin) && all(localPos <= _ExcludeBoxMax))
+    return 1.0;*/
 
   #if defined(HARD_OCCLUSION)
    return CalculateEnvironmentDepthHardOcclusion(uvCoords, linearSceneDepth);
