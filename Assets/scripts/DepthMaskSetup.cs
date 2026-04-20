@@ -5,24 +5,37 @@ using Meta.XR.MRUtilityKit;
 using UnityEngine;
 
 public class DepthMaskSetup : MonoBehaviour {
-    [SerializeField] private float _maxOcclusionDistance = 0.01f; //see unity
-    
+    [SerializeField] private float _maxOcclusionDistance = 0.7f;
     [SerializeField] private Transform _excludeBox;
-    
-    //[SerializeField] private Transform _controllerTransform;
-    //[SerializeField] private Vector3 _boxMin = new Vector3(-0.03f, 0.02f, -0.15f);
-    //[SerializeField] private Vector3 _boxMax = new Vector3(0.03f, 0.08f, 0.15f);
+    [SerializeField] private float _depthMargin = 0.15f;
 
-    void Start() {
-        Shader.SetGlobalFloat("_MaxOcclusionDistance", _maxOcclusionDistance);
-    }
-    
     void Update() {
-        if (_excludeBox != null) {
-            Shader.SetGlobalMatrix("_ControllerWorldToLocal", 
-                _excludeBox.worldToLocalMatrix);
-            Shader.SetGlobalVector("_ExcludeBoxMin", new Vector3(-0.5f, -0.5f, -0.5f));
-            Shader.SetGlobalVector("_ExcludeBoxMax", new Vector3(0.5f, 0.5f, 0.5f));
+        Shader.SetGlobalFloat("_MaxOcclusionDistance", _maxOcclusionDistance);
+        if (_excludeBox == null) return;
+
+        Shader.SetGlobalMatrix("_ExcludeBoxWorldToLocal",
+            _excludeBox.worldToLocalMatrix);
+
+        Camera cam = Camera.main;
+        if (cam != null) {
+            Vector3 c = _excludeBox.position;
+            Vector3 r = _excludeBox.right * _excludeBox.lossyScale.x * 0.5f;
+            Vector3 u = _excludeBox.up * _excludeBox.lossyScale.y * 0.5f;
+            Vector3 f = _excludeBox.forward * _excludeBox.lossyScale.z * 0.5f;
+            Vector3 camPos = cam.transform.position;
+
+            float minD = float.MaxValue;
+            Vector3[] corners = {
+                c - r - u - f, c + r - u - f,
+                c - r + u - f, c + r + u - f,
+                c - r - u + f, c + r - u + f,
+                c - r + u + f, c + r + u + f
+            };
+            for (int i = 0; i < 8; i++) {
+                float d = Vector3.Distance(camPos, corners[i]);
+                if (d < minD) minD = d;
+            }
+            Shader.SetGlobalFloat("_ExcludeMinDepth", minD - _depthMargin);
         }
     }
 }

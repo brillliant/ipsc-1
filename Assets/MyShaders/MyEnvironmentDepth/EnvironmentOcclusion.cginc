@@ -25,10 +25,8 @@ uniform float4x4 _EnvironmentDepthReprojectionMatrices[2];
 uniform float4 _EnvironmentDepthZBufferParams;
 uniform float _MaxOcclusionDistance;
 
-//для вырезки бокса
-uniform float4x4 _ControllerWorldToLocal;
-uniform float3 _ExcludeBoxMin;
-uniform float3 _ExcludeBoxMax;
+uniform float4x4 _ExcludeBoxWorldToLocal;
+uniform float _ExcludeMinDepth;
 
 #define SAMPLE_OFFSET_PIXELS 6.0f
 #define RELATIVE_ERROR_SCALE 0.015f
@@ -100,16 +98,21 @@ float CalculateEnvironmentDepthOcclusion(float3 worldCoords, float bias) {
     return 1.0;
 
   //для вырезки бокса
-  float3 cameraPos = _WorldSpaceCameraPos;
-  float3 rayDir = worldCoords - cameraPos;
-  float3 realWorldPos = cameraPos + rayDir * (envDepth / linearSceneDepth);
-  float3 localPos = mul(_ControllerWorldToLocal, float4(realWorldPos, 1.0)).xyz;
-  if (all(localPos >= _ExcludeBoxMin) && all(localPos <= _ExcludeBoxMax))
+  float3 rayOrigin = _WorldSpaceCameraPos;
+  float3 rayDir = normalize(worldCoords - rayOrigin);
+  float3 localOrigin = mul(_ExcludeBoxWorldToLocal, float4(rayOrigin, 1.0)).xyz;
+  float3 localDir = normalize(mul((float3x3)_ExcludeBoxWorldToLocal, rayDir));
+
+  float3 invDir = 1.0 / localDir;
+  float3 t1 = (-0.5 - localOrigin) * invDir;
+  float3 t2 = (0.5 - localOrigin) * invDir;
+  float3 tmin = min(t1, t2);
+  float3 tmax = max(t1, t2);
+  float tNear = max(max(tmin.x, tmin.y), tmin.z);
+  float tFar = min(min(tmax.x, tmax.y), tmax.z);
+
+  if (tNear < tFar && tFar > 0 && envDepth > _ExcludeMinDepth)
     return 1.0;
-  
-  /*float3 localPos = mul(_ControllerWorldToLocal, float4(worldCoords, 1.0)).xyz;
-  if (all(localPos >= _ExcludeBoxMin) && all(localPos <= _ExcludeBoxMax))
-    return 1.0;*/
 
   #if defined(HARD_OCCLUSION)
    return CalculateEnvironmentDepthHardOcclusion(uvCoords, linearSceneDepth);

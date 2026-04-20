@@ -1258,7 +1258,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71a155ece80369d4e99bdaf5e59169b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Meta.XR.EnvironmentDepth::Meta.XR.EnvironmentDepth.EnvironmentDepthManager
-  _occlusionShadersMode: 2
+  _occlusionShadersMode: 1
   _removeHands: 0
   CustomTrackingSpace: {fileID: 0}
   <MaskMeshFilters>k__BackingField: []
@@ -1291,6 +1291,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DepthMaskSetup
   _maxOcclusionDistance: 0.7
   _excludeBox: {fileID: 854340334}
+  _depthMargin: 0.1
+  _debugLossyScale: {x: 0.1, y: 0.1, z: 0.1}
 --- !u!1 &94294776
 GameObject:
   m_ObjectHideFlags: 0
@@ -9909,8 +9911,8 @@ Transform:
   m_GameObject: {fileID: 854340333}
   serializedVersion: 2
   m_LocalRotation: {x: 0.13536811, y: -0.0016969703, z: 0.012419585, w: 0.9907161}
-  m_LocalPosition: {x: 0.0068, y: 0.0089, z: 0.048}
-  m_LocalScale: {x: 0.042424913, y: 0.0527324, z: 0.21302578}
+  m_LocalPosition: {x: 0.0066, y: 0.021, z: 0.0516}
+  m_LocalScale: {x: 0.05010933, y: 0.0438529, z: 0.2083517}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1828601336}
@@ -9943,7 +9945,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 854340333}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
