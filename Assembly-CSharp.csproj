@@ -51,6 +51,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\EnvMapAnimator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
+    <Compile Include="Assets\scripts\menu\MenuController.cs" />
     <Compile Include="Assets\scripts\PistolScript.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
     <Compile Include="Assets\scripts\HandScript.cs" />
@@ -544,7 +545,7 @@
       <HintPath>D:\unity\ipsc-1\Library\PackageCache\com.unity.collections@aea9d3bd5e19\Unity.Collections.Tests\System.IO.Hashing\System.IO.Hashing.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
-      <HintPath>D:\unity\ipsc-1\Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
+      <HintPath>D:\unity\ipsc-1\Library\PackageCache\com.unity.visualscripting@8bed5ad90189\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>D:\unity\ipsc-1\Library\PackageCache\com.unity.nuget.newtonsoft-json@4dfd81071c64\Runtime\Newtonsoft.Json.dll</HintPath>
@@ -933,6 +934,9 @@
     <Reference Include="Oculus.Interaction.UnityXR">
       <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Oculus.Interaction.UnityXR.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.XR.Hands.Analytics.Hooks.Editor">
+      <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.XR.Hands.Analytics.Hooks.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.XR.CoreUtils.Editor">
       <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.XR.CoreUtils.Editor.dll</HintPath>
     </Reference>
@@ -1007,9 +1011,6 @@
     </Reference>
     <Reference Include="Unity.RenderPipelines.Core.Runtime.Shared">
       <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.RenderPipelines.Core.Runtime.Shared.dll</HintPath>
-    </Reference>
-    <Reference Include="Oculus.Interaction.Editor">
-      <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Oculus.Interaction.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Universal.2D.Runtime">
       <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.RenderPipelines.Universal.2D.Runtime.dll</HintPath>
@@ -1088,6 +1089,9 @@
     </Reference>
     <Reference Include="Unity.VisualScripting.Flow">
       <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.VisualScripting.Flow.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.XR.Hands">
+      <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.XR.Hands.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.TextMeshPro.Editor.dll</HintPath>
@@ -1248,6 +1252,9 @@
     <Reference Include="Meta.WitAi.TTS.Editor">
       <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Meta.WitAi.TTS.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.XR.Hands.Analytics.Editor">
+      <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.XR.Hands.Analytics.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.AI.Navigation">
       <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.AI.Navigation.dll</HintPath>
     </Reference>
@@ -1358,6 +1365,9 @@
     </Reference>
     <Reference Include="Unity.Collections">
       <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.XR.Hands.Editor">
+      <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.XR.Hands.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.XR.OpenXR.Features.OculusQuestSupport">
       <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.XR.OpenXR.Features.OculusQuestSupport.dll</HintPath>
@@ -1475,6 +1485,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Oculus.Interaction.Editor.csproj">
+      <Project>{1d881bdc-5937-86c9-5c47-93eb87b306b2}</Project>
+      <Name>Oculus.Interaction.Editor</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

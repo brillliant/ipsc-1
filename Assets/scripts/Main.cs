@@ -9,6 +9,11 @@ using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
 
 public class Main : MonoBehaviour {
+    public GameObject camera;
+    public GameObject menu;
+    private GameObject controllerRayInteractorLeft;
+    private GameObject controllerRayInteractorRight;
+    
     public GameObject ipscTargetPreview;
     public GameObject ipscTargetPrefab;
 
@@ -78,7 +83,19 @@ public class Main : MonoBehaviour {
     private FloorScript floorScript;
     private EffectMesh effectMeshScript;//todo added for demo
     
+    private MenuController menuController;
+    
     void Start() {
+        Transform root = camera.transform;
+
+        controllerRayInteractorLeft = root.Find(
+            "[BuildingBlock] Interaction/[BuildingBlock] Controller Interactions/LeftController/ControllerInteractors/ControllerRayInteractor"
+        )?.gameObject;
+
+        controllerRayInteractorRight = root.Find(
+            "[BuildingBlock] Interaction/[BuildingBlock] Controller Interactions/RightController/ControllerInteractors/ControllerRayInteractor"
+        )?.gameObject;
+
         InvokeRepeating(nameof(setHandColliderLayer), 1f, 1f); // кажду секунду пробуем задать слой для левой руки
         pistol = GameObject.Find("Glock17");
         pistolScript = pistol.GetComponent<PistolScript>();
@@ -113,10 +130,16 @@ public class Main : MonoBehaviour {
         pushHandPointOnPistolMesh = pistol.transform.Find("pushHandPoint/Sphere").gameObject.GetComponent<MeshRenderer>();
         pushMagazinePointOnHandMesh = GameObject.Find("pushMagazinePointOnHand").gameObject.GetComponent<MeshRenderer>();
         leftHand = GameObject.Find("OpenXRLeftHand").transform.Find("LeftHand").gameObject;
+        
+        menuController = new MenuController(menu, pistol, controllerRayInteractorLeft, controllerRayInteractorRight);
     }
     
     void Update() {
+        
         Debug.Log($"OVRPlugin initialized: {OVRPlugin.initialized}, version: {OVRPlugin.version}");
+        
+        if (Keyboard.current.pKey.wasPressedThisFrame || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstick, OVRInput.Controller.LTouch)) 
+            menuController.showHideMenu();
         
         if (isTargetSetUpMenuActivated) {
             paintRay();
@@ -486,7 +509,6 @@ public class Main : MonoBehaviour {
         установленныеМишени.Clear();
         clearHoles();
     }
-
     public void clearHoles() {
         foreach (GameObject пробоина in пробоины) {
             if (пробоина != gameObject) {
