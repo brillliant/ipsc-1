@@ -940,6 +940,9 @@
     <Reference Include="Unity.XR.CoreUtils.Editor">
       <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.XR.CoreUtils.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.2D.Sprite.Editor">
+      <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
     </Reference>
@@ -1212,6 +1215,9 @@
     </Reference>
     <Reference Include="Meta.XR.Editor.ToolingSupport">
       <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Meta.XR.Editor.ToolingSupport.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.2D.Sprite.AIIntegration.Editor">
+      <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.2D.Sprite.AIIntegration.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Meta.Voice.Hub.Runtime">
       <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Meta.Voice.Hub.Runtime.dll</HintPath>

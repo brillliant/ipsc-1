@@ -85,6 +85,9 @@ public class Main : MonoBehaviour {
     
     private MenuController menuController;
     
+    private bool removeMode = false;
+    private GameObject hoveredObject;
+    
     void Start() {
         Transform root = camera.transform;
 
@@ -162,10 +165,19 @@ public class Main : MonoBehaviour {
         } else if (currentIndex == 5) {//wall
             paintRay();
             setUpObject(wallPreview, wallPrefub);
-            
+
             readyText.gameObject.SetActive(false);
             hintText.gameObject.SetActive(false);
+        } else if (removeMode) {
+            paintRay();
+            updateRemoveHighlight();
+            if (hoveredObject != null && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch)) {
+                установленныеМишени.Remove(hoveredObject);
+                Destroy(hoveredObject);
+                hoveredObject = null;
+            }
         } else {
+            clearHoverHighlight();
             hideRay();
         }
 
@@ -409,13 +421,19 @@ public class Main : MonoBehaviour {
             line.startWidth = 0.005f;
             line.endWidth   = 0.001f;
             line.material = new Material(Shader.Find("Sprites/Default")); // стерео-совместимый
-            line.material.color = Color.red;
+            line.material.color = Color.cyan;
             line.positionCount = 2;
             line.useWorldSpace = true;
             line.alignment = LineAlignment.View;
         }
-        
-        if (!line.enabled) line.enabled = true;
+
+        if (!line.enabled) {
+            line.enabled = true;
+            line.material.color = Color.cyan;
+            
+            line.startWidth = 0.005f;
+            line.endWidth   = 0.001f;
+        }
 
         line.SetPosition(0, bulletPoint.position);               // визуализация того же луча
         line.SetPosition(1, bulletPoint.position + bulletPoint.forward * 10f);
@@ -424,6 +442,43 @@ public class Main : MonoBehaviour {
     private void hideRay() {
         if (!line) return;
         line.enabled = false;
+    }
+
+    private void updateRemoveHighlight() {
+        Ray ray = new Ray(bulletPoint.position, bulletPoint.forward);
+        GameObject newHovered = null;
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 50f)) {
+            Transform t = hit.collider.transform;
+            while (t != null && newHovered == null) {
+                foreach (var obj in установленныеМишени) {
+                    if (t.gameObject == obj) {
+                        newHovered = obj;
+                        break;
+                    }
+                }
+                t = t.parent;
+            }
+        }
+
+        if (newHovered == hoveredObject) return;
+
+        if (hoveredObject != null) setHighlight(hoveredObject, false);
+        hoveredObject = newHovered;
+        if (hoveredObject != null) setHighlight(hoveredObject, true);
+    }
+
+    private void clearHoverHighlight() {
+        if (hoveredObject == null) return;
+        setHighlight(hoveredObject, false);
+        hoveredObject = null;
+    }
+
+    private void setHighlight(GameObject obj, bool on) {
+        var mpb = new MaterialPropertyBlock();
+        if (on) mpb.SetColor("_BaseColor", new Color(1f, 0.3f, 0.3f, 1f));
+        foreach (var r in obj.GetComponentsInChildren<Renderer>())
+            r.SetPropertyBlock(mpb);
     }
 
     private int getNextIndex() {
@@ -436,6 +491,7 @@ public class Main : MonoBehaviour {
     }
 
     private void changeMenu() {
+        removeMode = false;
         if (currentPreview) {
             currentPreview.SetActive(false);
             Destroy(currentPreview); 
@@ -461,6 +517,88 @@ public class Main : MonoBehaviour {
         } else if (currentIndex == 3) {
             pistolScript.setMagRoundCount(int.MaxValue);
         }
+    }
+
+    public void chooseIPSClowTarget() {
+        if (currentPreview) {
+            currentPreview.SetActive(false);
+            Destroy(currentPreview); 
+        }
+        
+        currentIndex = 0;
+        isTargetSetUpMenuActivated = true;
+        isNoShotSetUpMenuActivated = false;
+        
+        highlightNecessaryMenuItem(currentIndex);
+        menuController.showHideMenu();
+        removeMode = false;
+    }
+    
+    public void chooseIPSCNowshotLowTarget() {
+        if (currentPreview) {
+            currentPreview.SetActive(false);
+            Destroy(currentPreview); 
+        }
+        
+        currentIndex = 2;
+        isTargetSetUpMenuActivated = false;
+        isNoShotSetUpMenuActivated = true;
+        
+        highlightNecessaryMenuItem(currentIndex);
+        menuController.showHideMenu();
+        removeMode = false;
+    }
+    
+    public void chooseBarrel() {
+        if (currentPreview) {
+            currentPreview.SetActive(false);
+            Destroy(currentPreview); 
+        }
+        
+        currentIndex = 4;
+        isTargetSetUpMenuActivated = false;
+        isNoShotSetUpMenuActivated = false;
+        
+        highlightNecessaryMenuItem(currentIndex);
+        menuController.showHideMenu();
+        removeMode = false;
+    }
+    
+    public void chooseWall() {
+        if (currentPreview) {
+            currentPreview.SetActive(false);
+            Destroy(currentPreview); 
+        }
+        
+        currentIndex = 5;
+        isTargetSetUpMenuActivated = false;
+        isNoShotSetUpMenuActivated = false;
+        
+        highlightNecessaryMenuItem(currentIndex);
+        menuController.showHideMenu();
+        removeMode = false;
+    }
+    
+    public void removeModeOn() {
+        if (currentPreview) {
+            currentPreview.SetActive(false);
+            Destroy(currentPreview); 
+        }
+
+        removeMode = true;
+
+        paintRay();
+        line.material.color = Color.red;
+        line.startWidth = 0.015f;
+        line.endWidth   = 0.003f;
+        
+        currentIndex = -1;
+        
+        isTargetSetUpMenuActivated = false;
+        isNoShotSetUpMenuActivated = false;
+        
+        highlightNecessaryMenuItem(currentIndex);
+        menuController.showHideMenu();
     }
 
     private void highlightNecessaryMenuItem(int index) {
