@@ -131,7 +131,7 @@ public class SlideScript : MonoBehaviour {
      * если была команда судьей, вынял ли магазин и показал ли пустой патронник?
      */
     private void checkEmptyBackHold() {
-        if (mainScript.unloadAndShowClearCommandGiven && !pistolScript.isMagazineInPistol()) {
+        if (mainScript.gameModeService.unloadAndShowClearCommandGiven && !pistolScript.isMagazineInPistol()) {
             if (!sliderAnimationRunning) {
                 float dz = transform.localPosition.z - localPosition0.z;
 

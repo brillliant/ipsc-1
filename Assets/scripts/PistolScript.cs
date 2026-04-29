@@ -61,7 +61,7 @@ public class PistolScript : MonoBehaviour {
     }
     
     void Update() {
-        if (!mainScript.isTargetSetUpMenuActivated && !mainScript.isNoShotSetUpMenuActivated && mainScript.isShootMode()) {
+        if (!mainScript.menuController.isTargetSetUpMenuActivated && !mainScript.menuController.isNoShotSetUpMenuActivated && mainScript.isShootMode()) {
             shootActionIfNeeded();
             if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Keyboard.current.spaceKey.wasReleasedThisFrame) {
                 triggerPressed = false;
@@ -150,10 +150,10 @@ public class PistolScript : MonoBehaviour {
      * проверяю позицию, если пистолет накланен вниз. типа в кобуре
      */
     private void checkIfPistolInHolster() {
-        if (mainScript.hummerDownCommandGiven) {
+        if (mainScript.gameModeService.hummerDownCommandGiven) {
             Vector3 barrelDir = -transform.forward;
             if (Vector3.Angle(barrelDir, Vector3.down) <= tolDeg) {
-                mainScript.clearHintShotTime();
+                mainScript.gameModeService.clearHintShotTime();
             }
         }
     }
@@ -212,7 +212,7 @@ public class PistolScript : MonoBehaviour {
 
     private void emptyShoot() {
         emptyShotSound.PlayOneShot(emptyShotSound.clip);
-        if (mainScript.hummerDownCommandGiven) {
+        if (mainScript.gameModeService.hummerDownCommandGiven) {
             hammerDown = true;
         }
     }
@@ -226,7 +226,7 @@ public class PistolScript : MonoBehaviour {
         bulletRigidbody.linearVelocity = bulletPoint.forward * bulletSpeed;
         
         shotSound.PlayOneShot(shotSound.clip);
-        mainScript.registerShot();
+        mainScript.gameModeService.registerShot();
 
         firedRound = true;
         Destroy(bullet, 1);
