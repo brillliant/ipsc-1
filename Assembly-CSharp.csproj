@@ -1198,26 +1198,26 @@
     <Reference Include="Unity.XR.Simulation">
       <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.XR.Simulation.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.2D.Sprite.AIIntegration.Editor">
+      <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.2D.Sprite.AIIntegration.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.RenderPipelines.Core.Editor.Shared">
       <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.RenderPipelines.Core.Editor.Shared.dll</HintPath>
-    </Reference>
-    <Reference Include="Meta.XR.Editor.Reflection">
-      <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Meta.XR.Editor.Reflection.dll</HintPath>
     </Reference>
     <Reference Include="Unity.XR.CompositionLayers.UIInteraction.Editor">
       <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.XR.CompositionLayers.UIInteraction.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection">
-      <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection.dll</HintPath>
+    <Reference Include="Meta.XR.Editor.Reflection">
+      <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Meta.XR.Editor.Reflection.dll</HintPath>
     </Reference>
     <Reference Include="Unity.InputSystem">
       <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.InputSystem.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection">
+      <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection.dll</HintPath>
+    </Reference>
     <Reference Include="Meta.XR.Editor.ToolingSupport">
       <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Meta.XR.Editor.ToolingSupport.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.2D.Sprite.AIIntegration.Editor">
-      <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Unity.2D.Sprite.AIIntegration.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Meta.Voice.Hub.Runtime">
       <HintPath>D:\unity\ipsc-1\Library\ScriptAssemblies\Meta.Voice.Hub.Runtime.dll</HintPath>
