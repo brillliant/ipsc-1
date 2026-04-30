@@ -24,7 +24,7 @@ public class BulletScript : MonoBehaviour {
             Vector3 offset = contact.normal * randomValue;
             Vector3 adjustedHitPoint = hitPoint + offset;
             
-            mainScript.пробоины.Add(Instantiate(bulletHolePrefab, adjustedHitPoint, hitRotation));
+            mainScript.builderService.пробоины.Add(Instantiate(bulletHolePrefab, adjustedHitPoint, hitRotation));
         }
         Destroy(gameObject);
     }

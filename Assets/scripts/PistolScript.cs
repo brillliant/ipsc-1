@@ -61,13 +61,13 @@ public class PistolScript : MonoBehaviour {
     }
     
     void Update() {
-        if (!mainScript.menuController.isTargetSetUpMenuActivated && !mainScript.menuController.isNoShotSetUpMenuActivated && mainScript.isShootMode()) {
+        if (!mainScript.menuController.isTargetSetUpMenuActivated && !mainScript.menuController.isNoShotSetUpMenuActivated && mainScript.menuController.isShootMode()) {
             shootActionIfNeeded();
             if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Keyboard.current.spaceKey.wasReleasedThisFrame) {
                 triggerPressed = false;
             }
             
-            if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.LTouch)) mainScript.clearHoles();
+            if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.LTouch)) mainScript.builderService.clearHoles();
             if (Keyboard.current.uKey.wasPressedThisFrame || OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) releaseMagazine();
         }
     }
@@ -245,7 +245,7 @@ public class PistolScript : MonoBehaviour {
         if (magazineLockedInPistol && magazineScript.getRoundCount() > 0) {
             setRoundToChamber();
             firedRound = false;
-            if (mainScript.getCurrentIndex() != 3) { //не декременчу патроны, если dryFire mode
+            if (mainScript.menuController.getCurrentIndex() != 3) { //не декременчу патроны, если dryFire mode
                 magazineScript.decrementRoundCount();
             }
             inShooting = false;

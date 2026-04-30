@@ -4,47 +4,33 @@ using TMPro;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-public class GameModeService {
-    private MonoBehaviour host;
-    private Coroutine pending;
+public class GameModeService : MonoBehaviour {
+    [Header("UI")]
+    public TextMeshProUGUI readyText;
+    public TextMeshProUGUI hintText;
 
-    private TextMeshProUGUI readyText;
-    private TextMeshProUGUI hintText;
+    [Header("Sounds")]
+    public AudioSource loadAndMakeReadySound;
+    public AudioSource areYouReadySound;
+    public AudioSource standByySound;
+    public AudioSource beepSound;
+    public AudioSource ifYouAreFinishedUnloadAndShowClear;
+    public AudioSource ifClearHammerDownAndHolster;
+    public AudioSource rangeIsClear;
+
+    [HideInInspector] public bool stageStarted = false;
+    [HideInInspector] public bool inprocessCommand = false;
+    [HideInInspector] public bool unloadAndShowClearCommandGiven = false;
+    [HideInInspector] public bool hummerDownCommandGiven = false;
+
     private PistolScript pistolScript;
-
-    private AudioSource loadAndMakeReadySound;
-    private AudioSource areYouReadySound;
-    private AudioSource standByySound;
-    private AudioSource beepSound;
-    private AudioSource ifYouAreFinishedUnloadAndShowClear;
-    private AudioSource ifClearHammerDownAndHolster;
-    private AudioSource rangeIsClear;
-
-    public bool stageStarted = false;
-    public bool inprocessCommand = false;
-    public bool unloadAndShowClearCommandGiven = false;
-    public bool hummerDownCommandGiven = false;
-
+    private Coroutine pending;
     private float startTime;
     private bool running;
     private float lastShotTime;
 
-    public GameModeService(MonoBehaviour host, TextMeshProUGUI readyText, TextMeshProUGUI hintText,
-        PistolScript pistolScript,
-        AudioSource loadAndMakeReadySound, AudioSource areYouReadySound, AudioSource standByySound,
-        AudioSource beepSound, AudioSource ifYouAreFinishedUnloadAndShowClear,
-        AudioSource ifClearHammerDownAndHolster, AudioSource rangeIsClear) {
-        this.host = host;
-        this.readyText = readyText;
-        this.hintText = hintText;
+    public void init(PistolScript pistolScript) {
         this.pistolScript = pistolScript;
-        this.loadAndMakeReadySound = loadAndMakeReadySound;
-        this.areYouReadySound = areYouReadySound;
-        this.standByySound = standByySound;
-        this.beepSound = beepSound;
-        this.ifYouAreFinishedUnloadAndShowClear = ifYouAreFinishedUnloadAndShowClear;
-        this.ifClearHammerDownAndHolster = ifClearHammerDownAndHolster;
-        this.rangeIsClear = rangeIsClear;
     }
 
     private IEnumerator After(float delay, Action action) {
@@ -67,9 +53,7 @@ public class GameModeService {
         running = false;
     }
 
-    public string showTotalTime() {
-        return formatTime(lastShotTime);
-    }
+    public string showTotalTime() => formatTime(lastShotTime);
 
     public string formatTime(float t) {
         int minutes = (int)(t / 60f);
@@ -78,13 +62,12 @@ public class GameModeService {
     }
 
     public void interruptAttempt() {
-        if (pending != null) host.StopCoroutine(pending);
+        if (pending != null) StopCoroutine(pending);
         stopTimer();
 
-        AudioSource[] allAudioSources = Object.FindObjectsOfType<AudioSource>();
-        foreach (AudioSource source in allAudioSources) {
+        foreach (AudioSource source in Object.FindObjectsOfType<AudioSource>())
             source.Stop();
-        }
+
         readyText.gameObject.SetActive(false);
         hintText.gameObject.SetActive(false);
 
@@ -107,10 +90,6 @@ public class GameModeService {
         unloadAndShowClearCommandGiven = true;
     }
 
-    private void showTimeOnTheScreen() {
-        readyText.text = "Your time: " + showTotalTime();
-    }
-
     public void sayHolsterCommand() {
         unloadAndShowClearCommandGiven = false;
 
@@ -122,24 +101,34 @@ public class GameModeService {
         pistolScript.hammerDown = false;
     }
 
+    public void hideUI() {
+        readyText.gameObject.SetActive(false);
+        hintText.gameObject.SetActive(false);
+    }
+
     public void clearHintShotTime() {
         inprocessCommand = false;
         hummerDownCommandGiven = false;
 
         rangeIsClear.PlayOneShot(rangeIsClear.clip);
-        showTimeOnTheScreen();
+        readyText.text = "Your time: " + showTotalTime();
+    }
+
+    public void startStage() {
+        inprocessCommand = true;
+        stageStarted = true;
+        showLoadAndMakeReadyCommand();
     }
 
     private void standBy() {
         readyText.text = "Stand by!";
         standByySound.PlayOneShot(standByySound.clip);
-        pending = host.StartCoroutine(After(UnityEngine.Random.Range(2f, 4f), beepAndStartTimer));
+        pending = StartCoroutine(After(UnityEngine.Random.Range(2f, 4f), beepAndStartTimer));
     }
 
     private void beepAndStartTimer() {
         readyText.gameObject.SetActive(false);
         beepSound.PlayOneShot(beepSound.clip);
-
         startTimer();
         inprocessCommand = false;
     }
@@ -148,24 +137,14 @@ public class GameModeService {
         readyText.text = "Are you ready?";
         areYouReadySound.PlayOneShot(areYouReadySound.clip);
         hintText.gameObject.SetActive(false);
-
-        pending = host.StartCoroutine(After(2f, standBy));
+        pending = StartCoroutine(After(2f, standBy));
     }
 
     private void showLoadAndMakeReadyCommand() {
         readyText.gameObject.SetActive(true);
         hintText.gameObject.SetActive(true);
-
         readyText.text = "Load and make ready";
         loadAndMakeReadySound.PlayOneShot(loadAndMakeReadySound.clip);
-
-        pending = host.StartCoroutine(After(4f, showAreYouReadyCommand));
-    }
-
-    public void startStage() {
-        inprocessCommand = true;
-        stageStarted = true;
-
-        showLoadAndMakeReadyCommand();
+        pending = StartCoroutine(After(4f, showAreYouReadyCommand));
     }
 }

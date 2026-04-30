@@ -139,7 +139,7 @@ public class SlideScript : MonoBehaviour {
                     holdSlideTimer += Time.deltaTime;
                     
                     if (holdSlideTimer >= delayToShowEmptyChamber) {
-                        mainScript.sayHolsterCommand();
+                        mainScript.gameModeService.sayHolsterCommand();
                         holdSlideTimer = 0f;
                     }
                 } else {

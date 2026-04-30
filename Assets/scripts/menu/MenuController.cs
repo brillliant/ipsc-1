@@ -1,44 +1,61 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
-public class MenuController {
-    private readonly GameObject menu;
-    private readonly GameObject pistol;
-    private readonly GameObject rayLeft;
-    private readonly GameObject rayRight;
-    private readonly Transform bulletPoint;
-    private readonly PistolScript pistolScript;
+public class MenuController : MonoBehaviour {
+    [Header("UI")]
+    public GameObject menu;
+    public GameObject camera;
+
+    [Header("Menu Items")]
+    public TextMeshProUGUI menuItem1_target;
+    public TextMeshProUGUI menuItem2_shoot;
+    public TextMeshProUGUI menuItem3_noShot;
+    public TextMeshProUGUI menuItem4_dryFire;
+    public TextMeshProUGUI menuItem5_barrel;
+    public TextMeshProUGUI menuItem6_wall;
 
     private readonly float distance = 0.45f;
     private readonly float verticalOffset = -0.2f;
     private readonly float rightOffset = 0.6f;
     private readonly float rotationOffset = -52f;
 
-    public int currentIndex = 0;
-    public bool isTargetSetUpMenuActivated = true;
-    public bool isNoShotSetUpMenuActivated = false;
-    public bool removeMode = false;
-    public GameObject currentPreview;
+    [HideInInspector] public int currentIndex = 0;
+    [HideInInspector] public bool isTargetSetUpMenuActivated = true;
+    [HideInInspector] public bool isNoShotSetUpMenuActivated = false;
+    [HideInInspector] public bool removeMode = false;
 
+    private Action onClearPreview;
     private List<TextMeshProUGUI> menuList;
     private LineRenderer line;
+    private GameObject pistol;
+    private PistolScript pistolScript;
+    private Transform bulletPoint;
+    private GameObject rayLeft;
+    private GameObject rayRight;
 
-    public MenuController(GameObject menu, GameObject pistol, GameObject rayLeft, GameObject rayRight,
-        Transform bulletPoint, PistolScript pistolScript,
-        TextMeshProUGUI menuItem1, TextMeshProUGUI menuItem2, TextMeshProUGUI menuItem3,
-        TextMeshProUGUI menuItem4, TextMeshProUGUI menuItem5, TextMeshProUGUI menuItem6) {
-        this.menu = menu;
-        this.pistol = pistol;
-        this.rayLeft = rayLeft;
-        this.rayRight = rayRight;
-        this.bulletPoint = bulletPoint;
-        this.pistolScript = pistolScript;
+    void Start() {
+        pistol = GameObject.Find("Glock17");
+        pistolScript = pistol.GetComponent<PistolScript>();
+        bulletPoint = pistolScript.bulletPoint;
+
+        Transform root = camera.transform;
+        rayLeft = root.Find(
+            "[BuildingBlock] Interaction/[BuildingBlock] Controller Interactions/LeftController/ControllerInteractors/ControllerRayInteractor"
+        )?.gameObject;
+        rayRight = root.Find(
+            "[BuildingBlock] Interaction/[BuildingBlock] Controller Interactions/RightController/ControllerInteractors/ControllerRayInteractor"
+        )?.gameObject;
 
         menuList = new List<TextMeshProUGUI> {
-            menuItem1, menuItem2, menuItem3, menuItem4, menuItem5, menuItem6
+            menuItem1_target, menuItem2_shoot, menuItem3_noShot,
+            menuItem4_dryFire, menuItem5_barrel, menuItem6_wall
         };
+    }
+
+    public void init(Action onClearPreview) {
+        this.onClearPreview = onClearPreview;
     }
 
     public void showHideMenu() {
@@ -53,7 +70,7 @@ public class MenuController {
 
     public void changeMenu() {
         removeMode = false;
-        clearPreview();
+        onClearPreview();
 
         int index = getNextIndex();
         highlightNecessaryMenuItem(index);
@@ -74,7 +91,7 @@ public class MenuController {
     }
 
     public void chooseIPSClowTarget() {
-        clearPreview();
+        onClearPreview();
         currentIndex = 0;
         isTargetSetUpMenuActivated = true;
         isNoShotSetUpMenuActivated = false;
@@ -84,7 +101,7 @@ public class MenuController {
     }
 
     public void chooseIPSCNowshotLowTarget() {
-        clearPreview();
+        onClearPreview();
         currentIndex = 2;
         isTargetSetUpMenuActivated = false;
         isNoShotSetUpMenuActivated = true;
@@ -94,7 +111,7 @@ public class MenuController {
     }
 
     public void chooseBarrel() {
-        clearPreview();
+        onClearPreview();
         currentIndex = 4;
         isTargetSetUpMenuActivated = false;
         isNoShotSetUpMenuActivated = false;
@@ -104,7 +121,7 @@ public class MenuController {
     }
 
     public void chooseWall() {
-        clearPreview();
+        onClearPreview();
         currentIndex = 5;
         isTargetSetUpMenuActivated = false;
         isNoShotSetUpMenuActivated = false;
@@ -114,7 +131,7 @@ public class MenuController {
     }
 
     public void removeModeOn() {
-        clearPreview();
+        onClearPreview();
         removeMode = true;
         paintRay();
         line.material.color = Color.red;
@@ -158,17 +175,7 @@ public class MenuController {
     }
 
     public int getCurrentIndex() => currentIndex;
-
     public bool isShootMode() => currentIndex is 1 or 3;
-
-    public bool IsActive() => menu.activeSelf;
-
-    private void clearPreview() {
-        if (!currentPreview) return;
-        currentPreview.SetActive(false);
-        Object.Destroy(currentPreview);
-        currentPreview = null;
-    }
 
     private int getNextIndex() {
         if (currentIndex + 1 <= menuList.Count - 1) currentIndex++;
