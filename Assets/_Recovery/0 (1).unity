@@ -68543,10 +68543,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -16
       objectReference: {fileID: 0}
-    - target: {fileID: 3152348777421778401, guid: 015d50c6ae209554ca438fae7e311d27, type: 3}
-      propertyPath: m_RaycastTarget
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3184001743188870112, guid: 015d50c6ae209554ca438fae7e311d27, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -69506,10 +69502,6 @@ PrefabInstance:
     - target: {fileID: 4619475426514208121, guid: 015d50c6ae209554ca438fae7e311d27, type: 3}
       propertyPath: m_IsOn
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4619475426514208121, guid: 015d50c6ae209554ca438fae7e311d27, type: 3}
-      propertyPath: m_Navigation.m_Mode
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4619475426514208121, guid: 015d50c6ae209554ca438fae7e311d27, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
