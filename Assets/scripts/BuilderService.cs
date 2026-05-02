@@ -65,7 +65,7 @@ public class BuilderService : MonoBehaviour {
     }
 
     private void setUpObject(GameObject preview, GameObject prefab) {
-        if (!currentPreview) currentPreview = Object.Instantiate(preview);
+        if (!currentPreview) currentPreview = Instantiate(preview);
         if (currentPreview && !currentPreview.activeSelf)
             currentPreview.SetActive(true);
 
@@ -87,7 +87,7 @@ public class BuilderService : MonoBehaviour {
             if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Keyboard.current.spaceKey.wasPressedThisFrame)
                 triggerPressed = false;
 
-            bool overUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+            bool overUI = rayInteractor.State != InteractorState.Normal;
             if (!triggerPressed && !overUI &&
                 (Keyboard.current.spaceKey.wasPressedThisFrame || OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0.5))
                 placeATarget(currentPreview, prefab);
