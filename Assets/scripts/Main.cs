@@ -19,7 +19,7 @@ public class Main : MonoBehaviour {
 
     [HideInInspector] public MenuController menuController;
     [HideInInspector] public GameModeService gameModeService;
-    public BuilderService builderService;
+    [HideInInspector] public BuilderService builderService;
 
     void Start() {
         InvokeRepeating(nameof(setHandColliderLayer), 1f, 1f);

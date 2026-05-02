@@ -4176,7 +4176,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 176294287}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &92198298
 MonoBehaviour:
@@ -9103,6 +9103,7 @@ Transform:
   - {fileID: 1908943725}
   - {fileID: 2009932165}
   - {fileID: 874482292}
+  - {fileID: 92198296}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &178344671
@@ -18599,7 +18600,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &427103638
 Transform:
   m_ObjectHideFlags: 0
@@ -31815,7 +31816,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 849522475}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -38844,7 +38845,6 @@ MonoBehaviour:
   barrelPrefab: {fileID: 5271129605900336281, guid: 7f9852de159a3f04a8720b27c894f174, type: 3}
   wallPreview: {fileID: 2909718853566039112, guid: d47d2c3385eaf984ca5b00bc0d56e56c, type: 3}
   wallPrefab: {fileID: 7383469191773269311, guid: 263366030ddb0e949b34971a5a566a01, type: 3}
-  rayInteractor: {fileID: 849522477}
   currentPreview: {fileID: 5456522116536683071, guid: 37c47f9928e3fef4bb9a9ffaafab5526, type: 3}
 --- !u!1 &1044434607
 GameObject:
@@ -82442,7 +82442,7 @@ MonoBehaviour:
   _rayInteractor: {fileID: 849522477}
   _renderer: {fileID: 864819828}
   _materialPropertyBlockEditor: {fileID: 1700851549}
-  _maxRayVisualLength: 10
+  _maxRayVisualLength: 0.5
   _hoverColor0: {r: 0.9921569, g: 0.9921569, b: 0.9921569, a: 1}
   _hoverColor1: {r: 1, g: 1, b: 1, a: 0}
   _selectColor0: {r: 0, g: 0.3413641, b: 0.7924528, a: 0.19607843}
@@ -86499,7 +86499,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1827013156
 Transform:
   m_ObjectHideFlags: 0
@@ -118910,4 +118910,3 @@ SceneRoots:
   - {fileID: 176294287}
   - {fileID: 1133289564}
   - {fileID: 32194107}
-  - {fileID: 92198296}

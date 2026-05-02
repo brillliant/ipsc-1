@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
 using DefaultNamespace;
+using Oculus.Interaction;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using Object = UnityEngine.Object;
 
@@ -16,8 +18,9 @@ public class BuilderService : MonoBehaviour {
     public GameObject wallPreview;
     public GameObject wallPrefab;
 
+    [SerializeField] private RayInteractor rayInteractor;
+
     private MenuController menuController;
-    private Transform bulletPoint;
     private GameModeService gameModeService;
     private readonly List<GameObject> установленныеМишени = new List<GameObject>();
     public readonly List<GameObject> пробоины = new List<GameObject>();
@@ -30,7 +33,6 @@ public class BuilderService : MonoBehaviour {
     void Start() {
         menuController = GetComponent<MenuController>();
         gameModeService = GetComponent<GameModeService>();
-        bulletPoint = GameObject.Find("Glock17").GetComponent<PistolScript>().bulletPoint;
     }
 
     void Update() {
@@ -43,17 +45,14 @@ public class BuilderService : MonoBehaviour {
         } else if (menuController.currentIndex == 5) {
             buildWith(wallPreview, wallPrefab);
         } else if (menuController.removeMode) {
-            menuController.paintRay();
             updateRemoveHighlight();
             tryRemoveHovered();
         } else {
             clearHoverHighlight();
-            menuController.hideRay();
         }
     }
 
     private void buildWith(GameObject preview, GameObject prefab) {
-        menuController.paintRay();
         setUpObject(preview, prefab);
         gameModeService.hideUI();
     }
@@ -61,7 +60,7 @@ public class BuilderService : MonoBehaviour {
     public void clearPreview() {
         if (!currentPreview) return;
         currentPreview.SetActive(false);
-        Object.Destroy(currentPreview);
+        Destroy(currentPreview);
         currentPreview = null;
     }
 
@@ -70,7 +69,7 @@ public class BuilderService : MonoBehaviour {
         if (currentPreview && !currentPreview.activeSelf)
             currentPreview.SetActive(true);
 
-        Ray ray = new Ray(bulletPoint.position, bulletPoint.forward);
+        Ray ray = rayInteractor.Ray;
 
         if (Physics.Raycast(ray, out RaycastHit hit) && !hit.collider.gameObject.name.Equals("emptyObjectForCollider")
                                                      && !hit.collider.gameObject.name.Equals("Glock17")) {
@@ -88,7 +87,8 @@ public class BuilderService : MonoBehaviour {
             if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Keyboard.current.spaceKey.wasPressedThisFrame)
                 triggerPressed = false;
 
-            if (!triggerPressed &&
+            bool overUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+            if (!triggerPressed && !overUI &&
                 (Keyboard.current.spaceKey.wasPressedThisFrame || OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0.5))
                 placeATarget(currentPreview, prefab);
         }
@@ -99,7 +99,7 @@ public class BuilderService : MonoBehaviour {
     }
 
     private void updateRemoveHighlight() {
-        Ray ray = new Ray(bulletPoint.position, bulletPoint.forward);
+        Ray ray = rayInteractor.Ray;
         GameObject newHovered = null;
 
         if (Physics.Raycast(ray, out RaycastHit hit, 50f)) {

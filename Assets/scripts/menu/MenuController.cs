@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using Oculus.Interaction;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class MenuController : MonoBehaviour {
     [Header("UI")]
@@ -28,30 +31,42 @@ public class MenuController : MonoBehaviour {
 
     private Action onClearPreview;
     private List<TextMeshProUGUI> menuList;
-    private LineRenderer line;
     private GameObject pistol;
     private PistolScript pistolScript;
-    private Transform bulletPoint;
     private GameObject rayLeft;
     private GameObject rayRight;
 
+    private bool  _hoveringUI;
+    
     void Start() {
         pistol = GameObject.Find("Glock17");
         pistolScript = pistol.GetComponent<PistolScript>();
-        bulletPoint = pistolScript.bulletPoint;
-
-        Transform root = camera.transform;
-        rayLeft = root.Find(
-            "[BuildingBlock] Interaction/[BuildingBlock] Controller Interactions/LeftController/ControllerInteractors/ControllerRayInteractor"
-        )?.gameObject;
-        rayRight = root.Find(
-            "[BuildingBlock] Interaction/[BuildingBlock] Controller Interactions/RightController/ControllerInteractors/ControllerRayInteractor"
-        )?.gameObject;
 
         menuList = new List<TextMeshProUGUI> {
             menuItem1_target, menuItem2_shoot, menuItem3_noShot,
             menuItem4_dryFire, menuItem5_barrel, menuItem6_wall
         };
+
+        Transform rayRightTransform = camera.transform.Find(
+            "[BuildingBlock] Interaction/[BuildingBlock] Controller Interactions/" +
+            "RightController/ControllerInteractors/ControllerRayInteractor"
+        );
+
+        rayRight = rayRightTransform.gameObject;
+    }
+    
+    private void setRayStatus(bool status) {
+        if (status)
+            StartCoroutine(enableRay());
+        else
+            rayRight.SetActive(false);
+    }
+
+    private System.Collections.IEnumerator enableRay() {
+        rayRight.SetActive(true);
+        yield return null;
+        foreach (Transform child in rayRight.transform)
+            child.gameObject.SetActive(true);
     }
 
     public void init(Action onClearPreview) {
@@ -61,8 +76,7 @@ public class MenuController : MonoBehaviour {
     public void showHideMenu() {
         bool willBeActive = !menu.activeSelf;
         menu.SetActive(willBeActive);
-        rayLeft.SetActive(willBeActive);
-        rayRight.SetActive(willBeActive);
+        setRayStatus(willBeActive);
         pistol.SetActive(!willBeActive);
 
         if (willBeActive) positionMenuInFrontOfPlayer();
@@ -97,7 +111,6 @@ public class MenuController : MonoBehaviour {
         isNoShotSetUpMenuActivated = false;
         removeMode = false;
         highlightNecessaryMenuItem(currentIndex);
-        showHideMenu();
     }
 
     public void chooseIPSCNowshotLowTarget() {
@@ -107,7 +120,6 @@ public class MenuController : MonoBehaviour {
         isNoShotSetUpMenuActivated = true;
         removeMode = false;
         highlightNecessaryMenuItem(currentIndex);
-        showHideMenu();
     }
 
     public void chooseBarrel() {
@@ -117,7 +129,6 @@ public class MenuController : MonoBehaviour {
         isNoShotSetUpMenuActivated = false;
         removeMode = false;
         highlightNecessaryMenuItem(currentIndex);
-        showHideMenu();
     }
 
     public void chooseWall() {
@@ -127,51 +138,15 @@ public class MenuController : MonoBehaviour {
         isNoShotSetUpMenuActivated = false;
         removeMode = false;
         highlightNecessaryMenuItem(currentIndex);
-        showHideMenu();
     }
 
     public void removeModeOn() {
         onClearPreview();
         removeMode = true;
-        paintRay();
-        line.material.color = Color.red;
-        line.startWidth = 0.015f;
-        line.endWidth = 0.003f;
         currentIndex = -1;
         isTargetSetUpMenuActivated = false;
         isNoShotSetUpMenuActivated = false;
         highlightNecessaryMenuItem(currentIndex);
-        showHideMenu();
-    }
-
-    public void paintRay() {
-        if (!line) {
-            var rayGameObject = new GameObject("Ray");
-            rayGameObject.transform.SetParent(bulletPoint, false);
-            line = rayGameObject.AddComponent<LineRenderer>();
-            line.startWidth = 0.005f;
-            line.endWidth = 0.001f;
-            line.material = new Material(Shader.Find("Sprites/Default"));
-            line.material.color = Color.cyan;
-            line.positionCount = 2;
-            line.useWorldSpace = true;
-            line.alignment = LineAlignment.View;
-        }
-
-        if (!line.enabled) {
-            line.enabled = true;
-            line.material.color = Color.cyan;
-            line.startWidth = 0.005f;
-            line.endWidth = 0.001f;
-        }
-
-        line.SetPosition(0, bulletPoint.position);
-        line.SetPosition(1, bulletPoint.position + bulletPoint.forward * 10f);
-    }
-
-    public void hideRay() {
-        if (!line) return;
-        line.enabled = false;
     }
 
     public int getCurrentIndex() => currentIndex;
