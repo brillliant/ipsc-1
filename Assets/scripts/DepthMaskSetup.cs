@@ -3,12 +3,20 @@ using System.Collections.Generic;
 using Meta.XR.EnvironmentDepth;
 using Meta.XR.MRUtilityKit;
 using UnityEngine;
+using UnityEngine.XR;
 
+[DefaultExecutionOrder(-1000)]
 public class DepthMaskSetup : MonoBehaviour {
     [SerializeField] private float _maxOcclusionDistance = 0.7f;
     [SerializeField] private Transform _excludeBox;
     [SerializeField] private float _depthMargin = 0.15f;
 
+    void Awake() {
+#if UNITY_EDITOR
+        gameObject.SetActive(false);
+#endif
+    }
+    
     void Update() {
         Shader.SetGlobalFloat("_MaxOcclusionDistance", _maxOcclusionDistance);
         if (_excludeBox == null) return;

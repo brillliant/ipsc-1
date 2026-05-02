@@ -21,7 +21,7 @@ public class BuilderService : MonoBehaviour {
     [SerializeField] private RayInteractor rayInteractor;
 
     private MenuController menuController;
-    private GameModeService gameModeService;
+    private CompetitionModeService competitionModeService;
     private readonly List<GameObject> установленныеМишени = new List<GameObject>();
     public readonly List<GameObject> пробоины = new List<GameObject>();
 
@@ -32,7 +32,7 @@ public class BuilderService : MonoBehaviour {
 
     void Start() {
         menuController = GetComponent<MenuController>();
-        gameModeService = GetComponent<GameModeService>();
+        competitionModeService = GetComponent<CompetitionModeService>();
     }
 
     void Update() {
@@ -54,7 +54,7 @@ public class BuilderService : MonoBehaviour {
 
     private void buildWith(GameObject preview, GameObject prefab) {
         setUpObject(preview, prefab);
-        gameModeService.hideUI();
+        competitionModeService.hideUI();
     }
 
     public void clearPreview() {
@@ -65,7 +65,7 @@ public class BuilderService : MonoBehaviour {
     }
 
     private void setUpObject(GameObject preview, GameObject prefab) {
-        if (!currentPreview) currentPreview = Object.Instantiate(preview);
+        if (!currentPreview) currentPreview = Instantiate(preview);
         if (currentPreview && !currentPreview.activeSelf)
             currentPreview.SetActive(true);
 
@@ -87,7 +87,7 @@ public class BuilderService : MonoBehaviour {
             if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Keyboard.current.spaceKey.wasPressedThisFrame)
                 triggerPressed = false;
 
-            bool overUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+            bool overUI = rayInteractor.State != InteractorState.Normal;
             if (!triggerPressed && !overUI &&
                 (Keyboard.current.spaceKey.wasPressedThisFrame || OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0.5))
                 placeATarget(currentPreview, prefab);

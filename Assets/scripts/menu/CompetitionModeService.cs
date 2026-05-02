@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-public class GameModeService : MonoBehaviour {
+public class CompetitionModeService : MonoBehaviour {
     [Header("UI")]
     public TextMeshProUGUI readyText;
     public TextMeshProUGUI hintText;

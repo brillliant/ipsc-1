@@ -2,6 +2,7 @@ using System;
 using Meta.XR.MRUtilityKit;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 public class Main : MonoBehaviour {
     [HideInInspector] public Boolean isHandKeepingMagazine;
@@ -9,16 +10,19 @@ public class Main : MonoBehaviour {
     private string targetLayer = "Character";
 
     private GameObject pistol;
+    
     private PistolScript pistolScript;
+    private FloorScript floorScript;
+    private ShootingModeController shootingModeController;    
 
     private MeshRenderer pushHandPointOnPistolMesh;
     private GameObject leftHand;
     private MeshRenderer pushMagazinePointOnHandMesh;
-    private FloorScript floorScript;
+
     private EffectMesh effectMeshScript;//todo added for demo
 
     [HideInInspector] public MenuController menuController;
-    [HideInInspector] public GameModeService gameModeService;
+    [FormerlySerializedAs("gameModeService")] [HideInInspector] public CompetitionModeService competitionModeService;
     [HideInInspector] public BuilderService builderService;
 
     void Start() {
@@ -26,6 +30,7 @@ public class Main : MonoBehaviour {
         pistol = GameObject.Find("Glock17");
         pistolScript = pistol.GetComponent<PistolScript>();
         floorScript = GetComponent<FloorScript>();
+        shootingModeController = GetComponent<ShootingModeController>();      
 
         effectMeshScript = effectMeshObject.GetComponent<EffectMesh>();//todo added for demo
 
@@ -36,8 +41,8 @@ public class Main : MonoBehaviour {
         menuController = GetComponent<MenuController>();
         menuController.init(() => builderService.clearPreview());
 
-        gameModeService = GetComponent<GameModeService>();
-        gameModeService.init(pistolScript);
+        competitionModeService = GetComponent<CompetitionModeService>();
+        competitionModeService.init(pistolScript);
 
         builderService = GetComponent<BuilderService>();
     }
@@ -59,11 +64,11 @@ public class Main : MonoBehaviour {
         bool triggerDown = OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch)
                            || Keyboard.current.zKey.wasPressedThisFrame;
 
-        if (!gameModeService.stageStarted && !gameModeService.inprocessCommand && triggerDown) gameModeService.startStage();
-        if (gameModeService.stageStarted && !gameModeService.inprocessCommand && triggerDown) gameModeService.stopStage();
+        if (!competitionModeService.stageStarted && !competitionModeService.inprocessCommand && triggerDown) competitionModeService.startStage();
+        if (competitionModeService.stageStarted && !competitionModeService.inprocessCommand && triggerDown) competitionModeService.stopStage();
         if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.LTouch)
             || Keyboard.current.leftShiftKey.wasPressedThisFrame)
-            gameModeService.interruptAttempt();
+            competitionModeService.interruptAttempt();
     }
 
     void setHandColliderLayer() {
@@ -73,6 +78,20 @@ public class Main : MonoBehaviour {
         int layer = LayerMask.NameToLayer(targetLayer);
         SetLayerRecursive(capsules, layer);
         CancelInvoke(nameof(setHandColliderLayer));
+    }
+
+    public void startStopRange() {
+        if (!competitionModeService.stageStarted) {
+            menuController.showHideMenu();
+            
+            if (shootingModeController.currentMode == ShootingModeController.ShootingMode.Competition) {
+                competitionModeService.startStage();
+            } else {
+                competitionModeService.stageStarted = true;
+            }
+        } else {
+            competitionModeService.interruptAttempt();
+        }
     }
 
     void SetLayerRecursive(GameObject obj, int layer) {

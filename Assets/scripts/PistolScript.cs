@@ -150,10 +150,10 @@ public class PistolScript : MonoBehaviour {
      * проверяю позицию, если пистолет накланен вниз. типа в кобуре
      */
     private void checkIfPistolInHolster() {
-        if (mainScript.gameModeService.hummerDownCommandGiven) {
+        if (mainScript.competitionModeService.hummerDownCommandGiven) {
             Vector3 barrelDir = -transform.forward;
             if (Vector3.Angle(barrelDir, Vector3.down) <= tolDeg) {
-                mainScript.gameModeService.clearHintShotTime();
+                mainScript.competitionModeService.clearHintShotTime();
             }
         }
     }
@@ -212,7 +212,7 @@ public class PistolScript : MonoBehaviour {
 
     private void emptyShoot() {
         emptyShotSound.PlayOneShot(emptyShotSound.clip);
-        if (mainScript.gameModeService.hummerDownCommandGiven) {
+        if (mainScript.competitionModeService.hummerDownCommandGiven) {
             hammerDown = true;
         }
     }
@@ -226,7 +226,7 @@ public class PistolScript : MonoBehaviour {
         bulletRigidbody.linearVelocity = bulletPoint.forward * bulletSpeed;
         
         shotSound.PlayOneShot(shotSound.clip);
-        mainScript.gameModeService.registerShot();
+        mainScript.competitionModeService.registerShot();
 
         firedRound = true;
         Destroy(bullet, 1);

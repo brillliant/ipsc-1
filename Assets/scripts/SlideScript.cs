@@ -131,7 +131,7 @@ public class SlideScript : MonoBehaviour {
      * если была команда судьей, вынял ли магазин и показал ли пустой патронник?
      */
     private void checkEmptyBackHold() {
-        if (mainScript.gameModeService.unloadAndShowClearCommandGiven && !pistolScript.isMagazineInPistol()) {
+        if (mainScript.competitionModeService.unloadAndShowClearCommandGiven && !pistolScript.isMagazineInPistol()) {
             if (!sliderAnimationRunning) {
                 float dz = transform.localPosition.z - localPosition0.z;
 
@@ -139,7 +139,7 @@ public class SlideScript : MonoBehaviour {
                     holdSlideTimer += Time.deltaTime;
                     
                     if (holdSlideTimer >= delayToShowEmptyChamber) {
-                        mainScript.gameModeService.sayHolsterCommand();
+                        mainScript.competitionModeService.sayHolsterCommand();
                         holdSlideTimer = 0f;
                     }
                 } else {
