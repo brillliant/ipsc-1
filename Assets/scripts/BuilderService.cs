@@ -36,15 +36,17 @@ public class BuilderService : MonoBehaviour {
     }
 
     void Update() {
-        if (menuController.isTargetSetUpMenuActivated) {
+        if (menuController.isShootMode()) return;
+
+        if (menuController.stateEnum == StateEnum.IPSC_target) {
             buildWith(ipscTargetPreview, ipscTargetPrefab);
-        } else if (menuController.isNoShotSetUpMenuActivated) {
+        } else if (menuController.stateEnum == StateEnum.IPSC_noshot) {
             buildWith(ipscTargetNoShotPreview, ipscTargetNoShotPrefab);
-        } else if (menuController.currentIndex == 4) {
+        } else if (menuController.stateEnum == StateEnum.Barrel) {
             buildWith(barrelPreview, barrelPrefab);
-        } else if (menuController.currentIndex == 5) {
+        } else if (menuController.stateEnum == StateEnum.Wall) {
             buildWith(wallPreview, wallPrefab);
-        } else if (menuController.removeMode) {
+        } else if (menuController.stateEnum == StateEnum.Remove) {
             updateRemoveHighlight();
             tryRemoveHovered();
         } else {
@@ -54,7 +56,7 @@ public class BuilderService : MonoBehaviour {
 
     private void buildWith(GameObject preview, GameObject prefab) {
         setUpObject(preview, prefab);
-        competitionModeService.hideUI();
+        competitionModeService.hideCommandsText();
     }
 
     public void clearPreview() {
@@ -65,6 +67,11 @@ public class BuilderService : MonoBehaviour {
     }
 
     private void setUpObject(GameObject preview, GameObject prefab) {
+        if (rayInteractor.State != InteractorState.Normal) {
+            clearPreview();
+            return;
+        }
+
         if (!currentPreview) currentPreview = Instantiate(preview);
         if (currentPreview && !currentPreview.activeSelf)
             currentPreview.SetActive(true);

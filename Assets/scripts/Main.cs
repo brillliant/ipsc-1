@@ -22,7 +22,7 @@ public class Main : MonoBehaviour {
     private EffectMesh effectMeshScript;//todo added for demo
 
     [HideInInspector] public MenuController menuController;
-    [FormerlySerializedAs("gameModeService")] [HideInInspector] public CompetitionModeService competitionModeService;
+    [HideInInspector] public CompetitionModeService competitionModeService;
     [HideInInspector] public BuilderService builderService;
 
     void Start() {
@@ -55,21 +55,23 @@ public class Main : MonoBehaviour {
         if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft, OVRInput.Controller.LTouch) ||
             Keyboard.current.mKey.wasPressedThisFrame) showHideDebugMesh();
 
-        handleStageInput();
+        if (Keyboard.current.oKey.wasPressedThisFrame) startStopRange();
+
+        //handleStageInput();
     }
 
-    private void handleStageInput() {
+    /*private void handleStageInput() {
         if (menuController.isTargetSetUpMenuActivated && menuController.isNoShotSetUpMenuActivated) return;
 
         bool triggerDown = OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch)
                            || Keyboard.current.zKey.wasPressedThisFrame;
 
-        if (!competitionModeService.stageStarted && !competitionModeService.inprocessCommand && triggerDown) competitionModeService.startStage();
-        if (competitionModeService.stageStarted && !competitionModeService.inprocessCommand && triggerDown) competitionModeService.stopStage();
+        if (!competitionModeService.isStageStarted && !competitionModeService.inprocessCommand && triggerDown) competitionModeService.startStage();
+        if (competitionModeService.isStageStarted && !competitionModeService.inprocessCommand && triggerDown) competitionModeService.stopStage();
         if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.LTouch)
             || Keyboard.current.leftShiftKey.wasPressedThisFrame)
             competitionModeService.interruptAttempt();
-    }
+    }*/
 
     void setHandColliderLayer() {
         GameObject capsules = GameObject.Find("Capsules");
@@ -81,15 +83,19 @@ public class Main : MonoBehaviour {
     }
 
     public void startStopRange() {
-        if (!competitionModeService.stageStarted) {
+        if (!menuController.isShootMode()) {
             menuController.showHideMenu();
             
             if (shootingModeController.currentMode == ShootingModeController.ShootingMode.Competition) {
+                menuController.stateEnum = StateEnum.Competition;
                 competitionModeService.startStage();
             } else {
-                competitionModeService.stageStarted = true;
+                menuController.stateEnum = StateEnum.DryRun;
+                pistolScript.setMagRoundCount(int.MaxValue);
+                //competitionModeService.isStageStarted = true;
             }
         } else {
+            menuController.stateEnum = StateEnum.Idle;
             competitionModeService.interruptAttempt();
         }
     }

@@ -5,6 +5,7 @@ using Oculus.Interaction;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 
 public class MenuController : MonoBehaviour {
     [Header("UI")]
@@ -27,8 +28,9 @@ public class MenuController : MonoBehaviour {
     [HideInInspector] public int currentIndex = 0;
     [HideInInspector] public bool isTargetSetUpMenuActivated = true;
     [HideInInspector] public bool isNoShotSetUpMenuActivated = false;
-    [HideInInspector] public bool removeMode = false;
-
+    //[HideInInspector] public bool removeMode = false; //todo заменить на stateEnum
+    [HideInInspector] public StateEnum stateEnum;
+    
     private Action onClearPreview;
     private List<TextMeshProUGUI> menuList;
     private GameObject pistol;
@@ -36,7 +38,7 @@ public class MenuController : MonoBehaviour {
     private GameObject rayLeft;
     private GameObject rayRight;
 
-    private bool  _hoveringUI;
+    private bool _hoveringUI;
     
     void Start() {
         pistol = GameObject.Find("Glock17");
@@ -83,7 +85,7 @@ public class MenuController : MonoBehaviour {
     }
 
     public void changeMenu() {
-        removeMode = false;
+        //removeMode = false;
         onClearPreview();
 
         int index = getNextIndex();
@@ -109,8 +111,10 @@ public class MenuController : MonoBehaviour {
         currentIndex = 0;
         isTargetSetUpMenuActivated = true;
         isNoShotSetUpMenuActivated = false;
-        removeMode = false;
+        //removeMode = false;
         highlightNecessaryMenuItem(currentIndex);
+
+        stateEnum = StateEnum.IPSC_target;
     }
 
     public void chooseIPSCNowshotLowTarget() {
@@ -118,8 +122,10 @@ public class MenuController : MonoBehaviour {
         currentIndex = 2;
         isTargetSetUpMenuActivated = false;
         isNoShotSetUpMenuActivated = true;
-        removeMode = false;
+        //removeMode = false;
         highlightNecessaryMenuItem(currentIndex);
+
+        stateEnum = StateEnum.IPSC_noshot;
     }
 
     public void chooseBarrel() {
@@ -127,8 +133,10 @@ public class MenuController : MonoBehaviour {
         currentIndex = 4;
         isTargetSetUpMenuActivated = false;
         isNoShotSetUpMenuActivated = false;
-        removeMode = false;
+        //removeMode = false;
         highlightNecessaryMenuItem(currentIndex);
+
+        stateEnum = StateEnum.Barrel;
     }
 
     public void chooseWall() {
@@ -136,21 +144,26 @@ public class MenuController : MonoBehaviour {
         currentIndex = 5;
         isTargetSetUpMenuActivated = false;
         isNoShotSetUpMenuActivated = false;
-        removeMode = false;
+        //removeMode = false;
         highlightNecessaryMenuItem(currentIndex);
+
+        stateEnum = StateEnum.Wall;
     }
 
     public void removeModeOn() {
         onClearPreview();
-        removeMode = true;
+        //removeMode = true;
         currentIndex = -1;
         isTargetSetUpMenuActivated = false;
         isNoShotSetUpMenuActivated = false;
         highlightNecessaryMenuItem(currentIndex);
+
+        stateEnum = StateEnum.Remove;
     }
 
     public int getCurrentIndex() => currentIndex;
-    public bool isShootMode() => currentIndex is 1 or 3;
+    //public bool isShootMode() => currentIndex is 1 or 3;
+    public bool isShootMode() => stateEnum == StateEnum.Competition || stateEnum == StateEnum.DryRun;
 
     private int getNextIndex() {
         if (currentIndex + 1 <= menuList.Count - 1) currentIndex++;

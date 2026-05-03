@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Object = UnityEngine.Object;
 
 public class CompetitionModeService : MonoBehaviour {
@@ -18,7 +19,7 @@ public class CompetitionModeService : MonoBehaviour {
     public AudioSource ifClearHammerDownAndHolster;
     public AudioSource rangeIsClear;
 
-    [HideInInspector] public bool stageStarted = false;
+    //[HideInInspector] public bool isStageStarted = false;
     [HideInInspector] public bool inprocessCommand = false;
     [HideInInspector] public bool unloadAndShowClearCommandGiven = false;
     [HideInInspector] public bool hummerDownCommandGiven = false;
@@ -44,7 +45,7 @@ public class CompetitionModeService : MonoBehaviour {
         running = true;
     }
 
-    public void registerShot() {
+    public void registerShotTime() {
         if (!running) return;
         lastShotTime = Time.realtimeSinceStartup - startTime;
     }
@@ -65,13 +66,13 @@ public class CompetitionModeService : MonoBehaviour {
         if (pending != null) StopCoroutine(pending);
         stopTimer();
 
-        foreach (AudioSource source in Object.FindObjectsOfType<AudioSource>())
+        foreach (AudioSource source in FindObjectsOfType<AudioSource>())
             source.Stop();
 
         readyText.gameObject.SetActive(false);
         hintText.gameObject.SetActive(false);
 
-        stageStarted = false;
+        //isStageStarted = false;
         unloadAndShowClearCommandGiven = false;
         hummerDownCommandGiven = false;
         inprocessCommand = false;
@@ -79,7 +80,7 @@ public class CompetitionModeService : MonoBehaviour {
     }
 
     public void stopStage() {
-        stageStarted = false;
+        //isStageStarted = false;
         inprocessCommand = true;
         stopTimer();
 
@@ -101,7 +102,7 @@ public class CompetitionModeService : MonoBehaviour {
         pistolScript.hammerDown = false;
     }
 
-    public void hideUI() {
+    public void hideCommandsText() {
         readyText.gameObject.SetActive(false);
         hintText.gameObject.SetActive(false);
     }
@@ -116,7 +117,7 @@ public class CompetitionModeService : MonoBehaviour {
 
     public void startStage() {
         inprocessCommand = true;
-        stageStarted = true;
+        //isStageStarted = true;
         showLoadAndMakeReadyCommand();
     }
 

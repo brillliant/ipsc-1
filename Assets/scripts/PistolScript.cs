@@ -61,7 +61,7 @@ public class PistolScript : MonoBehaviour {
     }
     
     void Update() {
-        if (!mainScript.menuController.isTargetSetUpMenuActivated && !mainScript.menuController.isNoShotSetUpMenuActivated && mainScript.menuController.isShootMode()) {
+        if (mainScript.menuController.isShootMode()) {
             shootActionIfNeeded();
             if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Keyboard.current.spaceKey.wasReleasedThisFrame) {
                 triggerPressed = false;
@@ -226,7 +226,7 @@ public class PistolScript : MonoBehaviour {
         bulletRigidbody.linearVelocity = bulletPoint.forward * bulletSpeed;
         
         shotSound.PlayOneShot(shotSound.clip);
-        mainScript.competitionModeService.registerShot();
+        mainScript.competitionModeService.registerShotTime();
 
         firedRound = true;
         Destroy(bullet, 1);
