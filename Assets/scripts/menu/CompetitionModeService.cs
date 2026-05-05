@@ -19,7 +19,6 @@ public class CompetitionModeService : MonoBehaviour {
     public AudioSource ifClearHammerDownAndHolster;
     public AudioSource rangeIsClear;
 
-    //[HideInInspector] public bool isStageStarted = false;
     [HideInInspector] public bool inprocessCommand = false;
     [HideInInspector] public bool unloadAndShowClearCommandGiven = false;
     [HideInInspector] public bool hummerDownCommandGiven = false;
@@ -72,7 +71,6 @@ public class CompetitionModeService : MonoBehaviour {
         readyText.gameObject.SetActive(false);
         hintText.gameObject.SetActive(false);
 
-        //isStageStarted = false;
         unloadAndShowClearCommandGiven = false;
         hummerDownCommandGiven = false;
         inprocessCommand = false;
@@ -80,7 +78,6 @@ public class CompetitionModeService : MonoBehaviour {
     }
 
     public void stopStage() {
-        //isStageStarted = false;
         inprocessCommand = true;
         stopTimer();
 
@@ -117,7 +114,6 @@ public class CompetitionModeService : MonoBehaviour {
 
     public void startStage() {
         inprocessCommand = true;
-        //isStageStarted = true;
         showLoadAndMakeReadyCommand();
     }
 

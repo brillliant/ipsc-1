@@ -61,7 +61,7 @@ public class PistolScript : MonoBehaviour {
     }
     
     void Update() {
-        if (mainScript.menuController.isShootMode()) {
+        if (!mainScript.menuController.menu.gameObject.activeSelf) {
             shootActionIfNeeded();
             if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Keyboard.current.spaceKey.wasReleasedThisFrame) {
                 triggerPressed = false;
@@ -245,9 +245,9 @@ public class PistolScript : MonoBehaviour {
         if (magazineLockedInPistol && magazineScript.getRoundCount() > 0) {
             setRoundToChamber();
             firedRound = false;
-            if (mainScript.menuController.getCurrentIndex() != 3) { //не декременчу патроны, если dryFire mode
+            //if (mainScript.menuController.getCurrentIndex() != 3) { //не декременчу патроны, если dryFire mode
                 magazineScript.decrementRoundCount();
-            }
+            //}
             inShooting = false;
         }
     }

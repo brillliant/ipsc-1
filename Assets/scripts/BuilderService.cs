@@ -82,7 +82,7 @@ public class BuilderService : MonoBehaviour {
                                                      && !hit.collider.gameObject.name.Equals("Glock17")) {
             placeToSurface(currentPreview, hit);
 
-            if (menuController.currentIndex == 5) {
+            if (menuController.stateEnum == StateEnum.Wall) {
                 if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft, OVRInput.Controller.RTouch)) rotateLeft();
                 if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickRight, OVRInput.Controller.RTouch)) rotateRight();
             } else {
@@ -96,7 +96,7 @@ public class BuilderService : MonoBehaviour {
 
             bool overUI = rayInteractor.State != InteractorState.Normal;
             if (!triggerPressed && !overUI &&
-                (Keyboard.current.spaceKey.wasPressedThisFrame || OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0.5))
+                (Keyboard.current.spaceKey.wasPressedThisFrame || OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch)))
                 placeATarget(currentPreview, prefab);
         }
 

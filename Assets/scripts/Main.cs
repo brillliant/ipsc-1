@@ -51,27 +51,12 @@ public class Main : MonoBehaviour {
         if (Keyboard.current.pKey.wasPressedThisFrame || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstick, OVRInput.Controller.LTouch))
             menuController.showHideMenu();
 
-        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickUp, OVRInput.Controller.LTouch)) menuController.changeMenu();
         if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft, OVRInput.Controller.LTouch) ||
             Keyboard.current.mKey.wasPressedThisFrame) showHideDebugMesh();
 
-        if (Keyboard.current.oKey.wasPressedThisFrame) startStopRange();
-
-        //handleStageInput();
+        if (Keyboard.current.oKey.wasPressedThisFrame || OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch)) startStopRange();
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickUp, OVRInput.Controller.LTouch)) competitionModeService.interruptAttempt();
     }
-
-    /*private void handleStageInput() {
-        if (menuController.isTargetSetUpMenuActivated && menuController.isNoShotSetUpMenuActivated) return;
-
-        bool triggerDown = OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch)
-                           || Keyboard.current.zKey.wasPressedThisFrame;
-
-        if (!competitionModeService.isStageStarted && !competitionModeService.inprocessCommand && triggerDown) competitionModeService.startStage();
-        if (competitionModeService.isStageStarted && !competitionModeService.inprocessCommand && triggerDown) competitionModeService.stopStage();
-        if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.LTouch)
-            || Keyboard.current.leftShiftKey.wasPressedThisFrame)
-            competitionModeService.interruptAttempt();
-    }*/
 
     void setHandColliderLayer() {
         GameObject capsules = GameObject.Find("Capsules");
@@ -92,11 +77,10 @@ public class Main : MonoBehaviour {
             } else {
                 menuController.stateEnum = StateEnum.DryRun;
                 pistolScript.setMagRoundCount(int.MaxValue);
-                //competitionModeService.isStageStarted = true;
             }
         } else {
             menuController.stateEnum = StateEnum.Idle;
-            competitionModeService.interruptAttempt();
+            competitionModeService.stopStage();
         }
     }
 
