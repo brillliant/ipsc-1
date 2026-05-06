@@ -20,7 +20,6 @@ public class BuilderService : MonoBehaviour {
 
     [SerializeField] private RayInteractor rayInteractor;
 
-    private MenuController menuController;
     private CompetitionModeService competitionModeService;
     private readonly List<GameObject> установленныеМишени = new List<GameObject>();
     public readonly List<GameObject> пробоины = new List<GameObject>();
@@ -31,22 +30,21 @@ public class BuilderService : MonoBehaviour {
     private GameObject hoveredObject;
 
     void Start() {
-        menuController = GetComponent<MenuController>();
         competitionModeService = GetComponent<CompetitionModeService>();
     }
 
     void Update() {
-        if (menuController.isShootMode()) return;
+        if (competitionModeService.isShootMode()) return;
 
-        if (menuController.stateEnum == StateEnum.IPSC_target) {
+        if (competitionModeService.stateEnum == StateEnum.IPSC_target) {
             buildWith(ipscTargetPreview, ipscTargetPrefab);
-        } else if (menuController.stateEnum == StateEnum.IPSC_noshot) {
+        } else if (competitionModeService.stateEnum == StateEnum.IPSC_noshot) {
             buildWith(ipscTargetNoShotPreview, ipscTargetNoShotPrefab);
-        } else if (menuController.stateEnum == StateEnum.Barrel) {
+        } else if (competitionModeService.stateEnum == StateEnum.Barrel) {
             buildWith(barrelPreview, barrelPrefab);
-        } else if (menuController.stateEnum == StateEnum.Wall) {
+        } else if (competitionModeService.stateEnum == StateEnum.Wall) {
             buildWith(wallPreview, wallPrefab);
-        } else if (menuController.stateEnum == StateEnum.Remove) {
+        } else if (competitionModeService.stateEnum == StateEnum.Remove) {
             updateRemoveHighlight();
             tryRemoveHovered();
         } else {
@@ -82,7 +80,7 @@ public class BuilderService : MonoBehaviour {
                                                      && !hit.collider.gameObject.name.Equals("Glock17")) {
             placeToSurface(currentPreview, hit);
 
-            if (menuController.stateEnum == StateEnum.Wall) {
+            if (competitionModeService.stateEnum == StateEnum.Wall) {
                 if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft, OVRInput.Controller.RTouch)) rotateLeft();
                 if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickRight, OVRInput.Controller.RTouch)) rotateRight();
             } else {

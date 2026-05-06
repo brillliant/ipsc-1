@@ -21,8 +21,7 @@ public class MenuController : MonoBehaviour {
     private readonly float rightOffset = 0.6f;
     private readonly float rotationOffset = -52f;
 
-    //[HideInInspector] public bool removeMode = false; //todo заменить на stateEnum
-    [HideInInspector] public StateEnum stateEnum;
+    private CompetitionModeService competitionModeService;
     
     private Action onClearPreview;
     private List<TextMeshProUGUI> menuList;
@@ -46,6 +45,7 @@ public class MenuController : MonoBehaviour {
         );
 
         rayRight = rayRightTransform.gameObject;
+        competitionModeService = GetComponent<CompetitionModeService>();
     }
     
     private void setRayStatus(bool status) {
@@ -66,8 +66,15 @@ public class MenuController : MonoBehaviour {
         this.onClearPreview = onClearPreview;
     }
 
-    public void showHideMenu() {
-        bool willBeActive = !menu.activeSelf;
+    public void hideMenu() {
+        showHideMenu(false);
+    }
+    
+    public void showMenu() {
+        showHideMenu(true);
+    }
+    
+    public void showHideMenu(bool willBeActive) {
         menu.SetActive(willBeActive);
         setRayStatus(willBeActive);
         pistol.SetActive(!willBeActive);
@@ -77,31 +84,29 @@ public class MenuController : MonoBehaviour {
 
     public void chooseIPSClowTarget() {
         onClearPreview();
-        stateEnum = StateEnum.IPSC_target;
+        competitionModeService.stateEnum = StateEnum.IPSC_target;
     }
 
     public void chooseIPSCNowshotLowTarget() {
         onClearPreview();
-        stateEnum = StateEnum.IPSC_noshot;
+        competitionModeService.stateEnum = StateEnum.IPSC_noshot;
     }
 
     public void chooseBarrel() {
         onClearPreview();
-        stateEnum = StateEnum.Barrel;
+        competitionModeService.stateEnum = StateEnum.Barrel;
     }
 
     public void chooseWall() {
         onClearPreview();
-        stateEnum = StateEnum.Wall;
+        competitionModeService.stateEnum = StateEnum.Wall;
     }
 
     public void removeModeOn() {
         onClearPreview();
-        stateEnum = StateEnum.Remove;
+        competitionModeService.stateEnum = StateEnum.Remove;
     }
-
-    public bool isShootMode() => stateEnum == StateEnum.Competition || stateEnum == StateEnum.DryRun;
-
+    
     private void positionMenuInFrontOfPlayer() {
         Transform head = Camera.main.transform;
 

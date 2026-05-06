@@ -1,8 +1,10 @@
 using System;
 using Meta.XR.MRUtilityKit;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class Main : MonoBehaviour {
     [HideInInspector] public Boolean isHandKeepingMagazine;
@@ -13,7 +15,6 @@ public class Main : MonoBehaviour {
     
     private PistolScript pistolScript;
     private FloorScript floorScript;
-    private ShootingModeController shootingModeController;    
 
     private MeshRenderer pushHandPointOnPistolMesh;
     private GameObject leftHand;
@@ -24,13 +25,12 @@ public class Main : MonoBehaviour {
     [HideInInspector] public MenuController menuController;
     [HideInInspector] public CompetitionModeService competitionModeService;
     [HideInInspector] public BuilderService builderService;
-
+    
     void Start() {
         InvokeRepeating(nameof(setHandColliderLayer), 1f, 1f);
         pistol = GameObject.Find("Glock17");
         pistolScript = pistol.GetComponent<PistolScript>();
         floorScript = GetComponent<FloorScript>();
-        shootingModeController = GetComponent<ShootingModeController>();      
 
         effectMeshScript = effectMeshObject.GetComponent<EffectMesh>();//todo added for demo
 
@@ -49,12 +49,12 @@ public class Main : MonoBehaviour {
 
     void Update() {
         if (Keyboard.current.pKey.wasPressedThisFrame || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstick, OVRInput.Controller.LTouch))
-            menuController.showHideMenu();
+            menuController.showHideMenu(pistol.activeSelf);
 
         if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft, OVRInput.Controller.LTouch) ||
             Keyboard.current.mKey.wasPressedThisFrame) showHideDebugMesh();
 
-        if (Keyboard.current.oKey.wasPressedThisFrame || OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch)) startStopRange();
+        if (Keyboard.current.oKey.wasPressedThisFrame || OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch)) competitionModeService.startStopRange();
         if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickUp, OVRInput.Controller.LTouch)) competitionModeService.interruptAttempt();
     }
 
@@ -65,23 +65,6 @@ public class Main : MonoBehaviour {
         int layer = LayerMask.NameToLayer(targetLayer);
         SetLayerRecursive(capsules, layer);
         CancelInvoke(nameof(setHandColliderLayer));
-    }
-
-    public void startStopRange() {
-        if (!menuController.isShootMode()) {
-            menuController.showHideMenu();
-            
-            if (shootingModeController.currentMode == ShootingModeController.ShootingMode.Competition) {
-                menuController.stateEnum = StateEnum.Competition;
-                competitionModeService.startStage();
-            } else {
-                menuController.stateEnum = StateEnum.DryRun;
-                pistolScript.setMagRoundCount(int.MaxValue);
-            }
-        } else {
-            menuController.stateEnum = StateEnum.Idle;
-            competitionModeService.stopStage();
-        }
     }
 
     void SetLayerRecursive(GameObject obj, int layer) {

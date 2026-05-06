@@ -8,10 +8,6 @@ public class RayColorController : MonoBehaviour {
     private Color _modeColor = Color.white;          // что должно быть «по умолчанию» в текущем режиме
     private bool  _hoveringUI;
 
-    public void SetModeDefault() => _modeColor = Color.white;
-    public void SetModePlace()   => _modeColor = new Color(0f, 0.6f, 1f);
-    public void SetModeDelete()  => _modeColor = new Color(1f, 0.15f, 0.15f);
-
     void Start() {
         var rayInteractorObj = camera.transform.Find(
             "[BuildingBlock] Interaction/[BuildingBlock] Controller Interactions/" +
