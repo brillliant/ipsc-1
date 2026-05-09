@@ -126,7 +126,7 @@ public class BuilderService : MonoBehaviour {
     private void tryRemoveHovered() {
         if (hoveredObject != null && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch)) {
             установленныеМишени.Remove(hoveredObject);
-            Object.Destroy(hoveredObject);
+            Destroy(hoveredObject);
             hoveredObject = null;
         }
     }
@@ -137,7 +137,7 @@ public class BuilderService : MonoBehaviour {
         hoveredObject = null;
     }
 
-    private void SaveObjects() {
+    public void SaveObjects() {
         objectDataList.Clear();
         foreach (GameObject obj in установленныеМишени) {
             objectDataList.Add(new ObjectData(obj.name, obj.transform.position, obj.transform.rotation));
@@ -148,14 +148,14 @@ public class BuilderService : MonoBehaviour {
 
     private void RemoveAllObjects() {
         foreach (GameObject obj in установленныеМишени)
-            Object.Destroy(obj);
+            Destroy(obj);
         установленныеМишени.Clear();
         clearHoles();
     }
 
     public void clearHoles() {
         foreach (GameObject пробоина in пробоины)
-            Object.Destroy(пробоина);
+            Destroy(пробоина);
         пробоины.Clear();
     }
 
