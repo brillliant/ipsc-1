@@ -245,7 +245,7 @@ public class PistolScript : MonoBehaviour {
         if (magazineLockedInPistol && magazineScript.getRoundCount() > 0) {
             setRoundToChamber();
             firedRound = false;
-            if (mainScript.competitionModeService.stateEnum != StateEnum.DryRun) { //не декременчу патроны, если dryFire mode
+            if (mainScript.competitionModeService.roundsCount != RoundsCount.Infinite) { //не декременчу патроны, если режим бесконечные патроны 
                 magazineScript.decrementRoundCount();
             }
             inShooting = false;

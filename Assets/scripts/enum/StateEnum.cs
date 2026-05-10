@@ -5,6 +5,5 @@ public enum StateEnum {
     Barrel,
     Wall,
     Remove,
-    Competition,
-    DryRun
+    StageRun
 }

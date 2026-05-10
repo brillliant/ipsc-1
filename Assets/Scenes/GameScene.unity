@@ -26439,7 +26439,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1285203537061935627, guid: 489d4be4aa493224a81def86c2f706b4, type: 3}
       propertyPath: m_text
-      value: shooting mode
+      value: Rounds Count
       objectReference: {fileID: 0}
     - target: {fileID: 1285203537061935627, guid: 489d4be4aa493224a81def86c2f706b4, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
@@ -26615,7 +26615,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3996863947086187459, guid: 489d4be4aa493224a81def86c2f706b4, type: 3}
       propertyPath: m_text
-      value: Dry Fire
+      value: Infinity
       objectReference: {fileID: 0}
     - target: {fileID: 3996863947086187459, guid: 489d4be4aa493224a81def86c2f706b4, type: 3}
       propertyPath: m_fontColor.a
@@ -26643,7 +26643,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4444421915889953440, guid: 489d4be4aa493224a81def86c2f706b4, type: 3}
       propertyPath: m_text
-      value: Competition
+      value: Normal
       objectReference: {fileID: 0}
     - target: {fileID: 4444421915889953440, guid: 489d4be4aa493224a81def86c2f706b4, type: 3}
       propertyPath: m_fontColor.a
@@ -38273,7 +38273,7 @@ GameObject:
   - component: {fileID: 994810550}
   - component: {fileID: 994810549}
   m_Layer: 5
-  m_Name: Mode
+  m_Name: Rounds Count
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38318,7 +38318,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Mode:'
+  m_text: 'Rounds count:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -38384,7 +38384,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -43.88904, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
@@ -39847,6 +39847,7 @@ MonoBehaviour:
   unloadAndShowClearCommandGiven: 0
   hummerDownCommandGiven: 0
   stateEnum: 0
+  roundsCount: 0
   buttonBackground: {fileID: 1263692819}
   buttonLabel: {fileID: 1794836842}
 --- !u!114 &1043981339
@@ -39883,7 +39884,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3de9e36c045ec6f4598a77aa52ff98bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  currentMode: 0
+  roundsCount: 0
 --- !u!1 &1044434607
 GameObject:
   m_ObjectHideFlags: 0
@@ -41153,7 +41154,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5614022670084783633, guid: 040567cd4431b484e9999e28a102d366, type: 3}
       propertyPath: m_text
-      value: RESET
+      value: 'CANCEL
+
+        STAGE'
       objectReference: {fileID: 0}
     - target: {fileID: 5614022670084783633, guid: 040567cd4431b484e9999e28a102d366, type: 3}
       propertyPath: m_fontSize
@@ -41333,7 +41336,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7922623383524267024, guid: 040567cd4431b484e9999e28a102d366, type: 3}
       propertyPath: m_Name
-      value: ButtonShelf_IconAndLabel_Toggle (5)
+      value: CANCEL_STAGE
       objectReference: {fileID: 0}
     - target: {fileID: 7922623383524267024, guid: 040567cd4431b484e9999e28a102d366, type: 3}
       propertyPath: m_IsActive
@@ -87389,7 +87392,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5614022670084783633, guid: 040567cd4431b484e9999e28a102d366, type: 3}
       propertyPath: m_text
-      value: START
+      value: 'START
+
+        STAGE'
       objectReference: {fileID: 0}
     - target: {fileID: 5614022670084783633, guid: 040567cd4431b484e9999e28a102d366, type: 3}
       propertyPath: m_fontSize
@@ -87565,7 +87570,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7922623383524267024, guid: 040567cd4431b484e9999e28a102d366, type: 3}
       propertyPath: m_Name
-      value: ButtonShelf_IconAndLabel_Toggle (4)
+      value: START_STAGE
       objectReference: {fileID: 0}
     - target: {fileID: 7922623383524267024, guid: 040567cd4431b484e9999e28a102d366, type: 3}
       propertyPath: m_IsActive

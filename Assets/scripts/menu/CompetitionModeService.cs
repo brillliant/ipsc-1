@@ -31,9 +31,10 @@ public class CompetitionModeService : MonoBehaviour {
     private float lastShotTime;
 
     private MenuController menuController;
-    private ShootingModeController shootingModeController;
+    private RoundsCountController roundsCountController;
     
     [HideInInspector] public StateEnum stateEnum;
+    [HideInInspector] public RoundsCount roundsCount;
     
     [SerializeField] Image buttonBackground;
     [SerializeField] TMP_Text buttonLabel;
@@ -45,12 +46,12 @@ public class CompetitionModeService : MonoBehaviour {
         buttonBackground.color = color;
     }
     
-    public bool isShootMode() => stateEnum == StateEnum.Competition || stateEnum == StateEnum.DryRun;
+    public bool isShootMode() => stateEnum == StateEnum.StageRun;
 
     private void Start() {
+        roundsCountController = GetComponent<RoundsCountController>();
         menuController = GetComponent<MenuController>();;
         pistolScript = GetComponent<PistolScript>();
-        shootingModeController = GetComponent<ShootingModeController>();
     }
 
     public void init(PistolScript pistolScript) {
@@ -182,18 +183,24 @@ public class CompetitionModeService : MonoBehaviour {
         }
         startStopRange();
     }
+
+    public void updateRoundsCount() {
+        if (roundsCountController.roundsMode == RoundsCountController.RoundsMode.Infinity) {
+            roundsCount = RoundsCount.Infinite;
+        } else {
+            roundsCount = RoundsCount.Normal;
+        }
+    }
     
     public void startStopRange() {
-        if (!isShootMode()) {
-            if (shootingModeController.currentMode == ShootingModeController.ShootingMode.Competition) {
-                stateEnum = StateEnum.Competition;
-                startStage();
-            } else {
-                stateEnum = StateEnum.DryRun;
-                pistolScript.setMagRoundCount(int.MaxValue);
-            }
+        updateRoundsCount();
+        
+        if (stateEnum != StateEnum.StageRun) {
+            stateEnum = StateEnum.StageRun;
+            
             setButtonColor(redColor);
             buttonLabel.text = "Stop";
+            startStage();
         } else {
             stateEnum = StateEnum.Idle;
             stopStage();
