@@ -28,9 +28,16 @@ public class BuilderService : MonoBehaviour {
     private List<ObjectData> objectDataList = new List<ObjectData>();
     private bool triggerPressed;
     private GameObject hoveredObject;
+    private Dictionary<string, GameObject> prefabMap;
 
     void Start() {
         competitionModeService = GetComponent<CompetitionModeService>();
+        prefabMap = new Dictionary<string, GameObject> {
+            { ipscTargetPrefab.name,      ipscTargetPrefab      },
+            { ipscTargetNoShotPrefab.name, ipscTargetNoShotPrefab },
+            { barrelPrefab.name,           barrelPrefab           },
+            { wallPrefab.name,             wallPrefab             },
+        };
     }
 
     void Update() {
@@ -170,11 +177,13 @@ public class BuilderService : MonoBehaviour {
         if (wrapper.objectDataList != null) objectDataList = wrapper.objectDataList;
 
         foreach (ObjectData data in objectDataList) {
-            GameObject prefab = Resources.Load<GameObject>(data.prefabName.Substring(0, data.prefabName.Length - 7));
-            if (prefab != null) {
+            string baseName = data.prefabName.EndsWith("(Clone)")
+                ? data.prefabName[..^7]
+                : data.prefabName;
+            if (prefabMap.TryGetValue(baseName, out GameObject prefab)) {
                 установленныеМишени.Add(Object.Instantiate(prefab, data.position, data.rotation));
             } else {
-                Debug.LogWarning("Prefab not found: " + data.prefabName);
+                Debug.LogWarning("Prefab not found in map: " + data.prefabName);
             }
         }
     }
