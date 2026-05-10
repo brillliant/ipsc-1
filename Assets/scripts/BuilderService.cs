@@ -20,8 +20,7 @@ public class BuilderService : MonoBehaviour {
 
     [SerializeField] private RayInteractor rayInteractor;
 
-    private MenuController menuController;
-    private GameModeService gameModeService;
+    private CompetitionModeService competitionModeService;
     private readonly List<GameObject> установленныеМишени = new List<GameObject>();
     public readonly List<GameObject> пробоины = new List<GameObject>();
 
@@ -29,22 +28,30 @@ public class BuilderService : MonoBehaviour {
     private List<ObjectData> objectDataList = new List<ObjectData>();
     private bool triggerPressed;
     private GameObject hoveredObject;
+    private Dictionary<string, GameObject> prefabMap;
 
     void Start() {
-        menuController = GetComponent<MenuController>();
-        gameModeService = GetComponent<GameModeService>();
+        competitionModeService = GetComponent<CompetitionModeService>();
+        prefabMap = new Dictionary<string, GameObject> {
+            { ipscTargetPrefab.name,      ipscTargetPrefab      },
+            { ipscTargetNoShotPrefab.name, ipscTargetNoShotPrefab },
+            { barrelPrefab.name,           barrelPrefab           },
+            { wallPrefab.name,             wallPrefab             },
+        };
     }
 
     void Update() {
-        if (menuController.isTargetSetUpMenuActivated) {
+        if (competitionModeService.isShootMode()) return;
+
+        if (competitionModeService.stateEnum == StateEnum.IPSC_target) {
             buildWith(ipscTargetPreview, ipscTargetPrefab);
-        } else if (menuController.isNoShotSetUpMenuActivated) {
+        } else if (competitionModeService.stateEnum == StateEnum.IPSC_noshot) {
             buildWith(ipscTargetNoShotPreview, ipscTargetNoShotPrefab);
-        } else if (menuController.currentIndex == 4) {
+        } else if (competitionModeService.stateEnum == StateEnum.Barrel) {
             buildWith(barrelPreview, barrelPrefab);
-        } else if (menuController.currentIndex == 5) {
+        } else if (competitionModeService.stateEnum == StateEnum.Wall) {
             buildWith(wallPreview, wallPrefab);
-        } else if (menuController.removeMode) {
+        } else if (competitionModeService.stateEnum == StateEnum.Remove) {
             updateRemoveHighlight();
             tryRemoveHovered();
         } else {
@@ -54,7 +61,7 @@ public class BuilderService : MonoBehaviour {
 
     private void buildWith(GameObject preview, GameObject prefab) {
         setUpObject(preview, prefab);
-        gameModeService.hideUI();
+        competitionModeService.hideCommandsText();
     }
 
     public void clearPreview() {
@@ -65,6 +72,11 @@ public class BuilderService : MonoBehaviour {
     }
 
     private void setUpObject(GameObject preview, GameObject prefab) {
+        if (rayInteractor.State != InteractorState.Normal) {
+            clearPreview();
+            return;
+        }
+
         if (!currentPreview) currentPreview = Instantiate(preview);
         if (currentPreview && !currentPreview.activeSelf)
             currentPreview.SetActive(true);
@@ -75,7 +87,7 @@ public class BuilderService : MonoBehaviour {
                                                      && !hit.collider.gameObject.name.Equals("Glock17")) {
             placeToSurface(currentPreview, hit);
 
-            if (menuController.currentIndex == 5) {
+            if (competitionModeService.stateEnum == StateEnum.Wall) {
                 if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft, OVRInput.Controller.RTouch)) rotateLeft();
                 if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickRight, OVRInput.Controller.RTouch)) rotateRight();
             } else {
@@ -89,7 +101,7 @@ public class BuilderService : MonoBehaviour {
 
             bool overUI = rayInteractor.State != InteractorState.Normal;
             if (!triggerPressed && !overUI &&
-                (Keyboard.current.spaceKey.wasPressedThisFrame || OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0.5))
+                (Keyboard.current.spaceKey.wasPressedThisFrame || OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch)))
                 placeATarget(currentPreview, prefab);
         }
 
@@ -121,7 +133,7 @@ public class BuilderService : MonoBehaviour {
     private void tryRemoveHovered() {
         if (hoveredObject != null && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch)) {
             установленныеМишени.Remove(hoveredObject);
-            Object.Destroy(hoveredObject);
+            Destroy(hoveredObject);
             hoveredObject = null;
         }
     }
@@ -132,7 +144,7 @@ public class BuilderService : MonoBehaviour {
         hoveredObject = null;
     }
 
-    private void SaveObjects() {
+    public void SaveObjects() {
         objectDataList.Clear();
         foreach (GameObject obj in установленныеМишени) {
             objectDataList.Add(new ObjectData(obj.name, obj.transform.position, obj.transform.rotation));
@@ -143,14 +155,14 @@ public class BuilderService : MonoBehaviour {
 
     private void RemoveAllObjects() {
         foreach (GameObject obj in установленныеМишени)
-            Object.Destroy(obj);
+            Destroy(obj);
         установленныеМишени.Clear();
         clearHoles();
     }
 
     public void clearHoles() {
         foreach (GameObject пробоина in пробоины)
-            Object.Destroy(пробоина);
+            Destroy(пробоина);
         пробоины.Clear();
     }
 
@@ -165,11 +177,13 @@ public class BuilderService : MonoBehaviour {
         if (wrapper.objectDataList != null) objectDataList = wrapper.objectDataList;
 
         foreach (ObjectData data in objectDataList) {
-            GameObject prefab = Resources.Load<GameObject>(data.prefabName.Substring(0, data.prefabName.Length - 7));
-            if (prefab != null) {
+            string baseName = data.prefabName.EndsWith("(Clone)")
+                ? data.prefabName[..^7]
+                : data.prefabName;
+            if (prefabMap.TryGetValue(baseName, out GameObject prefab)) {
                 установленныеМишени.Add(Object.Instantiate(prefab, data.position, data.rotation));
             } else {
-                Debug.LogWarning("Prefab not found: " + data.prefabName);
+                Debug.LogWarning("Prefab not found in map: " + data.prefabName);
             }
         }
     }

@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using Oculus.Interaction;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class MenuController : MonoBehaviour {
     [Header("UI")]
@@ -24,23 +21,18 @@ public class MenuController : MonoBehaviour {
     private readonly float rightOffset = 0.6f;
     private readonly float rotationOffset = -52f;
 
-    [HideInInspector] public int currentIndex = 0;
-    [HideInInspector] public bool isTargetSetUpMenuActivated = true;
-    [HideInInspector] public bool isNoShotSetUpMenuActivated = false;
-    [HideInInspector] public bool removeMode = false;
-
+    private CompetitionModeService competitionModeService;
+    
     private Action onClearPreview;
     private List<TextMeshProUGUI> menuList;
     private GameObject pistol;
-    private PistolScript pistolScript;
     private GameObject rayLeft;
     private GameObject rayRight;
 
-    private bool  _hoveringUI;
+    private bool _hoveringUI;
     
     void Start() {
         pistol = GameObject.Find("Glock17");
-        pistolScript = pistol.GetComponent<PistolScript>();
 
         menuList = new List<TextMeshProUGUI> {
             menuItem1_target, menuItem2_shoot, menuItem3_noShot,
@@ -53,6 +45,7 @@ public class MenuController : MonoBehaviour {
         );
 
         rayRight = rayRightTransform.gameObject;
+        competitionModeService = GetComponent<CompetitionModeService>();
     }
     
     private void setRayStatus(bool status) {
@@ -73,8 +66,15 @@ public class MenuController : MonoBehaviour {
         this.onClearPreview = onClearPreview;
     }
 
-    public void showHideMenu() {
-        bool willBeActive = !menu.activeSelf;
+    public void hideMenu() {
+        showHideMenu(false);
+    }
+    
+    public void showMenu() {
+        showHideMenu(true);
+    }
+    
+    public void showHideMenu(bool willBeActive) {
         menu.SetActive(willBeActive);
         setRayStatus(willBeActive);
         pistol.SetActive(!willBeActive);
@@ -82,96 +82,31 @@ public class MenuController : MonoBehaviour {
         if (willBeActive) positionMenuInFrontOfPlayer();
     }
 
-    public void changeMenu() {
-        removeMode = false;
-        onClearPreview();
-
-        int index = getNextIndex();
-        highlightNecessaryMenuItem(index);
-
-        if (currentIndex == 0) {
-            isTargetSetUpMenuActivated = true;
-            isNoShotSetUpMenuActivated = false;
-        } else if (currentIndex == 2) {
-            isTargetSetUpMenuActivated = false;
-            isNoShotSetUpMenuActivated = true;
-        } else {
-            isTargetSetUpMenuActivated = false;
-            isNoShotSetUpMenuActivated = false;
-        }
-
-        if (currentIndex == 1) pistolScript.setMagRoundCount(15);
-        else if (currentIndex == 3) pistolScript.setMagRoundCount(int.MaxValue);
-    }
-
     public void chooseIPSClowTarget() {
         onClearPreview();
-        currentIndex = 0;
-        isTargetSetUpMenuActivated = true;
-        isNoShotSetUpMenuActivated = false;
-        removeMode = false;
-        highlightNecessaryMenuItem(currentIndex);
+        competitionModeService.stateEnum = StateEnum.IPSC_target;
     }
 
     public void chooseIPSCNowshotLowTarget() {
         onClearPreview();
-        currentIndex = 2;
-        isTargetSetUpMenuActivated = false;
-        isNoShotSetUpMenuActivated = true;
-        removeMode = false;
-        highlightNecessaryMenuItem(currentIndex);
+        competitionModeService.stateEnum = StateEnum.IPSC_noshot;
     }
 
     public void chooseBarrel() {
         onClearPreview();
-        currentIndex = 4;
-        isTargetSetUpMenuActivated = false;
-        isNoShotSetUpMenuActivated = false;
-        removeMode = false;
-        highlightNecessaryMenuItem(currentIndex);
+        competitionModeService.stateEnum = StateEnum.Barrel;
     }
 
     public void chooseWall() {
         onClearPreview();
-        currentIndex = 5;
-        isTargetSetUpMenuActivated = false;
-        isNoShotSetUpMenuActivated = false;
-        removeMode = false;
-        highlightNecessaryMenuItem(currentIndex);
+        competitionModeService.stateEnum = StateEnum.Wall;
     }
 
     public void removeModeOn() {
         onClearPreview();
-        removeMode = true;
-        currentIndex = -1;
-        isTargetSetUpMenuActivated = false;
-        isNoShotSetUpMenuActivated = false;
-        highlightNecessaryMenuItem(currentIndex);
+        competitionModeService.stateEnum = StateEnum.Remove;
     }
-
-    public int getCurrentIndex() => currentIndex;
-    public bool isShootMode() => currentIndex is 1 or 3;
-
-    private int getNextIndex() {
-        if (currentIndex + 1 <= menuList.Count - 1) currentIndex++;
-        else currentIndex = 0;
-        return currentIndex;
-    }
-
-    private void highlightNecessaryMenuItem(int index) {
-        for (int i = 0; i < menuList.Count; i++) {
-            if (i == index) {
-                menuList[i].fontSize = 8;
-                menuList[i].fontStyle = FontStyles.Bold;
-                menuList[i].color = Color.red;
-            } else {
-                menuList[i].fontSize = 5;
-                menuList[i].fontStyle = FontStyles.Normal;
-                menuList[i].color = Color.gray;
-            }
-        }
-    }
-
+    
     private void positionMenuInFrontOfPlayer() {
         Transform head = Camera.main.transform;
 

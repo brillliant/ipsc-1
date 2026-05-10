@@ -1,7 +1,10 @@
 using System;
 using Meta.XR.MRUtilityKit;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class Main : MonoBehaviour {
     [HideInInspector] public Boolean isHandKeepingMagazine;
@@ -9,18 +12,20 @@ public class Main : MonoBehaviour {
     private string targetLayer = "Character";
 
     private GameObject pistol;
+    
     private PistolScript pistolScript;
+    private FloorScript floorScript;
 
     private MeshRenderer pushHandPointOnPistolMesh;
     private GameObject leftHand;
     private MeshRenderer pushMagazinePointOnHandMesh;
-    private FloorScript floorScript;
+
     private EffectMesh effectMeshScript;//todo added for demo
 
     [HideInInspector] public MenuController menuController;
-    [HideInInspector] public GameModeService gameModeService;
+    [HideInInspector] public CompetitionModeService competitionModeService;
     [HideInInspector] public BuilderService builderService;
-
+    
     void Start() {
         InvokeRepeating(nameof(setHandColliderLayer), 1f, 1f);
         pistol = GameObject.Find("Glock17");
@@ -36,34 +41,21 @@ public class Main : MonoBehaviour {
         menuController = GetComponent<MenuController>();
         menuController.init(() => builderService.clearPreview());
 
-        gameModeService = GetComponent<GameModeService>();
-        gameModeService.init(pistolScript);
+        competitionModeService = GetComponent<CompetitionModeService>();
+        competitionModeService.init(pistolScript);
 
         builderService = GetComponent<BuilderService>();
     }
 
     void Update() {
         if (Keyboard.current.pKey.wasPressedThisFrame || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstick, OVRInput.Controller.LTouch))
-            menuController.showHideMenu();
+            menuController.showHideMenu(pistol.activeSelf);
 
-        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickUp, OVRInput.Controller.LTouch)) menuController.changeMenu();
         if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft, OVRInput.Controller.LTouch) ||
             Keyboard.current.mKey.wasPressedThisFrame) showHideDebugMesh();
 
-        handleStageInput();
-    }
-
-    private void handleStageInput() {
-        if (menuController.isTargetSetUpMenuActivated && menuController.isNoShotSetUpMenuActivated) return;
-
-        bool triggerDown = OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch)
-                           || Keyboard.current.zKey.wasPressedThisFrame;
-
-        if (!gameModeService.stageStarted && !gameModeService.inprocessCommand && triggerDown) gameModeService.startStage();
-        if (gameModeService.stageStarted && !gameModeService.inprocessCommand && triggerDown) gameModeService.stopStage();
-        if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.LTouch)
-            || Keyboard.current.leftShiftKey.wasPressedThisFrame)
-            gameModeService.interruptAttempt();
+        if (Keyboard.current.oKey.wasPressedThisFrame || OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch)) competitionModeService.startStopRange();
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickUp, OVRInput.Controller.LTouch)) competitionModeService.interruptAttempt();
     }
 
     void setHandColliderLayer() {

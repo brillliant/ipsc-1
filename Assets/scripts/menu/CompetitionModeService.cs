@@ -2,9 +2,11 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
-public class GameModeService : MonoBehaviour {
+public class CompetitionModeService : MonoBehaviour {
     [Header("UI")]
     public TextMeshProUGUI readyText;
     public TextMeshProUGUI hintText;
@@ -18,7 +20,6 @@ public class GameModeService : MonoBehaviour {
     public AudioSource ifClearHammerDownAndHolster;
     public AudioSource rangeIsClear;
 
-    [HideInInspector] public bool stageStarted = false;
     [HideInInspector] public bool inprocessCommand = false;
     [HideInInspector] public bool unloadAndShowClearCommandGiven = false;
     [HideInInspector] public bool hummerDownCommandGiven = false;
@@ -28,6 +29,29 @@ public class GameModeService : MonoBehaviour {
     private float startTime;
     private bool running;
     private float lastShotTime;
+
+    private MenuController menuController;
+    private ShootingModeController shootingModeController;
+    
+    [HideInInspector] public StateEnum stateEnum;
+    
+    [SerializeField] Image buttonBackground;
+    [SerializeField] TMP_Text buttonLabel;
+
+    private Color greenColor = new Color(0.30f, 0.52f, 0.31f);
+    private Color redColor  = new Color(0.83f, 0.18f, 0.18f);
+
+    private void setButtonColor(Color color) {
+        buttonBackground.color = color;
+    }
+    
+    public bool isShootMode() => stateEnum == StateEnum.Competition || stateEnum == StateEnum.DryRun;
+
+    private void Start() {
+        menuController = GetComponent<MenuController>();;
+        pistolScript = GetComponent<PistolScript>();
+        shootingModeController = GetComponent<ShootingModeController>();
+    }
 
     public void init(PistolScript pistolScript) {
         this.pistolScript = pistolScript;
@@ -44,7 +68,7 @@ public class GameModeService : MonoBehaviour {
         running = true;
     }
 
-    public void registerShot() {
+    public void registerShotTime() {
         if (!running) return;
         lastShotTime = Time.realtimeSinceStartup - startTime;
     }
@@ -65,26 +89,29 @@ public class GameModeService : MonoBehaviour {
         if (pending != null) StopCoroutine(pending);
         stopTimer();
 
-        foreach (AudioSource source in Object.FindObjectsOfType<AudioSource>())
+        foreach (AudioSource source in FindObjectsOfType<AudioSource>())
             source.Stop();
 
         readyText.gameObject.SetActive(false);
         hintText.gameObject.SetActive(false);
 
-        stageStarted = false;
         unloadAndShowClearCommandGiven = false;
         hummerDownCommandGiven = false;
         inprocessCommand = false;
         pistolScript.hammerDown = false;
+        
+        setButtonColor(greenColor);
+        buttonLabel.text = "Start";
+        stateEnum = StateEnum.Idle;
     }
 
     public void stopStage() {
-        stageStarted = false;
+        if (pending != null) StopCoroutine(pending);
         inprocessCommand = true;
         stopTimer();
 
         readyText.text = "If you are finished, unload and show clear";
-        ifYouAreFinishedUnloadAndShowClear.PlayOneShot(ifYouAreFinishedUnloadAndShowClear.clip);
+        ifYouAreFinishedUnloadAndShowClear.Play();
         readyText.gameObject.SetActive(true);
 
         unloadAndShowClearCommandGiven = true;
@@ -95,13 +122,13 @@ public class GameModeService : MonoBehaviour {
 
         readyText.gameObject.SetActive(true);
         readyText.text = "If clear, hammer down and holster";
-        ifClearHammerDownAndHolster.PlayOneShot(ifClearHammerDownAndHolster.clip);
+        ifClearHammerDownAndHolster.Play();
 
         hummerDownCommandGiven = true;
         pistolScript.hammerDown = false;
     }
 
-    public void hideUI() {
+    public void hideCommandsText() {
         readyText.gameObject.SetActive(false);
         hintText.gameObject.SetActive(false);
     }
@@ -110,32 +137,31 @@ public class GameModeService : MonoBehaviour {
         inprocessCommand = false;
         hummerDownCommandGiven = false;
 
-        rangeIsClear.PlayOneShot(rangeIsClear.clip);
+        rangeIsClear.Play();
         readyText.text = "Your time: " + showTotalTime();
     }
 
     public void startStage() {
         inprocessCommand = true;
-        stageStarted = true;
         showLoadAndMakeReadyCommand();
     }
 
     private void standBy() {
         readyText.text = "Stand by!";
-        standByySound.PlayOneShot(standByySound.clip);
+        standByySound.Play();
         pending = StartCoroutine(After(UnityEngine.Random.Range(2f, 4f), beepAndStartTimer));
     }
 
     private void beepAndStartTimer() {
         readyText.gameObject.SetActive(false);
-        beepSound.PlayOneShot(beepSound.clip);
+        beepSound.Play();
         startTimer();
         inprocessCommand = false;
     }
 
     private void showAreYouReadyCommand() {
         readyText.text = "Are you ready?";
-        areYouReadySound.PlayOneShot(areYouReadySound.clip);
+        areYouReadySound.Play();
         hintText.gameObject.SetActive(false);
         pending = StartCoroutine(After(2f, standBy));
     }
@@ -144,7 +170,35 @@ public class GameModeService : MonoBehaviour {
         readyText.gameObject.SetActive(true);
         hintText.gameObject.SetActive(true);
         readyText.text = "Load and make ready";
-        loadAndMakeReadySound.PlayOneShot(loadAndMakeReadySound.clip);
+        loadAndMakeReadySound.Play();
         pending = StartCoroutine(After(4f, showAreYouReadyCommand));
+    }
+
+    public void startStopRangeAndMenu() {
+        if (menuController.menu.activeSelf) {
+            menuController.hideMenu();
+        } else {
+            menuController.showMenu();
+        }
+        startStopRange();
+    }
+    
+    public void startStopRange() {
+        if (!isShootMode()) {
+            if (shootingModeController.currentMode == ShootingModeController.ShootingMode.Competition) {
+                stateEnum = StateEnum.Competition;
+                startStage();
+            } else {
+                stateEnum = StateEnum.DryRun;
+                pistolScript.setMagRoundCount(int.MaxValue);
+            }
+            setButtonColor(redColor);
+            buttonLabel.text = "Stop";
+        } else {
+            stateEnum = StateEnum.Idle;
+            stopStage();
+            setButtonColor(greenColor);
+            buttonLabel.text = "Start";
+        }
     }
 }

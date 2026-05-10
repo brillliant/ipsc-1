@@ -61,7 +61,7 @@ public class PistolScript : MonoBehaviour {
     }
     
     void Update() {
-        if (!mainScript.menuController.isTargetSetUpMenuActivated && !mainScript.menuController.isNoShotSetUpMenuActivated && mainScript.menuController.isShootMode()) {
+        if (!mainScript.menuController.menu.gameObject.activeSelf) {
             shootActionIfNeeded();
             if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0 || Keyboard.current.spaceKey.wasReleasedThisFrame) {
                 triggerPressed = false;
@@ -150,10 +150,10 @@ public class PistolScript : MonoBehaviour {
      * проверяю позицию, если пистолет накланен вниз. типа в кобуре
      */
     private void checkIfPistolInHolster() {
-        if (mainScript.gameModeService.hummerDownCommandGiven) {
+        if (mainScript.competitionModeService.hummerDownCommandGiven) {
             Vector3 barrelDir = -transform.forward;
             if (Vector3.Angle(barrelDir, Vector3.down) <= tolDeg) {
-                mainScript.gameModeService.clearHintShotTime();
+                mainScript.competitionModeService.clearHintShotTime();
             }
         }
     }
@@ -212,7 +212,7 @@ public class PistolScript : MonoBehaviour {
 
     private void emptyShoot() {
         emptyShotSound.PlayOneShot(emptyShotSound.clip);
-        if (mainScript.gameModeService.hummerDownCommandGiven) {
+        if (mainScript.competitionModeService.hummerDownCommandGiven) {
             hammerDown = true;
         }
     }
@@ -226,7 +226,7 @@ public class PistolScript : MonoBehaviour {
         bulletRigidbody.linearVelocity = bulletPoint.forward * bulletSpeed;
         
         shotSound.PlayOneShot(shotSound.clip);
-        mainScript.gameModeService.registerShot();
+        mainScript.competitionModeService.registerShotTime();
 
         firedRound = true;
         Destroy(bullet, 1);
@@ -245,9 +245,9 @@ public class PistolScript : MonoBehaviour {
         if (magazineLockedInPistol && magazineScript.getRoundCount() > 0) {
             setRoundToChamber();
             firedRound = false;
-            if (mainScript.menuController.getCurrentIndex() != 3) { //не декременчу патроны, если dryFire mode
+            //if (mainScript.menuController.getCurrentIndex() != 3) { //не декременчу патроны, если dryFire mode
                 magazineScript.decrementRoundCount();
-            }
+            //}
             inShooting = false;
         }
     }
