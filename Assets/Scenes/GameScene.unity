@@ -26607,7 +26607,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3768555871589625888, guid: 489d4be4aa493224a81def86c2f706b4, type: 3}
       propertyPath: WhenSelectionChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: ShootingModeController, Assembly-CSharp
+      value: RoundsCountController, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 3768555871589625888, guid: 489d4be4aa493224a81def86c2f706b4, type: 3}
       propertyPath: WhenSelectionChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -39881,9 +39881,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1043981333}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3de9e36c045ec6f4598a77aa52ff98bd, type: 3}
+  m_Script: {fileID: 11500000, guid: 809cbabe9034e0a4cac948518493f685, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: '::'
+  m_EditorClassIdentifier: Assembly-CSharp::RoundsCountController
   roundsCount: 0
 --- !u!1 &1044434607
 GameObject:

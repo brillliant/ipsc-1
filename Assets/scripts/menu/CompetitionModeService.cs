@@ -184,17 +184,11 @@ public class CompetitionModeService : MonoBehaviour {
         startStopRange();
     }
 
-    public void updateRoundsCount() {
-        if (roundsCountController.roundsMode == RoundsCountController.RoundsMode.Infinity) {
-            roundsCount = RoundsCount.Infinite;
-        } else {
-            roundsCount = RoundsCount.Normal;
-        }
+    public void setRoundsCount(RoundsCount roundsCount) {
+        this.roundsCount = roundsCount;
     }
     
     public void startStopRange() {
-        updateRoundsCount();
-        
         if (stateEnum != StateEnum.StageRun) {
             stateEnum = StateEnum.StageRun;
             

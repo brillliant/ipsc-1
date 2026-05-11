@@ -75,8 +75,6 @@ public class MenuController : MonoBehaviour {
     }
     
     public void showHideMenu(bool willBeActive) {
-        competitionModeService.updateRoundsCount();
-        
         menu.SetActive(willBeActive);
         setRayStatus(willBeActive);
         pistol.SetActive(!willBeActive);

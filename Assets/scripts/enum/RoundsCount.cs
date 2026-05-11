@@ -1,4 +1,4 @@
 ﻿public enum RoundsCount {
-    Normal,
-    Infinite
+    Normal = 0,
+    Infinite = 1
 }

@@ -1,15 +1,19 @@
 using UnityEngine;
 
 public class RoundsCountController : MonoBehaviour {
-    public enum RoundsMode {
-        Normal = 0, 
-        Infinity = 1
+    
+    private CompetitionModeService competitionModeService;
+
+    void Start() {
+        competitionModeService = GetComponent<CompetitionModeService>();
     }
     
-    public RoundsMode roundsMode = RoundsMode.Normal;
+    public RoundsCount roundsCount = RoundsCount.Normal;
     
     public void onGameModeSelected(int index) {
-        roundsMode = (RoundsMode)index;
+        roundsCount = (RoundsCount)index;
+        
+        competitionModeService.setRoundsCount(roundsCount);
     }
 }
 
