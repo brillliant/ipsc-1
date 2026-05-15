@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using DefaultNamespace;
 using Oculus.Interaction;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -29,6 +30,9 @@ public class BuilderService : MonoBehaviour {
     private bool triggerPressed;
     private GameObject hoveredObject;
     private Dictionary<string, GameObject> prefabMap;
+    public GameObject saveNameDialog;
+    
+    [SerializeField] private TMP_InputField nameField;
 
     void Start() {
         competitionModeService = GetComponent<CompetitionModeService>();
@@ -144,13 +148,29 @@ public class BuilderService : MonoBehaviour {
         hoveredObject = null;
     }
 
+    public void showSaveDialog() {
+        saveNameDialog.SetActive(true);
+    } 
+
     public void SaveObjects() {
+        string fileName = nameField.text.Trim();
+        if (string.IsNullOrEmpty(fileName)) return;
+
+        string path = Path.Combine(Application.persistentDataPath, fileName + ".json");
+        if (File.Exists(path)) {
+            Debug.LogWarning($"Файл '{fileName}' уже существует");
+            // TODO: показать пользователю предупреждение
+            return;
+        }
+
+        saveNameDialog.SetActive(false);
+
         objectDataList.Clear();
         foreach (GameObject obj in установленныеМишени) {
             objectDataList.Add(new ObjectData(obj.name, obj.transform.position, obj.transform.rotation));
         }
         ObjectDataList wrapper = new ObjectDataList { objectDataList = objectDataList };
-        File.WriteAllText(Application.persistentDataPath + "/saveData.json", JsonUtility.ToJson(wrapper));
+        File.WriteAllText(path, JsonUtility.ToJson(wrapper));
     }
 
     private void RemoveAllObjects() {
