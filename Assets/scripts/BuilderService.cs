@@ -167,6 +167,7 @@ public class BuilderService : MonoBehaviour {
         }
 
         saveNameDialog.SetActive(false);
+        PlaceStageRootInFrontOfPlayer();
 
         objectDataList.Clear();
         foreach (GameObject obj in установленныеМишени) {
@@ -294,8 +295,13 @@ public class BuilderService : MonoBehaviour {
     private void PlaceStageRootInFrontOfPlayer() {
         Transform cam = Camera.main.transform;
         Vector3 forward = new Vector3(cam.forward.x, 0, cam.forward.z).normalized;
-        stageRoot.position = cam.position + forward * 2f;
-        stageRoot.position = new Vector3(stageRoot.position.x, 0f, stageRoot.position.z); // на пол
-        stageRoot.rotation = Quaternion.LookRotation(-forward); // лицом к игроку
+        Vector3 xzTarget = cam.position + forward * 2f;
+
+        float floorY = 0f;
+        if (Physics.Raycast(new Vector3(xzTarget.x, cam.position.y, xzTarget.z), Vector3.down, out RaycastHit hit, 5f))
+            floorY = hit.point.y;
+
+        stageRoot.position = new Vector3(xzTarget.x, floorY, xzTarget.z);
+        stageRoot.rotation = Quaternion.LookRotation(-forward);
     }
 }
