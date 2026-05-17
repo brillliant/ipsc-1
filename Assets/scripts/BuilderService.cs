@@ -19,6 +19,9 @@ public class BuilderService : MonoBehaviour {
     public GameObject wallPreview;
     public GameObject wallPrefab;
 
+    [SerializeField] private Transform readyStagesContainer;
+    public GameObject installStageButtonPrefub;
+
     [SerializeField] private RayInteractor rayInteractor;
 
     private CompetitionModeService competitionModeService;
@@ -111,7 +114,6 @@ public class BuilderService : MonoBehaviour {
 
         if (OVRInput.Get(OVRInput.RawAxis1D.RHandTrigger) > 0.5) SaveObjects();
         if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) RemoveAllObjects();
-        if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch)) LoadObjects();
     }
 
     private void updateRemoveHighlight() {
@@ -185,12 +187,40 @@ public class BuilderService : MonoBehaviour {
             Destroy(пробоина);
         пробоины.Clear();
     }
+    
+    public void PopulateReadyStagesMenu() {
+        // очистить старые кнопки
+        foreach (Transform child in readyStagesContainer) {
+            Destroy(child.gameObject);
+        }
 
-    public void LoadObjects() {
+        string[] files = Directory.GetFiles(Application.persistentDataPath, "*.json");
+        foreach (string file in files) {
+            string stageName = Path.GetFileNameWithoutExtension(file);
+            GameObject btn = Instantiate(installStageButtonPrefub, readyStagesContainer);
+
+            // подменяем label
+            var label = btn.GetComponentInChildren<TMP_Text>();
+            if (label != null) label.text = stageName;
+
+            // вешаем onClick
+            var toggle = btn.GetComponentInChildren<UnityEngine.UI.Toggle>();
+            if (toggle != null) {
+                toggle.onValueChanged.AddListener(isOn => {
+                    if (isOn) LoadObjects(stageName);
+                });
+            }
+        }
+    }
+
+    public void LoadObjects(string fileName) {
         RemoveAllObjects();
 
-        string path = Application.persistentDataPath + "/saveData.json";
-        if (!File.Exists(path)) return;
+        string path = Path.Combine(Application.persistentDataPath, fileName + ".json");
+        if (!File.Exists(path)) {
+            Debug.LogWarning($"Файл '{fileName}' не найден");
+            return;
+        }
 
         string json = File.ReadAllText(path);
         ObjectDataList wrapper = JsonUtility.FromJson<ObjectDataList>(json);
