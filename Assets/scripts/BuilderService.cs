@@ -20,6 +20,7 @@ public class BuilderService : MonoBehaviour {
     public GameObject wallPrefab;
 
     [SerializeField] private Transform readyStagesContainer;
+    [SerializeField] private Transform stageRoot;
     public GameObject installStageButtonPrefub;
 
     [SerializeField] private RayInteractor rayInteractor;
@@ -169,7 +170,10 @@ public class BuilderService : MonoBehaviour {
 
         objectDataList.Clear();
         foreach (GameObject obj in установленныеМишени) {
-            objectDataList.Add(new ObjectData(obj.name, obj.transform.position, obj.transform.rotation));
+            // позиция и поворот ОТНОСИТЕЛЬНО stageRoot
+            Vector3 localPos = stageRoot.InverseTransformPoint(obj.transform.position);
+            Quaternion localRot = Quaternion.Inverse(stageRoot.rotation) * obj.transform.rotation;
+            objectDataList.Add(new ObjectData(obj.name, localPos, localRot));
         }
         ObjectDataList wrapper = new ObjectDataList { objectDataList = objectDataList };
         File.WriteAllText(path, JsonUtility.ToJson(wrapper));
@@ -222,6 +226,8 @@ public class BuilderService : MonoBehaviour {
             return;
         }
 
+        PlaceStageRootInFrontOfPlayer();
+
         string json = File.ReadAllText(path);
         ObjectDataList wrapper = JsonUtility.FromJson<ObjectDataList>(json);
         if (wrapper.objectDataList != null) objectDataList = wrapper.objectDataList;
@@ -231,7 +237,10 @@ public class BuilderService : MonoBehaviour {
                 ? data.prefabName[..^7]
                 : data.prefabName;
             if (prefabMap.TryGetValue(baseName, out GameObject prefab)) {
-                установленныеМишени.Add(Object.Instantiate(prefab, data.position, data.rotation));
+                GameObject obj = Instantiate(prefab, stageRoot);
+                obj.transform.localPosition = data.position;
+                obj.transform.localRotation = data.rotation;
+                установленныеМишени.Add(obj);
             } else {
                 Debug.LogWarning("Prefab not found in map: " + data.prefabName);
             }
@@ -280,5 +289,13 @@ public class BuilderService : MonoBehaviour {
         if (on) mpb.SetColor("_BaseColor", new Color(1f, 0.3f, 0.3f, 1f));
         foreach (var r in obj.GetComponentsInChildren<Renderer>())
             r.SetPropertyBlock(mpb);
+    }
+    
+    private void PlaceStageRootInFrontOfPlayer() {
+        Transform cam = Camera.main.transform;
+        Vector3 forward = new Vector3(cam.forward.x, 0, cam.forward.z).normalized;
+        stageRoot.position = cam.position + forward * 2f;
+        stageRoot.position = new Vector3(stageRoot.position.x, 0f, stageRoot.position.z); // на пол
+        stageRoot.rotation = Quaternion.LookRotation(-forward); // лицом к игроку
     }
 }

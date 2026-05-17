@@ -28318,6 +28318,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 496759246}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &704465201
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 704465202}
+  m_Layer: 0
+  m_Name: StageRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &704465202
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 704465201}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.02987, y: 0.553, z: -0.08723}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -39903,6 +39934,7 @@ MonoBehaviour:
   wallPreview: {fileID: 2909718853566039112, guid: d47d2c3385eaf984ca5b00bc0d56e56c, type: 3}
   wallPrefab: {fileID: 7383469191773269311, guid: 263366030ddb0e949b34971a5a566a01, type: 3}
   readyStagesContainer: {fileID: 954217042}
+  stageRoot: {fileID: 704465202}
   installStageButtonPrefub: {fileID: 4102898763052618297, guid: 5292db714b0f87045a7dfd9be93b1be5, type: 3}
   rayInteractor: {fileID: 849522477}
   currentPreview: {fileID: 5456522116536683071, guid: 37c47f9928e3fef4bb9a9ffaafab5526, type: 3}
@@ -122513,3 +122545,4 @@ SceneRoots:
   - {fileID: 1133289564}
   - {fileID: 32194107}
   - {fileID: 92198296}
+  - {fileID: 704465202}
