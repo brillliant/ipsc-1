@@ -62,6 +62,8 @@ public class BuilderService : MonoBehaviour {
         } else if (competitionModeService.stateEnum == StateEnum.Remove) {
             updateRemoveHighlight();
             tryRemoveHovered();
+        } else if (competitionModeService.stateEnum == StateEnum.MoveStage) {
+            moveStage();
         } else {
             clearHoverHighlight();
         }
@@ -246,6 +248,8 @@ public class BuilderService : MonoBehaviour {
                 Debug.LogWarning("Prefab not found in map: " + data.prefabName);
             }
         }
+        
+        competitionModeService.stateEnum = StateEnum.MoveStage;
     }
 
     private void placeATarget(GameObject preview, GameObject prefab) {
@@ -303,5 +307,49 @@ public class BuilderService : MonoBehaviour {
 
         stageRoot.position = new Vector3(xzTarget.x, floorY, xzTarget.z);
         stageRoot.rotation = Quaternion.LookRotation(-forward);
+    }
+    
+    private void moveStage() {
+        if (rayInteractor.State != InteractorState.Normal) return;
+
+        Ray ray = rayInteractor.Ray;
+        if (Physics.Raycast(ray, out RaycastHit hit)
+            && !hit.collider.gameObject.name.Equals("emptyObjectForCollider")
+            && !hit.collider.gameObject.name.Equals("Glock17")
+            && !hit.collider.transform.IsChildOf(stageRoot)) {
+
+            // двигаем так, чтобы геометрический центр стейджа оказался в hit.point
+            Vector3 center = GetStageCenter();
+            Vector3 xzOffset = new Vector3(center.x - stageRoot.position.x, 0f, center.z - stageRoot.position.z);
+            stageRoot.position = new Vector3(hit.point.x - xzOffset.x, hit.point.y, hit.point.z - xzOffset.z);
+
+            // вращение вокруг геометрического центра (он теперь в hit.point)
+            if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft, OVRInput.Controller.RTouch))
+                stageRoot.RotateAround(hit.point, Vector3.up, -15f);
+            if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickRight, OVRInput.Controller.RTouch))
+                stageRoot.RotateAround(hit.point, Vector3.up, 15f);
+
+            // подтвердить и выйти из режима
+            if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch)) {
+                competitionModeService.stateEnum = StateEnum.Idle;
+            }
+        }
+    }
+
+    private Vector3 GetStageCenter() {
+        if (установленныеМишени.Count == 0) return stageRoot.position;
+
+        Vector3 min = Vector3.positiveInfinity;
+        Vector3 max = Vector3.negativeInfinity;
+        foreach (var obj in установленныеМишени) {
+            Vector3 p = obj.transform.position;
+            min = Vector3.Min(min, p);
+            max = Vector3.Max(max, p);
+        }
+        return (min + max) / 2f;
+    }
+    
+    public void setMoveStageMode() {
+        competitionModeService.stateEnum = StateEnum.MoveStage;
     }
 }

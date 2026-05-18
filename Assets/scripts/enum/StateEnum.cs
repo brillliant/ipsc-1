@@ -5,5 +5,6 @@ public enum StateEnum {
     Barrel,
     Wall,
     Remove,
+    MoveStage,
     StageRun
 }
