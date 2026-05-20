@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using Object = UnityEngine.Object;
 
 public class BuilderService : MonoBehaviour {
@@ -21,7 +22,11 @@ public class BuilderService : MonoBehaviour {
 
     [SerializeField] private Transform readyStagesContainer;
     [SerializeField] private Transform stageRoot;
-    public GameObject installStageButtonPrefub;
+    
+    [SerializeField] private GameObject deleteConfirmDialog;
+    private string stageToDelete;
+    
+    public GameObject loadStageButtonPrefub;
 
     [SerializeField] private RayInteractor rayInteractor;
 
@@ -29,7 +34,7 @@ public class BuilderService : MonoBehaviour {
     private readonly List<GameObject> установленныеМишени = new List<GameObject>();
     public readonly List<GameObject> пробоины = new List<GameObject>();
 
-    public GameObject currentPreview;
+    private GameObject currentPreview;
     private List<ObjectData> objectDataList = new List<ObjectData>();
     private bool triggerPressed;
     private GameObject hoveredObject;
@@ -169,20 +174,29 @@ public class BuilderService : MonoBehaviour {
         }
 
         saveNameDialog.SetActive(false);
+
+        // отвязываем от stageRoot, чтобы их world-позиции не сдвинулись при движении stageRoot
+        foreach (var obj in установленныеМишени)
+            obj.transform.SetParent(null);
+
         PlaceStageRootInFrontOfPlayer();
 
         objectDataList.Clear();
         foreach (GameObject obj in установленныеМишени) {
-            // позиция и поворот ОТНОСИТЕЛЬНО stageRoot
             Vector3 localPos = stageRoot.InverseTransformPoint(obj.transform.position);
             Quaternion localRot = Quaternion.Inverse(stageRoot.rotation) * obj.transform.rotation;
             objectDataList.Add(new ObjectData(obj.name, localPos, localRot));
         }
+
+        // возвращаем обратно под stageRoot
+        foreach (var obj in установленныеМишени)
+            obj.transform.SetParent(stageRoot);
         ObjectDataList wrapper = new ObjectDataList { objectDataList = objectDataList };
         File.WriteAllText(path, JsonUtility.ToJson(wrapper));
+        PopulateReadyStagesMenu();
     }
 
-    private void RemoveAllObjects() {
+    public void RemoveAllObjects() {
         foreach (GameObject obj in установленныеМишени)
             Destroy(obj);
         установленныеМишени.Clear();
@@ -204,7 +218,7 @@ public class BuilderService : MonoBehaviour {
         string[] files = Directory.GetFiles(Application.persistentDataPath, "*.json");
         foreach (string file in files) {
             string stageName = Path.GetFileNameWithoutExtension(file);
-            GameObject btn = Instantiate(installStageButtonPrefub, readyStagesContainer);
+            GameObject btn = Instantiate(loadStageButtonPrefub, readyStagesContainer);
 
             // подменяем label
             var label = btn.GetComponentInChildren<TMP_Text>();
@@ -217,7 +231,31 @@ public class BuilderService : MonoBehaviour {
                     if (isOn) LoadObjects(stageName);
                 });
             }
+            
+            var deleteBtn = btn.transform.Find("DeleteButton")?.GetComponent<UnityEngine.UI.Button>();
+            if (deleteBtn != null) {
+                deleteBtn.onClick.AddListener(() => RequestDeleteStage(stageName));
+            }
         }
+    }
+    
+    public void RequestDeleteStage(string fileName) {
+        stageToDelete = fileName;
+        deleteConfirmDialog.SetActive(true);
+    }
+    
+    public void ConfirmDeleteStage() {
+        if (string.IsNullOrEmpty(stageToDelete)) return;
+        string path = Path.Combine(Application.persistentDataPath, stageToDelete + ".json");
+        if (File.Exists(path)) File.Delete(path);
+        stageToDelete = null;
+        deleteConfirmDialog.SetActive(false);
+        PopulateReadyStagesMenu();
+    }
+
+    public void CancelDeleteStage() {
+        stageToDelete = null;
+        deleteConfirmDialog.SetActive(false);
     }
 
     public void LoadObjects(string fileName) {
@@ -254,7 +292,7 @@ public class BuilderService : MonoBehaviour {
 
     private void placeATarget(GameObject preview, GameObject prefab) {
         triggerPressed = true;
-        установленныеМишени.Add(Object.Instantiate(prefab, preview.transform.position, preview.transform.rotation));
+        установленныеМишени.Add(Object.Instantiate(prefab, preview.transform.position, preview.transform.rotation, stageRoot));
     }
 
     private void rotateLeft() {
@@ -325,9 +363,9 @@ public class BuilderService : MonoBehaviour {
 
             // вращение вокруг геометрического центра (он теперь в hit.point)
             if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft, OVRInput.Controller.RTouch))
-                stageRoot.RotateAround(hit.point, Vector3.up, -15f);
+                stageRoot.RotateAround(hit.point, Vector3.up, -5f);
             if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickRight, OVRInput.Controller.RTouch))
-                stageRoot.RotateAround(hit.point, Vector3.up, 15f);
+                stageRoot.RotateAround(hit.point, Vector3.up, 5f);
 
             // подтвердить и выйти из режима
             if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch)) {

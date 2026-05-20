@@ -887,11 +887,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 1
   windowsGamepadBackendHint: 0
-  cloudProjectId: 5b2095c3-4f51-403b-a37e-2a4cb9bd9535
+  cloudProjectId: 0f21726d-0125-4203-af2b-30cc2d9e00fe
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: OVR-XR2
-  organizationId: udezimiro
+  projectName: My project
+  organizationId: pashkelevich
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}

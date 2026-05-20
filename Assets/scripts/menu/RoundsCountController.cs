@@ -4,7 +4,7 @@ public class RoundsCountController : MonoBehaviour {
     
     private CompetitionModeService competitionModeService;
 
-    void Start() {
+    void Awake() {
         competitionModeService = GetComponent<CompetitionModeService>();
     }
     
