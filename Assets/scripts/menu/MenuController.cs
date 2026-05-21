@@ -46,6 +46,9 @@ public class MenuController : MonoBehaviour {
 
         rayRight = rayRightTransform.gameObject;
         competitionModeService = GetComponent<CompetitionModeService>();
+
+        menu.SetActive(false);
+        setRayStatus(false);
     }
     
     private void setRayStatus(bool status) {

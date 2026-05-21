@@ -11,11 +11,20 @@ public class FloorScript : MonoBehaviour {
     [SerializeField] public bool highlight = true;                // вкл/выкл в рантайме
     [SerializeField] private Material effectMaterial;              // присвой сюда RoomBoxEffects из MRUK
 
+    [Header("Floor Calibration")]
+    [SerializeField] private GameObject resetFloorMessage;
+
     private GameObject megaFloor;
     private MeshRenderer meshRenderer;
     private Material runtimeMat;
 
+    private OVRCameraRig ovrCameraRig;
+    public bool IsCalibrating { get; private set; }
+    private float hideTime = -1f;
+
     void Start() {
+        ovrCameraRig = FindAnyObjectByType<OVRCameraRig>();
+
         MRUKRoom room = MRUK.Instance?.GetCurrentRoom();
         if (room == null) { CreateAt(Vector3.zero, Vector3.up); return; }
 
@@ -52,10 +61,34 @@ public class FloorScript : MonoBehaviour {
         ApplyHighlight();
     }
 
-    void Update() => ApplyHighlight();
+    void Update() {
+        TrackControllerDuringCalibration();
+        ApplyHighlight();
+    }
+
+    private void TrackControllerDuringCalibration() {
+        if (!IsCalibrating || ovrCameraRig == null || megaFloor == null) return;
+        Vector3 pos = megaFloor.transform.position;
+        megaFloor.transform.position = new Vector3(pos.x, ovrCameraRig.rightHandAnchor.position.y - 0.03f, pos.z);
+    }
+
+    public void StartCalibration() {
+        if (megaFloor == null) return;
+        IsCalibrating = true;
+        hideTime = -1f;
+        resetFloorMessage?.SetActive(true);
+    }
+
+    public void ConfirmCalibration() {
+        if (!IsCalibrating) return;
+        IsCalibrating = false;
+        hideTime = Time.time + 2f;
+        resetFloorMessage?.SetActive(false);
+    }
 
     private void ApplyHighlight() {
         if (meshRenderer == null) return;
-        meshRenderer.enabled = highlight && runtimeMat != null;
+        bool calibrationVisible = IsCalibrating || (hideTime > 0f && Time.time < hideTime);
+        meshRenderer.enabled = calibrationVisible || (highlight && runtimeMat != null);
     }
 }
