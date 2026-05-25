@@ -39,7 +39,7 @@ public class BuilderService : MonoBehaviour {
     private bool triggerPressed;
     private GameObject hoveredObject;
     private Dictionary<string, GameObject> prefabMap;
-    public GameObject saveNameDialog;
+    public GameObject saveStageDialog;
     
     [SerializeField] private TMP_InputField nameField;
 
@@ -51,6 +51,15 @@ public class BuilderService : MonoBehaviour {
             { barrelPrefab.name,           barrelPrefab           },
             { wallPrefab.name,             wallPrefab             },
         };
+    }
+    
+    private void OnDisable() {
+        competitionModeService.stateEnum = StateEnum.Idle;
+    }
+    
+    public void cancelSaveStage() {
+        nameField.text = "";
+        saveStageDialog.SetActive(false);
     }
 
     void Update() {
@@ -159,7 +168,7 @@ public class BuilderService : MonoBehaviour {
     }
 
     public void showSaveDialog() {
-        saveNameDialog.SetActive(true);
+        saveStageDialog.SetActive(true);
     } 
 
     public void SaveObjects() {
@@ -173,7 +182,7 @@ public class BuilderService : MonoBehaviour {
             return;
         }
 
-        saveNameDialog.SetActive(false);
+        saveStageDialog.SetActive(false);
 
         // отвязываем от stageRoot, чтобы их world-позиции не сдвинулись при движении stageRoot
         foreach (var obj in установленныеМишени)
@@ -194,6 +203,7 @@ public class BuilderService : MonoBehaviour {
         ObjectDataList wrapper = new ObjectDataList { objectDataList = objectDataList };
         File.WriteAllText(path, JsonUtility.ToJson(wrapper));
         PopulateReadyStagesMenu();
+        nameField.text = "";
     }
 
     public void RemoveAllObjects() {
