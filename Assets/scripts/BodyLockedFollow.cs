@@ -2,59 +2,69 @@ using UnityEngine;
 
 public class BodyLockedFollow : MonoBehaviour {
     [Header("Refs")]
-    [SerializeField] private Transform head;           // CenterEyeAnchor
+    [SerializeField] private Transform head;
 
-    [Header("Spawn position (relative to head)")]
+    [Header("Spawn position")]
     [SerializeField] private float distance       = 0.45f;
     [SerializeField] private float rightOffset    = 0.6f;
-    [SerializeField] private float verticalOffset = -0.2f;   // ниже шлема, метры
+    [SerializeField] private float verticalOffset = -0.6f;
     [SerializeField] private float rotationOffset = -52f;
 
-    [Header("Follow")]
-    [SerializeField] private float followSpeed = 5f;
-    [SerializeField] private float deadZone    = 0.25f;
+    [Header("Dead zones")]
+    [SerializeField] private float xzDeadZone      = 0.75f;
+    [SerializeField] private float verticalDeadZone = 0.3f;
+    [SerializeField] private float settleDelay      = 0.6f;
 
-    private Vector3 _worldOffset;
-    private Vector3 _targetPos;
+    private Vector3 _lastDesired;
+    private float   _outsideZoneTime = -1f;
     private bool    _ready;
 
-    void OnEnable() {
+    void Awake() {
         if (head == null && Camera.main != null) head = Camera.main.transform;
-        SnapToSpawnPosition();
     }
 
     void LateUpdate() {
         if (!_ready || head == null) return;
 
-        Vector3 desired = head.position + _worldOffset;
-        // Y тоже из _worldOffset — а в нём зашита разница (head.y - 0.2),
-        // поэтому при наклоне/приседании меню следует за головой по высоте автоматически.
+        Vector3 bodyForward = new Vector3(head.forward.x, 0, head.forward.z).normalized;
+        Vector3 desired     = head.position + bodyForward * distance + head.right * rightOffset;
+        desired.y           = head.position.y + verticalOffset;
 
-        if (Vector3.Distance(_targetPos, desired) > deadZone) {
-            _targetPos = desired;
+        Vector3 menuPos   = transform.position;
+        bool xzOutside    = Vector2.Distance(new Vector2(menuPos.x, menuPos.z), new Vector2(desired.x, desired.z)) > xzDeadZone;
+        bool yOutside     = Mathf.Abs(desired.y - menuPos.y) > verticalDeadZone;
+        bool desiredStable = Vector3.Distance(desired, _lastDesired) < 0.05f;
+
+        if ((xzOutside || yOutside) && desiredStable) {
+            if (_outsideZoneTime < 0f) _outsideZoneTime = Time.time;
+            else if (Time.time - _outsideZoneTime >= settleDelay) {
+                SnapToSpawnPosition();
+                _outsideZoneTime = -1f;
+            }
+        } else {
+            _outsideZoneTime = -1f;
         }
-        transform.position = Vector3.Lerp(transform.position, _targetPos, Time.deltaTime * followSpeed);
+
+        _lastDesired = desired;
     }
 
     public void SnapToSpawnPosition() {
         if (head == null && Camera.main != null) head = Camera.main.transform;
         if (head == null) return;
 
-        Vector3 spawnPos = head.position + head.forward * distance;
-        spawnPos += head.right * rightOffset;
-        spawnPos.y = head.position.y + verticalOffset;     // ← высота от головы
+        Vector3 bodyForward = new Vector3(head.forward.x, 0, head.forward.z).normalized;
+        Vector3 spawnPos    = head.position + bodyForward * distance + head.right * rightOffset;
+        spawnPos.y          = head.position.y + verticalOffset;
 
         Vector3 lookDir = head.position - spawnPos;
         lookDir.y = 0;
         if (lookDir.sqrMagnitude < 0.0001f) return;
 
-        Quaternion spawnRot = Quaternion.LookRotation(-lookDir.normalized);
-        spawnRot *= Quaternion.Euler(0, rotationOffset, 0);
+        _ready = true;
 
-        _worldOffset = spawnPos - head.position;
-        _targetPos   = spawnPos;
-        _ready       = true;
-
-        transform.SetPositionAndRotation(spawnPos, spawnRot);
+        transform.SetPositionAndRotation(
+            spawnPos,
+            Quaternion.LookRotation(-lookDir.normalized) * Quaternion.Euler(0, rotationOffset, 0)
+        );
     }
 }

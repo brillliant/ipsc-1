@@ -16,12 +16,9 @@ public class MenuController : MonoBehaviour {
     public TextMeshProUGUI menuItem5_barrel;
     public TextMeshProUGUI menuItem6_wall;
 
-    private readonly float distance = 0.45f;
-    private readonly float verticalOffset = -0.2f;
-    private readonly float rightOffset = 0.6f;
-    private readonly float rotationOffset = -52f;
 
     private CompetitionModeService competitionModeService;
+    private BodyLockedFollow bodyLockedFollow;
     
     private Action onClearPreview;
     private List<TextMeshProUGUI> menuList;
@@ -46,6 +43,7 @@ public class MenuController : MonoBehaviour {
 
         rayRight = rayRightTransform.gameObject;
         competitionModeService = GetComponent<CompetitionModeService>();
+        bodyLockedFollow = menu.GetComponent<BodyLockedFollow>();
 
         menu.SetActive(false);
         setRayStatus(false);
@@ -82,7 +80,8 @@ public class MenuController : MonoBehaviour {
         setRayStatus(willBeActive);
         pistol.SetActive(!willBeActive);
 
-        if (willBeActive) positionMenuInFrontOfPlayer();
+        if (willBeActive) bodyLockedFollow.SnapToSpawnPosition();
+
     }
 
     public void chooseIPSClowTarget() {
@@ -110,19 +109,5 @@ public class MenuController : MonoBehaviour {
         competitionModeService.stateEnum = StateEnum.Remove;
     }
     
-    private void positionMenuInFrontOfPlayer() {
-        Transform head = Camera.main.transform;
 
-        Vector3 spawnPos = head.position + head.forward * distance;
-        spawnPos.y = head.position.y + verticalOffset;
-        spawnPos += head.right * rightOffset;
-
-        Vector3 lookDir = head.position - spawnPos;
-        lookDir.y = 0;
-        Quaternion spawnRot = Quaternion.LookRotation(-lookDir.normalized);
-        spawnRot *= Quaternion.Euler(0, rotationOffset, 0);
-
-        menu.transform.position = spawnPos;
-        menu.transform.rotation = spawnRot;
-    }
 }
