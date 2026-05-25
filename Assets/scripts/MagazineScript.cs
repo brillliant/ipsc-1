@@ -17,7 +17,6 @@ public class MagazineScript : MonoBehaviour {
     
     public GameObject handGrabInteraction;
 
-    private Boolean enteredPoint1;
     private Boolean readyToLock;
     private Boolean magazineIsSetUp;
     private String magazineId = null;
@@ -41,12 +40,10 @@ public class MagazineScript : MonoBehaviour {
         
         String magazineIdNumber = Random.Range(0, 100).ToString();
         if (transform.parent.name == "MagazineRoot") {
-            enteredPoint1 = true;
             magazineIsSetUp = true;
             readyToLock = false;
             magazineId = "FromPistol_" + magazineIdNumber;
         } else {
-            enteredPoint1 = false;
             magazineIsSetUp = false;
             readyToLock = true;
             magazineId = "FromBag_" + magazineIdNumber;
@@ -100,14 +97,12 @@ public class MagazineScript : MonoBehaviour {
         transform.SetParent(null);
         
         isMagazineMovingInGun = false;
-        enteredPoint1 = false;
         handGrabInteraction.SetActive(true);
         rb.constraints = RigidbodyConstraints.None;
         pistolScript.removeMagazineLink();
     }
     
     public void startInsertion() {
-        enteredPoint1 = true;
         handGrabInteraction.SetActive(false);
         mainScript.isHandKeepingMagazine = false;
         isMagazineMovingInGun = true;

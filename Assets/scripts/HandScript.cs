@@ -12,8 +12,6 @@ public class HandScript : MonoBehaviour {
     
     private GameObject magazine;
     
-    private bool isColor1Active = true;
-
     void Awake() {
         if (pistol == null) {
             pistol = GameObject.Find("Glock17");
