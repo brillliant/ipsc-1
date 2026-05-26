@@ -361,27 +361,41 @@ public class BuilderService : MonoBehaviour {
         if (rayInteractor.State != InteractorState.Normal) return;
 
         Ray ray = rayInteractor.Ray;
-        if (Physics.Raycast(ray, out RaycastHit hit)
-            && !hit.collider.gameObject.name.Equals("emptyObjectForCollider")
-            && !hit.collider.gameObject.name.Equals("Glock17")
-            && !hit.collider.transform.IsChildOf(stageRoot)) {
+        if (!tryRaycastIgnoringStage(ray, out RaycastHit hit)) return;
 
-            // двигаем так, чтобы геометрический центр стейджа оказался в hit.point
-            Vector3 center = GetStageCenter();
-            Vector3 xzOffset = new Vector3(center.x - stageRoot.position.x, 0f, center.z - stageRoot.position.z);
-            stageRoot.position = new Vector3(hit.point.x - xzOffset.x, hit.point.y, hit.point.z - xzOffset.z);
+        // двигаем так, чтобы геометрический центр стейджа оказался в hit.point
+        Vector3 center = GetStageCenter();
+        Vector3 xzOffset = new Vector3(center.x - stageRoot.position.x, 0f, center.z - stageRoot.position.z);
+        stageRoot.position = new Vector3(hit.point.x - xzOffset.x, hit.point.y, hit.point.z - xzOffset.z);
 
-            // вращение вокруг геометрического центра (он теперь в hit.point)
-            if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft, OVRInput.Controller.RTouch))
-                stageRoot.RotateAround(hit.point, Vector3.up, -5f);
-            if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickRight, OVRInput.Controller.RTouch))
-                stageRoot.RotateAround(hit.point, Vector3.up, 5f);
+        // вращение вокруг геометрического центра (он теперь в hit.point)
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft, OVRInput.Controller.RTouch))
+            stageRoot.RotateAround(hit.point, Vector3.up, -5f);
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickRight, OVRInput.Controller.RTouch))
+            stageRoot.RotateAround(hit.point, Vector3.up, 5f);
 
-            // подтвердить и выйти из режима
-            if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch)) {
-                competitionModeService.stateEnum = StateEnum.Idle;
+        // подтвердить и выйти из режима
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch)) {
+            competitionModeService.stateEnum = StateEnum.Idle;
+        }
+    }
+
+    private bool tryRaycastIgnoringStage(Ray ray, out RaycastHit nearest) {
+        nearest = default;
+        RaycastHit[] hits = Physics.RaycastAll(ray);
+        float bestDist = float.PositiveInfinity;
+        bool found = false;
+        foreach (var h in hits) {
+            string n = h.collider.gameObject.name;
+            if (n.Equals("emptyObjectForCollider") || n.Equals("Glock17")) continue;
+            if (h.collider.transform.IsChildOf(stageRoot)) continue;
+            if (h.distance < bestDist) {
+                bestDist = h.distance;
+                nearest = h;
+                found = true;
             }
         }
+        return found;
     }
 
     private Vector3 GetStageCenter() {
