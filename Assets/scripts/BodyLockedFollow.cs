@@ -11,7 +11,7 @@ public class BodyLockedFollow : MonoBehaviour {
     [SerializeField] private float rotationOffset = -52f;
 
     [Header("Dead zones")]
-    [SerializeField] private float xzDeadZone      = 0.75f;
+    [SerializeField] private float xzDeadZone      = 0.9f;
     [SerializeField] private float verticalDeadZone = 0.3f;
     [SerializeField] private float settleDelay      = 0.6f;
 
