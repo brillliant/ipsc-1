@@ -45,6 +45,10 @@ public class Main : MonoBehaviour {
         competitionModeService.init(pistolScript);
 
         builderService = GetComponent<BuilderService>();
+        
+        if (OVRManager.display != null && OVRManager.display.displayFrequenciesAvailable != null) {
+            OVRManager.display.displayFrequency = 90.0f;
+        }
     }
 
     void Update() {
