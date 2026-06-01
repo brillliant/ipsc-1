@@ -13,19 +13,16 @@ public class BulletScript : MonoBehaviour {
     }
     
     private void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject.name == "TargetMain") {
-            ContactPoint contact = collision.contacts[0];
-            Vector3 hitPoint = contact.point;
-            Quaternion hitRotation = Quaternion.FromToRotation(Vector3.back, contact.normal);
+        ContactPoint contact = collision.contacts[0];
+        Vector3 hitPoint = contact.point;
+        Quaternion hitRotation = Quaternion.FromToRotation(Vector3.back, contact.normal);
 
-            float randomValue = Random.Range((float)min, (float)max);
-            
-            // Смещение по направлению нормали для предотвращения Z-fighting
-            Vector3 offset = contact.normal * randomValue;
-            Vector3 adjustedHitPoint = hitPoint + offset;
-            
-            mainScript.builderService.пробоины.Add(Instantiate(bulletHolePrefab, adjustedHitPoint, hitRotation));
-        }
+        float randomValue = Random.Range((float)min, (float)max);
+
+        Vector3 offset = contact.normal * randomValue;
+        Vector3 adjustedHitPoint = hitPoint + offset;
+
+        mainScript.builderService.пробоины.Add(Instantiate(bulletHolePrefab, adjustedHitPoint, hitRotation));
         Destroy(gameObject);
     }
 }
