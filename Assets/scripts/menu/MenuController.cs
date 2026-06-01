@@ -94,6 +94,11 @@ public class MenuController : MonoBehaviour {
         competitionModeService.stateEnum = StateEnum.IPSC_noshot;
     }
 
+    public void chooseUspsaTarget() {
+        onClearPreview();
+        competitionModeService.stateEnum = StateEnum.USPSA_target;
+    }
+
     public void chooseBarrel() {
         onClearPreview();
         competitionModeService.stateEnum = StateEnum.Barrel;
