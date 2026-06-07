@@ -230,25 +230,40 @@ public class BuilderService : MonoBehaviour {
             Destroy(child.gameObject);
         }
 
+        HashSet<string> userStageNames = new HashSet<string>();
+
         string[] files = Directory.GetFiles(Application.persistentDataPath, "*.json");
         foreach (string file in files) {
             string stageName = Path.GetFileNameWithoutExtension(file);
-            GameObject btn = Instantiate(loadStageButtonPrefub, readyStagesContainer);
+            userStageNames.Add(stageName);
+            AddStageButton(stageName, isPreset: false);
+        }
 
-            // подменяем label
-            var label = btn.GetComponentInChildren<TMP_Text>();
-            if (label != null) label.text = stageName;
+        TextAsset[] presets = Resources.LoadAll<TextAsset>("PresetStages");
+        foreach (TextAsset preset in presets) {
+            if (userStageNames.Contains(preset.name)) continue;
+            AddStageButton(preset.name, isPreset: true);
+        }
+    }
 
-            // вешаем onClick
-            var toggle = btn.GetComponentInChildren<UnityEngine.UI.Toggle>();
-            if (toggle != null) {
-                toggle.onValueChanged.AddListener(isOn => {
-                    if (isOn) LoadObjects(stageName);
-                });
-            }
-            
-            var deleteBtn = btn.transform.Find("DeleteButton")?.GetComponent<UnityEngine.UI.Button>();
-            if (deleteBtn != null) {
+    private void AddStageButton(string stageName, bool isPreset) {
+        GameObject btn = Instantiate(loadStageButtonPrefub, readyStagesContainer);
+
+        var label = btn.GetComponentInChildren<TMP_Text>();
+        if (label != null) label.text = stageName;
+
+        var toggle = btn.GetComponentInChildren<UnityEngine.UI.Toggle>();
+        if (toggle != null) {
+            toggle.onValueChanged.AddListener(isOn => {
+                if (isOn) LoadObjects(stageName);
+            });
+        }
+
+        var deleteBtn = btn.transform.Find("DeleteButton")?.GetComponent<UnityEngine.UI.Button>();
+        if (deleteBtn != null) {
+            if (isPreset) {
+                deleteBtn.gameObject.SetActive(false);
+            } else {
                 deleteBtn.onClick.AddListener(() => RequestDeleteStage(stageName));
             }
         }
@@ -276,15 +291,21 @@ public class BuilderService : MonoBehaviour {
     public void LoadObjects(string fileName) {
         RemoveAllObjects();
 
+        string json;
         string path = Path.Combine(Application.persistentDataPath, fileName + ".json");
-        if (!File.Exists(path)) {
-            Debug.LogWarning($"Файл '{fileName}' не найден");
-            return;
+        if (File.Exists(path)) {
+            json = File.ReadAllText(path);
+        } else {
+            TextAsset preset = Resources.Load<TextAsset>("PresetStages/" + fileName);
+            if (preset == null) {
+                Debug.LogWarning($"Файл '{fileName}' не найден");
+                return;
+            }
+            json = preset.text;
         }
 
         PlaceStageRootInFrontOfPlayer();
 
-        string json = File.ReadAllText(path);
         ObjectDataList wrapper = JsonUtility.FromJson<ObjectDataList>(json);
         if (wrapper.objectDataList != null) objectDataList = wrapper.objectDataList;
 
