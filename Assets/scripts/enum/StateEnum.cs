@@ -7,5 +7,6 @@ public enum StateEnum {
     Wall,
     Remove,
     MoveStage,
+    DrawShootingZone,
     StageRun
 }

@@ -16,8 +16,15 @@ namespace DefaultNamespace {
     }
     
     [System.Serializable]
+    public class ShootingZoneData {
+        public List<Vector3> points;   // локальные относительно stageRoot
+        public bool closed;
+    }
+
+    [System.Serializable]
     public class ObjectDataList
     {
         public List<ObjectData> objectDataList;
+        public List<ShootingZoneData> shootingZones;
     }
 }

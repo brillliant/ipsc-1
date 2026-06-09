@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using Meta.XR.MRUtilityKit;
 
@@ -76,7 +77,9 @@ public class FloorScript : MonoBehaviour {
         if (megaFloor == null) return;
         IsCalibrating = true;
         hideTime = -1f;
-        resetFloorMessage?.SetActive(true);
+        var label = resetFloorMessage.GetComponentInChildren<TMP_Text>(true);
+        if (label != null) label.text = "Move controller\nand click to set level";
+        resetFloorMessage.SetActive(true);
     }
 
     public void ConfirmCalibration() {
