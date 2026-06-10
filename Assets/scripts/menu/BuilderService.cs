@@ -90,6 +90,11 @@ public class BuilderService : MonoBehaviour {
         saveStageDialog.SetActive(false);
     }
 
+    // сдвинуть весь стейдж по высоте (объекты и линии — дети stageRoot, едут вместе)
+    public void ShiftByFloorDelta(float deltaY) {
+        stageRoot.position += Vector3.up * deltaY;
+    }
+
     void Update() {
         if (competitionModeService.isShootMode()) return;
 

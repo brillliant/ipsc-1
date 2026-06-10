@@ -31,10 +31,23 @@ public class CompetitionModeService : MonoBehaviour {
     private float lastShotTime;
 
     private MenuController menuController;
-    private RoundsCountController roundsCountController;
+    private FloorScript floorScript;
     
-    [HideInInspector] public StateEnum stateEnum;
+    private StateEnum _stateEnum;
+    public StateEnum stateEnum {
+        get => _stateEnum;
+        set {
+            _stateEnum = value;
+            if (floorScript != null) floorScript.highlight = isPlacementState(value);
+        }
+    }
     [HideInInspector] public RoundsCount roundsCount;
+
+    // режимы, в которых идёт расстановка → показываем синий пол
+    private static bool isPlacementState(StateEnum s) =>
+        s == StateEnum.IPSC_target || s == StateEnum.IPSC_noshot || s == StateEnum.USPSA_target ||
+        s == StateEnum.Barrel || s == StateEnum.Wall || s == StateEnum.DrawShootingZone ||
+        s == StateEnum.MoveStage;
     
     [SerializeField] Image buttonBackground;
     [SerializeField] TMP_Text buttonLabel;
@@ -49,9 +62,9 @@ public class CompetitionModeService : MonoBehaviour {
     public bool isShootMode() => stateEnum == StateEnum.StageRun;
 
     private void Start() {
-        roundsCountController = GetComponent<RoundsCountController>();
         menuController = GetComponent<MenuController>();;
         pistolScript = GetComponent<PistolScript>();
+        floorScript = GetComponent<FloorScript>();
     }
 
     public void init(PistolScript pistolScript) {

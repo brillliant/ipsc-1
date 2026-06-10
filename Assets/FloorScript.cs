@@ -23,7 +23,11 @@ public class FloorScript : MonoBehaviour {
     public bool IsCalibrating { get; private set; }
     private float hideTime = -1f;
 
+    private BuilderService builderService;
+    private float calibStartY;   // уровень пола на момент начала калибровки
+
     void Start() {
+        builderService = GetComponent<BuilderService>();
         ovrCameraRig = FindAnyObjectByType<OVRCameraRig>();
 
         MRUKRoom room = MRUK.Instance?.GetCurrentRoom();
@@ -77,6 +81,7 @@ public class FloorScript : MonoBehaviour {
         if (megaFloor == null) return;
         IsCalibrating = true;
         hideTime = -1f;
+        calibStartY = megaFloor.transform.position.y;
         var label = resetFloorMessage.GetComponentInChildren<TMP_Text>(true);
         if (label != null) label.text = "Move controller\nand click to set level";
         resetFloorMessage.SetActive(true);
@@ -87,6 +92,11 @@ public class FloorScript : MonoBehaviour {
         IsCalibrating = false;
         hideTime = Time.time + 2f;
         resetFloorMessage?.SetActive(false);
+
+        // на сколько сдвинулся пол — на столько же двигаем установленные объекты
+        float delta = megaFloor.transform.position.y - calibStartY;
+        if (builderService != null && Mathf.Abs(delta) > 0.0001f)
+            builderService.ShiftByFloorDelta(delta);
     }
 
     private void ApplyHighlight() {
