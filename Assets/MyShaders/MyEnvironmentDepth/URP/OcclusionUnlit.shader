@@ -24,6 +24,9 @@ Shader "MyEnvironmentDepth/URP/OcclusionUnlit"
     {
         [MainColor] _BaseColor("Base Color", Color) = (1, 1, 1, 1)
          _BaseMap("Base Map", 2D) = "white"
+        // Карта нормалей — рельеф/рифления зон на картоне мишени
+        [Normal] _BumpMap("Normal Map", 2D) = "bump" {}
+        _BumpScale("Normal Scale", Float) = 1
     }
 
     SubShader
@@ -48,6 +51,8 @@ Shader "MyEnvironmentDepth/URP/OcclusionUnlit"
             #pragma multi_compile _ HARD_OCCLUSION SOFT_OCCLUSION
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            // Освещение: GetMainLight(), SampleSH(), UnpackNormalScale(), GetVertexNormalInputs()
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
             // 2. Include the file with utility functions
             #include "EnvironmentOcclusionURP.hlsl"
@@ -55,6 +60,8 @@ Shader "MyEnvironmentDepth/URP/OcclusionUnlit"
             struct Attributes
             {
                 float4 vertex : POSITION;
+                float3 normal : NORMAL;
+                float4 tangent : TANGENT;
                 float2 uv :TEXCOORD0;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
@@ -63,10 +70,12 @@ Shader "MyEnvironmentDepth/URP/OcclusionUnlit"
             {
                 float4 positionCS : SV_POSITION;
                 float2 uv :TEXCOORD0;
+                half3 normalWS    : TEXCOORD1;
+                half3 tangentWS   : TEXCOORD2;
+                half3 bitangentWS : TEXCOORD3;
                 // 3. This macro adds required data field to the varyings struct
                 //    The number has to be filled with the recent TEXCOORD number + 1
-                //    Or 0 as in this case, if there are no other TEXCOORD fields
-                META_DEPTH_VERTEX_OUTPUT(1)
+                META_DEPTH_VERTEX_OUTPUT(4)
 
                 UNITY_VERTEX_INPUT_INSTANCE_ID
                 // 4. The fragment shader needs to understand to which eye it's currently
@@ -76,10 +85,13 @@ Shader "MyEnvironmentDepth/URP/OcclusionUnlit"
 
             TEXTURE2D(_BaseMap);
             SAMPLER(sampler_BaseMap);
+            TEXTURE2D(_BumpMap);
+            SAMPLER(sampler_BumpMap);
 
             CBUFFER_START(UnityPerMaterial)
                 half4 _BaseColor;
                 float4 _BaseMap_ST;
+                half _BumpScale;
             CBUFFER_END
 
             Varyings vert(Attributes input)
@@ -89,6 +101,12 @@ Shader "MyEnvironmentDepth/URP/OcclusionUnlit"
                 UNITY_TRANSFER_INSTANCE_ID(input, output);
                 output.uv = TRANSFORM_TEX(input.uv, _BaseMap);
                 output.positionCS = TransformObjectToHClip(input.vertex.xyz);
+
+                // Мировые нормаль/тангент/битангент для нормал-маппинга (TBN)
+                VertexNormalInputs normalInput = GetVertexNormalInputs(input.normal, input.tangent);
+                output.normalWS    = normalInput.normalWS;
+                output.tangentWS   = normalInput.tangentWS;
+                output.bitangentWS = normalInput.bitangentWS;
 
                 // 5. World position is required to calculate the occlusions.
                 //    This macro will calculate and set world position value in the output Varyings structure.
@@ -107,6 +125,20 @@ Shader "MyEnvironmentDepth/URP/OcclusionUnlit"
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
                 half4 finalColor = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * _BaseColor;
+
+                // Нормаль из карты нормалей -> в мировое пространство через TBN
+                half3 normalTS = UnpackNormalScale(
+                    SAMPLE_TEXTURE2D(_BumpMap, sampler_BumpMap, input.uv), _BumpScale);
+                half3x3 tbn = half3x3(input.tangentWS, input.bitangentWS, input.normalWS);
+                half3 normalWS = normalize(mul(normalTS, tbn));
+
+                // Дешёвое освещение: главный свет (N·L) + ambient из SH.
+                // Именно оно проявляет рифления зон альфа/дельта.
+                Light mainLight = GetMainLight();
+                half ndotl = saturate(dot(normalWS, mainLight.direction));
+                half3 lighting = mainLight.color * ndotl + SampleSH(normalWS);
+                finalColor.rgb *= lighting;
+
                 // 8. A third macro required to enable occlusions.
                 //    It requires previous macros to be there as well as the naming behind the macro is strict.
                 //    It will enable soft or hard occlusions depending on the current keyword set.
