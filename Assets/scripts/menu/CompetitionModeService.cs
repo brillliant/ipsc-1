@@ -46,8 +46,8 @@ public class CompetitionModeService : MonoBehaviour {
     // режимы, в которых идёт расстановка → показываем синий пол
     private static bool isPlacementState(StateEnum s) =>
         s == StateEnum.IPSC_target || s == StateEnum.IPSC_noshot || s == StateEnum.USPSA_target ||
-        s == StateEnum.Barrel || s == StateEnum.Wall || s == StateEnum.DrawShootingZone ||
-        s == StateEnum.MoveStage;
+        s == StateEnum.USPSA_noshot || s == StateEnum.Barrel || s == StateEnum.Wall ||
+        s == StateEnum.DrawShootingZone || s == StateEnum.MoveStage;
     
     [SerializeField] Image buttonBackground;
     [SerializeField] TMP_Text buttonLabel;

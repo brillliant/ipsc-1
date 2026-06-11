@@ -17,6 +17,8 @@ public class BuilderService : MonoBehaviour {
     public GameObject ipscTargetNoShotPrefab;
     public GameObject uspsaTargetPreview;
     public GameObject uspsaTargetPrefab;
+    public GameObject uspsaTargetNoShotPreview;
+    public GameObject uspsaTargetNoShotPrefab;
     public GameObject barrelPreview;
     public GameObject barrelPrefab;
     public GameObject wallPreview;
@@ -76,6 +78,7 @@ public class BuilderService : MonoBehaviour {
             { ipscTargetPrefab.name,      ipscTargetPrefab      },
             { ipscTargetNoShotPrefab.name, ipscTargetNoShotPrefab },
             { uspsaTargetPrefab.name,      uspsaTargetPrefab      },
+            { uspsaTargetNoShotPrefab.name, uspsaTargetNoShotPrefab },
             { barrelPrefab.name,           barrelPrefab           },
             { wallPrefab.name,             wallPrefab             },
         };
@@ -106,6 +109,8 @@ public class BuilderService : MonoBehaviour {
             buildWith(ipscTargetNoShotPreview, ipscTargetNoShotPrefab);
         } else if (competitionModeService.stateEnum == StateEnum.USPSA_target) {
             buildWith(uspsaTargetPreview, uspsaTargetPrefab);
+        } else if (competitionModeService.stateEnum == StateEnum.USPSA_noshot) {
+            buildWith(uspsaTargetNoShotPreview, uspsaTargetNoShotPrefab);
         } else if (competitionModeService.stateEnum == StateEnum.Barrel) {
             buildWith(barrelPreview, barrelPrefab);
         } else if (competitionModeService.stateEnum == StateEnum.Wall) {

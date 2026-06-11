@@ -8,20 +8,21 @@ public class MenuController : MonoBehaviour {
     public GameObject menu;
     public GameObject camera;
 
-    [Header("Menu Items")]
+    /*[Header("Menu Items")]
     public TextMeshProUGUI menuItem1_target;
     public TextMeshProUGUI menuItem2_shoot;
     public TextMeshProUGUI menuItem3_noShot;
     public TextMeshProUGUI menuItem4_dryFire;
     public TextMeshProUGUI menuItem5_barrel;
-    public TextMeshProUGUI menuItem6_wall;
+    public TextMeshProUGUI menuItem6_wall;*/
 
+    private FloorScript floorScript;
 
     private CompetitionModeService competitionModeService;
     private BodyLockedFollow bodyLockedFollow;
     
     private Action onClearPreview;
-    private List<TextMeshProUGUI> menuList;
+    //private List<TextMeshProUGUI> menuList;
     private GameObject pistol;
     private GameObject rayLeft;
     private GameObject rayRight;
@@ -31,10 +32,10 @@ public class MenuController : MonoBehaviour {
     void Start() {
         pistol = GameObject.Find("Glock17");
 
-        menuList = new List<TextMeshProUGUI> {
+        /*menuList = new List<TextMeshProUGUI> {
             menuItem1_target, menuItem2_shoot, menuItem3_noShot,
             menuItem4_dryFire, menuItem5_barrel, menuItem6_wall
-        };
+        };*/
 
         Transform rayRightTransform = camera.transform.Find(
             "[BuildingBlock] Interaction/[BuildingBlock] Controller Interactions/" +
@@ -44,7 +45,8 @@ public class MenuController : MonoBehaviour {
         rayRight = rayRightTransform.gameObject;
         competitionModeService = GetComponent<CompetitionModeService>();
         bodyLockedFollow = menu.GetComponent<BodyLockedFollow>();
-
+        floorScript = GetComponent<FloorScript>();
+        
         menu.SetActive(false);
         setRayStatus(false);
     }
@@ -68,6 +70,8 @@ public class MenuController : MonoBehaviour {
     }
 
     public void hideMenu() {
+        onClearPreview();
+        competitionModeService.stateEnum = StateEnum.Idle;
         showHideMenu(false);
     }
     
@@ -81,7 +85,8 @@ public class MenuController : MonoBehaviour {
         pistol.SetActive(!willBeActive);
 
         if (willBeActive) bodyLockedFollow.SnapToSpawnPosition();
-
+        
+        if (!willBeActive) floorScript.highlight = false;
     }
 
     public void chooseIPSClowTarget() {
@@ -99,6 +104,11 @@ public class MenuController : MonoBehaviour {
         competitionModeService.stateEnum = StateEnum.USPSA_target;
     }
 
+    public void chooseUspsaNoShotTarget() {
+        onClearPreview();
+        competitionModeService.stateEnum = StateEnum.USPSA_noshot;
+    }
+
     public void chooseBarrel() {
         onClearPreview();
         competitionModeService.stateEnum = StateEnum.Barrel;
@@ -113,6 +123,4 @@ public class MenuController : MonoBehaviour {
         onClearPreview();
         competitionModeService.stateEnum = StateEnum.Remove;
     }
-    
-
 }
