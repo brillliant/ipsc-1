@@ -40513,8 +40513,8 @@ MonoBehaviour:
   deleteConfirmDialog: {fileID: 452549990}
   loadStageButtonPrefub: {fileID: 7778398889310687141, guid: 6cedd244a4a16274c9d708dc84153934, type: 3}
   rayInteractor: {fileID: 849522477}
-  shootingZoneMaterial: {fileID: 2100000, guid: 33a4d061f07762445a9b39c9f027b5f9, type: 2}
-  zoneHintMessage: {fileID: 1845065936}
+  shootingZoneMaterial: {fileID: 0}
+  zoneHintMessage: {fileID: 0}
   saveStageDialog: {fileID: 3020047765714007705}
   nameField: {fileID: 1310816140}
 --- !u!114 &1043981340
