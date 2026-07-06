@@ -184,16 +184,12 @@ public class BuilderService : MonoBehaviour {
         int newEdge = -1;                  // наведённое ребро
         float bestRayDist = float.PositiveInfinity;
 
-        // обычные объекты — по коллайдерам
-        if (Physics.Raycast(ray, out RaycastHit hit, 50f)) {
-            Transform t = hit.collider.transform;
-            while (t != null && newObj == null) {
-                foreach (var obj in установленныеМишени) {
-                    if (t.gameObject == obj) { newObj = obj; break; }
-                }
-                t = t.parent;
-            }
-            if (newObj != null) bestRayDist = hit.distance;
+        // обычные объекты — по коллайдерам; RaycastAll, чтобы невидимые коллайдеры
+        // (бокс на руке, коллайдер меню, пробоины) не блокировали выделение
+        foreach (var h in Physics.RaycastAll(ray, 50f)) {
+            if (h.distance >= bestRayDist) continue;
+            GameObject owner = findPlacedObject(h.collider.transform);
+            if (owner != null) { newObj = owner; bestRayDist = h.distance; }
         }
 
         // рёбра линий — без коллайдеров, расстояние от луча до сегментов (только в режиме Remove)
@@ -222,6 +218,16 @@ public class BuilderService : MonoBehaviour {
 
         if (hoveredObject != null) setHighlight(hoveredObject, true);
         if (hoveredZone != null) showEdgeHighlight(hoveredZone, hoveredEdge);
+    }
+
+    // поднимаемся по родителям, пока не найдём установленный объект (коллайдер мог быть у ребёнка)
+    private GameObject findPlacedObject(Transform t) {
+        while (t != null) {
+            foreach (var obj in установленныеМишени)
+                if (t.gameObject == obj) return obj;
+            t = t.parent;
+        }
+        return null;
     }
 
     private void tryRemoveHovered() {
