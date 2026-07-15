@@ -62,8 +62,8 @@ public class CompetitionModeService : MonoBehaviour {
     public bool isShootMode() => stateEnum == StateEnum.StageRun;
 
     private void Start() {
-        menuController = GetComponent<MenuController>();;
-        pistolScript = GetComponent<PistolScript>();
+        menuController = GetComponent<MenuController>();
+        // pistolScript приходит через init() из Main — на этом объекте компонента PistolScript нет
         floorScript = GetComponent<FloorScript>();
     }
 

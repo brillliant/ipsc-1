@@ -71,7 +71,9 @@ public class MenuController : MonoBehaviour {
 
     public void hideMenu() {
         onClearPreview();
-        competitionModeService.stateEnum = StateEnum.Idle;
+        // сброс в Idle — только для билдер-режимов; идущий стейдж закрытием меню не прерываем
+        if (competitionModeService.stateEnum != StateEnum.StageRun)
+            competitionModeService.stateEnum = StateEnum.Idle;
         showHideMenu(false);
     }
     
