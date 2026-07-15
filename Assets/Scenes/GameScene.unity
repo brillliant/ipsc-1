@@ -40545,6 +40545,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraRig: {fileID: 2118623064}
   isLeftHandedPlayer: 0
+  debugLabel: {fileID: 178344673}
 --- !u!1 &1044434607
 GameObject:
   m_ObjectHideFlags: 0
@@ -118905,7 +118906,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6067706442897525986, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: m_Name
-      value: GridMenuExample3x3
+      value: ReadyStagesMenu
       objectReference: {fileID: 0}
     - target: {fileID: 6067706442897525986, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: m_IsActive
@@ -118958,6 +118959,10 @@ PrefabInstance:
     - target: {fileID: 6067706443027747046, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6067706444418444451, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6067706444418444452, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: m_Pivot.y
