@@ -117,7 +117,6 @@
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
     <None Include="Assets\MyShaders\LitShader\ShadowCasterPass.hlsl" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
-    <None Include="Assets\Resources\PresetStages\The Thrill of the Bill Drill.json" />
     <None Include="Assets\TextMesh Pro\Shaders\SDFFunctions.hlsl" />
     <None Include="Assets\MyShaders\LitShader\DepthOnlyPass.hlsl" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
@@ -137,6 +136,7 @@
     <None Include="Assets\MyShaders\MyEnvironmentDepth\OcclusionLit.shader" />
     <None Include="Assets\MyShaders\LitShader\DepthNormalsPass.hlsl" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
+    <None Include="Assets\Resources\PresetStages\The Thrill of the Bill Drill.json" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />
