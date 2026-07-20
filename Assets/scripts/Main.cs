@@ -55,7 +55,7 @@ public class Main : MonoBehaviour {
         if (Keyboard.current.pKey.wasPressedThisFrame || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstick, OVRInput.Controller.LTouch))
             menuController.showHideMenu(pistol.activeSelf);
 
-        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft, OVRInput.Controller.LTouch) ||
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickDown, OVRInput.Controller.LTouch) ||
             Keyboard.current.mKey.wasPressedThisFrame) showHideDebugMesh();
 
         if (Keyboard.current.oKey.wasPressedThisFrame || OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch)) competitionModeService.startStopRange();

@@ -74,7 +74,7 @@ public class FloorScript : MonoBehaviour {
     private void TrackControllerDuringCalibration() {
         if (!IsCalibrating || ovrCameraRig == null || megaFloor == null) return;
         Vector3 pos = megaFloor.transform.position;
-        megaFloor.transform.position = new Vector3(pos.x, ovrCameraRig.rightHandAnchor.position.y - 0.03f, pos.z);
+        megaFloor.transform.position = new Vector3(pos.x, ovrCameraRig.rightHandAnchor.position.y - 0.10f, pos.z);
     }
 
     public void StartCalibration() {

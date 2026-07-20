@@ -99,9 +99,10 @@ public class BuilderService : MonoBehaviour {
     }
 
     void Update() {
-        if (competitionModeService.isShootMode()) return;
-
+        // выход из режима рисования — до проверки isShootMode, иначе при старте стейджа зона «зависает»
         if (inZoneMode && competitionModeService.stateEnum != StateEnum.DrawShootingZone) exitZoneMode();
+
+        if (competitionModeService.isShootMode()) return;
 
         if (competitionModeService.stateEnum == StateEnum.IPSC_target) {
             buildWith(ipscTargetPreview, ipscTargetPrefab);
@@ -523,8 +524,9 @@ public class BuilderService : MonoBehaviour {
     }
 
     // авто-повтор удержания стика, как у клавиатуры: первый шаг сразу, потом пауза и частые повторы
+    // работает от любого из двух стиков (Primary* с конкретным контроллером — это его собственный стик)
     private bool ThumbstickStep(OVRInput.Button button) {
-        if (!OVRInput.Get(button, OVRInput.Controller.RTouch)) {
+        if (!OVRInput.Get(button, OVRInput.Controller.RTouch) && !OVRInput.Get(button, OVRInput.Controller.LTouch)) {
             if (repeatButton == button) repeatButton = OVRInput.Button.None;
             return false;
         }
@@ -650,13 +652,19 @@ public class BuilderService : MonoBehaviour {
         if (!inZoneMode) enterZoneMode();
         competitionModeService.hideCommandsText();
 
+        // кнопка B — закончить текущую линию и начать новую; работает независимо от того, куда смотрит луч
+        if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) {
+            finishLine();
+            return;
+        }
+
         if (rayInteractor.State != InteractorState.Normal) {
             zonePreviewLine.enabled = false;
             return;
         }
 
         Ray ray = rayInteractor.Ray;
-        if (!Physics.Raycast(ray, out RaycastHit hit) || !hit.collider.gameObject.name.Equals("MegaFloor")) {
+        if (!tryRaycastFloor(ray, out RaycastHit hit)) {
             zonePreviewLine.enabled = false;
             return;
         }
@@ -674,12 +682,6 @@ public class BuilderService : MonoBehaviour {
             zonePreviewLine.enabled = false;
         }
 
-        // кнопка B — закончить текущую линию и начать новую
-        if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)) {
-            finishLine();
-            return;
-        }
-
         if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) == 0) zoneTriggerPressed = false;
 
         if (!zoneTriggerPressed &&
@@ -695,10 +697,28 @@ public class BuilderService : MonoBehaviour {
         }
     }
 
+    // ближайшее пересечение луча именно с полом: невидимые коллайдеры (бокс меню, рука) не мешают
+    private bool tryRaycastFloor(Ray ray, out RaycastHit floorHit) {
+        floorHit = default;
+        float bestDist = float.PositiveInfinity;
+        bool found = false;
+        foreach (var h in Physics.RaycastAll(ray)) {
+            if (!h.collider.gameObject.name.Equals("MegaFloor")) continue;
+            if (h.distance < bestDist) {
+                bestDist = h.distance;
+                floorHit = h;
+                found = true;
+            }
+        }
+        return found;
+    }
+
     private void addZonePoint(Vector3 candidate) {
         zonePoints.Add(candidate);
         zoneLine.positionCount = zonePoints.Count;
         zoneLine.SetPosition(zonePoints.Count - 1, candidate);
+
+        if (zonePoints.Count == 1) showZoneHint();   // появился незакреплённый хвост
     }
 
     // если курсор рядом с уже поставленной точкой — возвращаем её координаты (магнит)
@@ -731,7 +751,7 @@ public class BuilderService : MonoBehaviour {
         zonePreviewLine.positionCount = 0;
         zonePreviewLine.enabled = false;
 
-        showZoneHint();
+        hideZoneHint();   // подсказка появится, когда повиснет хвост первой точки
     }
 
     private void showZoneHint() {
@@ -739,6 +759,10 @@ public class BuilderService : MonoBehaviour {
         var label = zoneHintMessage.GetComponentInChildren<TMP_Text>(true);
         if (label != null) label.text = "Click \"B\" to cancel";
         zoneHintMessage.SetActive(true);
+    }
+
+    private void hideZoneHint() {
+        if (zoneHintMessage != null) zoneHintMessage.SetActive(false);
     }
 
     // закончить текущую линию (B) и сразу начать новую — остаёмся в режиме рисования
@@ -771,11 +795,12 @@ public class BuilderService : MonoBehaviour {
         zoneLine = null;
         zonePreviewLine = null;
         zonePoints.Clear();
+        hideZoneHint();   // хвоста больше нет — подсказка не нужна
     }
 
     private void exitZoneMode() {
         inZoneMode = false;
-        if (zoneHintMessage != null) zoneHintMessage.SetActive(false);
+        hideZoneHint();
         if (currentZone == null) return;
         if (zonePoints.Count >= 2) finalizeCurrentZone();  // сохраняем незамкнутую линию
         else discardCurrentZone();                          // одиночная точка — выбрасываем

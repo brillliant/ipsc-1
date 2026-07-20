@@ -124,6 +124,7 @@ public class CompetitionModeService : MonoBehaviour {
         inprocessCommand = true;
         stopTimer();
 
+        hintText.gameObject.SetActive(false);
         readyText.text = "If you are finished, unload and show clear";
         ifYouAreFinishedUnloadAndShowClear.Play();
         readyText.gameObject.SetActive(true);
@@ -171,6 +172,9 @@ public class CompetitionModeService : MonoBehaviour {
         beepSound.Play();
         startTimer();
         inprocessCommand = false;
+
+        hintText.text = "Left grab - stop\n Stick up - cancel";
+        hintText.gameObject.SetActive(true);
     }
 
     private void showAreYouReadyCommand() {
@@ -182,6 +186,7 @@ public class CompetitionModeService : MonoBehaviour {
 
     private void showLoadAndMakeReadyCommand() {
         readyText.gameObject.SetActive(true);
+        hintText.text = "";   // подсказка про stop/cancel появится после стартового сигнала
         hintText.gameObject.SetActive(true);
         readyText.text = "Load and make ready";
         loadAndMakeReadySound.Play();
