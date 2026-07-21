@@ -59,7 +59,7 @@ public class BuilderService : MonoBehaviour {
     private LineRenderer edgeHighlight;    // подсветка наведённого ребра
 
     private const float RepeatDelay    = 0.4f;   // задержка перед авто-повтором удержания стика
-    private const float RepeatInterval = 0.08f;  // интервал авто-повтора
+    private const float RepeatInterval = 0.05f;  // интервал авто-повтора
     private OVRInput.Button repeatButton = OVRInput.Button.None;
     private float nextRepeatTime;
 
@@ -515,12 +515,14 @@ public class BuilderService : MonoBehaviour {
         установленныеМишени.Add(Object.Instantiate(prefab, preview.transform.position, preview.transform.rotation, stageRoot));
     }
 
+    private const float RotateStep = 3f;   // шаг поворота объекта за один шаг стика, градусы
+
     private void rotateLeft() {
-        currentPreview.transform.Rotate(0f, -5f, 0f, Space.Self);
+        currentPreview.transform.Rotate(0f, -RotateStep, 0f, Space.Self);
     }
 
     private void rotateRight() {
-        currentPreview.transform.Rotate(0f, 5f, 0f, Space.Self);
+        currentPreview.transform.Rotate(0f, RotateStep, 0f, Space.Self);
     }
 
     // авто-повтор удержания стика, как у клавиатуры: первый шаг сразу, потом пауза и частые повторы
