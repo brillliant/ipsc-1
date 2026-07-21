@@ -40545,7 +40545,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraRig: {fileID: 2118623064}
   isLeftHandedPlayer: 0
-  debugLabel: {fileID: 178344673}
+  debugLabel: {fileID: 1521864574}
 --- !u!1 &1044434607
 GameObject:
   m_ObjectHideFlags: 0
@@ -80164,7 +80164,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1521864573
 RectTransform:
   m_ObjectHideFlags: 0
