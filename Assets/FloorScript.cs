@@ -5,7 +5,7 @@ using UnityEngine;
 using Meta.XR.MRUtilityKit;
 
 public class FloorScript : MonoBehaviour {
-    private float halfSizeMeters = 15f;
+    private float halfSizeMeters = 20f;
     [SerializeField] private bool addCollider = true;
 
     [Header("Highlight like EffectMesh")]
@@ -81,6 +81,15 @@ public class FloorScript : MonoBehaviour {
         if (megaFloor == null) return;
         IsCalibrating = true;
         hideTime = -1f;
+
+        // пересаживаем плоскость под игрока: центр по X/Z — под текущей позицией головы.
+        // иначе пол остаётся там, где был floor-анкер на момент запуска приложения
+        Transform head = ovrCameraRig != null ? ovrCameraRig.centerEyeAnchor : null;
+        if (head != null) {
+            Vector3 p = megaFloor.transform.position;
+            megaFloor.transform.position = new Vector3(head.position.x, p.y, head.position.z);
+        }
+
         calibStartY = megaFloor.transform.position.y;
         var label = resetFloorMessage.GetComponentInChildren<TMP_Text>(true);
         if (label != null) label.text = "Move controller\nand click to set level";

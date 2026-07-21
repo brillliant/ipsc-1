@@ -21,6 +21,7 @@ public class Main : MonoBehaviour {
     private MeshRenderer pushMagazinePointOnHandMesh;
 
     private EffectMesh effectMeshScript;//todo added for demo
+    private bool debugOn;
 
     [HideInInspector] public MenuController menuController;
     [HideInInspector] public CompetitionModeService competitionModeService;
@@ -64,6 +65,11 @@ public class Main : MonoBehaviour {
 
         if (floorScript.IsCalibrating && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch))
             floorScript.ConfirmCalibration();
+
+        // синие дебаг-точки видны только когда включён дебаг И подсвечен пол — иначе рассинхрон
+        bool pointsVisible = debugOn && floorScript.highlight;
+        pushHandPointOnPistolMesh.enabled = pointsVisible;
+        pushMagazinePointOnHandMesh.enabled = pointsVisible;
     }
 
     void setHandColliderLayer() {
@@ -82,12 +88,10 @@ public class Main : MonoBehaviour {
     }
 
     private void showHideDebugMesh() {
-        pushHandPointOnPistolMesh.enabled = !pushHandPointOnPistolMesh.enabled;
-        leftHand.SetActive(!leftHand.activeSelf);
-        pushMagazinePointOnHandMesh.enabled = !pushMagazinePointOnHandMesh.enabled;
-        floorScript.highlight = !floorScript.highlight;
-
-        if (effectMeshScript.HideMesh) effectMeshScript.HideMesh = false;
-        else effectMeshScript.HideMesh = true;
+        debugOn = !debugOn;
+        leftHand.SetActive(debugOn);
+        floorScript.highlight = debugOn;
+        effectMeshScript.HideMesh = !debugOn;
+        // сами синие точки включаются в Update и гаснут вместе с полом
     }
 }
