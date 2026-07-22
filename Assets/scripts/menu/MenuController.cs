@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Oculus.Interaction;
 using TMPro;
 using UnityEngine;
 
@@ -69,6 +70,11 @@ public class MenuController : MonoBehaviour {
         this.onClearPreview = onClearPreview;
     }
 
+    // правый луч контроллера — тот же, которым тыкаем в кнопки меню
+    public RayInteractor GetRightRayInteractor() {
+        return rayRight != null ? rayRight.GetComponent<RayInteractor>() : null;
+    }
+
     public void hideMenu() {
         onClearPreview();
         // сброс в Idle — только для билдер-режимов; идущий стейдж закрытием меню не прерываем
@@ -86,7 +92,7 @@ public class MenuController : MonoBehaviour {
         setRayStatus(willBeActive);
         pistol.SetActive(!willBeActive);
 
-        if (willBeActive) bodyLockedFollow.SnapToSpawnPosition();
+        if (willBeActive) bodyLockedFollow.SnapToSpawnPosition();   // поставить перед игроком один раз при открытии
         
         if (!willBeActive) floorScript.highlight = false;
     }
