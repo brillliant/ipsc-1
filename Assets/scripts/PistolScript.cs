@@ -160,6 +160,7 @@ public class PistolScript : MonoBehaviour {
 
     private void LateUpdate() {
         checkIfPistolInHolster();
+        applyRecoil();
     }
 
     public Transform findMagazine() {
@@ -278,38 +279,35 @@ public class PistolScript : MonoBehaviour {
         return roundInChamberFlag;
     }
     
-    [SerializeField] private float recoilDuration = 0.01f;
-    [SerializeField] private float returnDuration = 0.15f;
-    
-    [SerializeField] private float recoilUp = 10f;
-    [SerializeField] private float recoilSide = 3f;
+    [SerializeField] private float returnDuration = 0.15f;   // время пружинного возврата, 0.12–0.18 c
+    [SerializeField] private float recoilUp = 10f;           // подброс вверх за выстрел, градусы
+    [SerializeField] private float recoilSide = 3f;          // разброс вбок за выстрел, градусы
+    [SerializeField] private float maxPitch = 25f;           // потолок накопленного подброса вверх
+    [SerializeField] private float maxYaw = 8f;              // потолок бокового ухода
 
+    private float recoilPitch, recoilYaw;        // накопленный подброс: копится поверх — второй выстрел выше
+    private float recoilPitchVel, recoilYawVel;
+
+    // мгновенный импульс отдачи; добавляется к текущему подбросу, а не к изначальному положению
     private void recoil() {
-        float up = recoilUp + UnityEngine.Random.Range(-1f, 1f);
-        float side = UnityEngine.Random.Range(-recoilSide, recoilSide);
-        Quaternion targetRotation = transform.localRotation * Quaternion.Euler(up, side, 0);
-        StartCoroutine(recoilRoutine(targetRotation));
+        recoilPitch = Mathf.Clamp(recoilPitch + recoilUp + UnityEngine.Random.Range(-1f, 1f), 0f, maxPitch);
+        recoilYaw   = Mathf.Clamp(recoilYaw + UnityEngine.Random.Range(-recoilSide, recoilSide), -maxYaw, maxYaw);
     }
 
-    private IEnumerator recoilRoutine(Quaternion targetRotation) {
-        float t = 0f;
-
-        while (t < recoilDuration) {
-            transform.localRotation = Quaternion.Slerp(originalRotation, targetRotation, t / recoilDuration);
-            t += Time.deltaTime;
-            yield return null;
+    // пружинный возврат к нулю с критическим демпфированием; вызывается из LateUpdate
+    private void applyRecoil() {
+        bool settled = Mathf.Abs(recoilPitch) < 0.01f && Mathf.Abs(recoilYaw) < 0.01f
+                       && Mathf.Abs(recoilPitchVel) < 0.01f && Mathf.Abs(recoilYawVel) < 0.01f;
+        if (settled) {
+            if (recoilPitch != 0f || recoilYaw != 0f) {   // один раз довернуть ровно в ноль и перестать трогать
+                recoilPitch = recoilYaw = 0f;
+                transform.localRotation = originalRotation;
+            }
+            return;
         }
-
-        transform.localRotation = targetRotation;
-        t = 0f;
-
-        while (t < returnDuration) {
-            transform.localRotation = Quaternion.Slerp(targetRotation, originalRotation, t / returnDuration);
-            t += Time.deltaTime;
-            yield return null;
-        }
-
-        transform.localRotation = originalRotation;
+        recoilPitch = Mathf.SmoothDampAngle(recoilPitch, 0f, ref recoilPitchVel, returnDuration);
+        recoilYaw   = Mathf.SmoothDampAngle(recoilYaw,   0f, ref recoilYawVel,   returnDuration);
+        transform.localRotation = originalRotation * Quaternion.Euler(recoilPitch, recoilYaw, 0f);
     }
     
     public void removeRoundFromChamber(bool manual) {
