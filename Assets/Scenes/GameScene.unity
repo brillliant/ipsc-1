@@ -6435,10 +6435,11 @@ MonoBehaviour:
   bulletPoint: {fileID: 947667043}
   codeObject: {fileID: 1043981333}
   hammerDown: 0
-  recoilDuration: 0.01
   returnDuration: 0.15
   recoilUp: 10
   recoilSide: 3
+  maxPitch: 25
+  maxYaw: 8
 --- !u!1 &130977126
 GameObject:
   m_ObjectHideFlags: 0
