@@ -19,6 +19,12 @@ public class BuilderService : MonoBehaviour {
     public GameObject uspsaTargetPrefab;
     public GameObject uspsaTargetNoShotPreview;
     public GameObject uspsaTargetNoShotPrefab;
+    public GameObject uspsaRightDarkPreview;
+    public GameObject uspsaRightDarkPrefab;
+    public GameObject uspsaLeftDarkPreview;
+    public GameObject uspsaLeftDarkPrefab;
+    public GameObject uspsaLeftRightDarkPreview;
+    public GameObject uspsaLeftRightDarkPrefab;
     public GameObject barrelPreview;
     public GameObject barrelPrefab;
     public GameObject wallPreview;
@@ -79,6 +85,9 @@ public class BuilderService : MonoBehaviour {
             { ipscTargetNoShotPrefab.name, ipscTargetNoShotPrefab },
             { uspsaTargetPrefab.name,      uspsaTargetPrefab      },
             { uspsaTargetNoShotPrefab.name, uspsaTargetNoShotPrefab },
+            { uspsaRightDarkPrefab.name,     uspsaRightDarkPrefab     },
+            { uspsaLeftDarkPrefab.name,      uspsaLeftDarkPrefab      },
+            { uspsaLeftRightDarkPrefab.name, uspsaLeftRightDarkPrefab },
             { barrelPrefab.name,           barrelPrefab           },
             { wallPrefab.name,             wallPrefab             },
         };
@@ -112,6 +121,12 @@ public class BuilderService : MonoBehaviour {
             buildWith(uspsaTargetPreview, uspsaTargetPrefab);
         } else if (competitionModeService.stateEnum == StateEnum.USPSA_noshot) {
             buildWith(uspsaTargetNoShotPreview, uspsaTargetNoShotPrefab);
+        } else if (competitionModeService.stateEnum == StateEnum.USPSA_rightDark) {
+            buildWith(uspsaRightDarkPreview, uspsaRightDarkPrefab);
+        } else if (competitionModeService.stateEnum == StateEnum.USPSA_leftDark) {
+            buildWith(uspsaLeftDarkPreview, uspsaLeftDarkPrefab);
+        } else if (competitionModeService.stateEnum == StateEnum.USPSA_leftRightDark) {
+            buildWith(uspsaLeftRightDarkPreview, uspsaLeftRightDarkPrefab);
         } else if (competitionModeService.stateEnum == StateEnum.Barrel) {
             buildWith(barrelPreview, barrelPrefab);
         } else if (competitionModeService.stateEnum == StateEnum.Wall) {

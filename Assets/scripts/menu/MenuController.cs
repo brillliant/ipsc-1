@@ -117,6 +117,21 @@ public class MenuController : MonoBehaviour {
         competitionModeService.stateEnum = StateEnum.USPSA_noshot;
     }
 
+    public void chooseUspsaRightDarkTarget() {
+        onClearPreview();
+        competitionModeService.stateEnum = StateEnum.USPSA_rightDark;
+    }
+
+    public void chooseUspsaLeftDarkTarget() {
+        onClearPreview();
+        competitionModeService.stateEnum = StateEnum.USPSA_leftDark;
+    }
+
+    public void chooseUspsaLeftRightDarkTarget() {
+        onClearPreview();
+        competitionModeService.stateEnum = StateEnum.USPSA_leftRightDark;
+    }
+
     public void chooseBarrel() {
         onClearPreview();
         competitionModeService.stateEnum = StateEnum.Barrel;

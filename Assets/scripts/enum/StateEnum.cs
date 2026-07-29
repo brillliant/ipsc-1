@@ -9,5 +9,8 @@ public enum StateEnum {
     Remove,
     MoveStage,
     DrawShootingZone,
-    StageRun
+    StageRun,
+    USPSA_rightDark,
+    USPSA_leftDark,
+    USPSA_leftRightDark
 }
