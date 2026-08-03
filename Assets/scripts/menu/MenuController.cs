@@ -92,7 +92,11 @@ public class MenuController : MonoBehaviour {
         setRayStatus(willBeActive);
         pistol.SetActive(!willBeActive);
 
-        if (willBeActive) bodyLockedFollow.SnapToSpawnPosition();   // поставить перед игроком один раз при открытии
+        if (willBeActive) {
+            bodyLockedFollow.SnapToSpawnPosition();   // поставить перед игроком один раз при открытии
+            foreach (var hs in FindObjectsOfType<HandednessService>())
+                hs.Recalibrate();                     // перекалибровать эталон трекинга при открытии меню
+        }
         
         if (!willBeActive) floorScript.highlight = false;
     }

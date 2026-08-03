@@ -191,7 +191,7 @@ public class CompetitionModeService : MonoBehaviour {
         hintText.gameObject.SetActive(true);
         readyText.text = "Load and make ready";
         loadAndMakeReadySound.Play();
-        pending = StartCoroutine(After(4f, showAreYouReadyCommand));
+        pending = StartCoroutine(After(7f, showAreYouReadyCommand));
     }
 
     public void startStopRangeAndMenu() {
