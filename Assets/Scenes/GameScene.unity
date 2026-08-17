@@ -33753,7 +33753,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.13536811, y: -0.0016969703, z: 0.012419585, w: 0.9907161}
   m_LocalPosition: {x: 0.0066, y: 0.021, z: 0.0516}
-  m_LocalScale: {x: 0.05010933, y: 0.0438529, z: 0.2083517}
+  m_LocalScale: {x: 0.05010933, y: 0.0638529, z: 0.2083517}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1828601336}
@@ -73547,7 +73547,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5100176613592845068, guid: 015d50c6ae209554ca438fae7e311d27, type: 3}
       propertyPath: m_Name
-      value: Wall
+      value: Wall_8
       objectReference: {fileID: 0}
     - target: {fileID: 5100176613630248223, guid: 015d50c6ae209554ca438fae7e311d27, type: 3}
       propertyPath: m_IsActive
@@ -74227,7 +74227,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5170205590472354127, guid: 015d50c6ae209554ca438fae7e311d27, type: 3}
       propertyPath: m_text
-      value: Wall
+      value: Wall 8 ft
       objectReference: {fileID: 0}
     - target: {fileID: 5170205590472354127, guid: 015d50c6ae209554ca438fae7e311d27, type: 3}
       propertyPath: m_fontColor.a
