@@ -6,7 +6,7 @@ public class BulletScript : MonoBehaviour {
     private Main mainScript;
     private double min = 0.0001;
     private double max = 0.0009;
-        
+
     void Start() {
         codeObject = GameObject.Find("codeObject");
         mainScript = codeObject.GetComponent<Main>();

@@ -5,6 +5,7 @@ public enum StateEnum {
     USPSA_target,
     USPSA_noshot,
     Barrel,
+    PopperBig,
     Wall,
     Remove,
     MoveStage,

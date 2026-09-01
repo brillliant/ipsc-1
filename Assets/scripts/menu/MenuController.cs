@@ -141,6 +141,11 @@ public class MenuController : MonoBehaviour {
         competitionModeService.stateEnum = StateEnum.Barrel;
     }
 
+    public void choosePopperBig() {
+        onClearPreview();
+        competitionModeService.stateEnum = StateEnum.PopperBig;
+    }
+
     public void chooseWall() {
         onClearPreview();
         competitionModeService.stateEnum = StateEnum.Wall;

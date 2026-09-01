@@ -144,6 +144,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 730a17617eeba0b4ba3c4919e8734d52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   bulletHolePrefab: {fileID: 1786829079385361553, guid: 1297d90b009fbbd4084ebd2f6c8722b1, type: 3}
