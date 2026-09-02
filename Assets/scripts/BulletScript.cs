@@ -22,7 +22,9 @@ public class BulletScript : MonoBehaviour {
         Vector3 offset = contact.normal * randomValue;
         Vector3 adjustedHitPoint = hitPoint + offset;
 
-        mainScript.builderService.пробоины.Add(Instantiate(bulletHolePrefab, adjustedHitPoint, hitRotation));
+        GameObject пробоина = Instantiate(bulletHolePrefab, adjustedHitPoint, hitRotation);
+        пробоина.transform.SetParent(collision.collider.transform, true);   // дырка едет вместе с мишенью (упавший поппер, сдвиг стейджа)
+        mainScript.builderService.пробоины.Add(пробоина);
         Destroy(gameObject);
     }
 }

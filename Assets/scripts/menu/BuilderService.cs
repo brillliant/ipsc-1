@@ -422,6 +422,9 @@ public class BuilderService : MonoBehaviour {
         foreach (GameObject пробоина in пробоины)
             Destroy(пробоина);
         пробоины.Clear();
+
+        foreach (GameObject мишень in установленныеМишени)
+            мишень.GetComponentInChildren<TargetScript>()?.resetTarget();   // поднимаем упавшие попперы
     }
     
     public void PopulateReadyStagesMenu() {
