@@ -47,7 +47,7 @@ public class CompetitionModeService : MonoBehaviour {
     private static bool isPlacementState(StateEnum s) =>
         s == StateEnum.IPSC_target || s == StateEnum.IPSC_noshot || s == StateEnum.USPSA_target ||
         s == StateEnum.USPSA_noshot || s == StateEnum.USPSA_rightDark || s == StateEnum.USPSA_leftDark ||
-        s == StateEnum.USPSA_leftRightDark || s == StateEnum.Barrel || s == StateEnum.USPSAMiniPopper || s == StateEnum.Wall ||
+        s == StateEnum.USPSA_leftRightDark || s == StateEnum.Barrel || s == StateEnum.USPSAMiniPopper || s == StateEnum.USPSAPopper || s == StateEnum.Wall ||
         s == StateEnum.DrawShootingZone || s == StateEnum.MoveStage;
     
     [SerializeField] Image buttonBackground;

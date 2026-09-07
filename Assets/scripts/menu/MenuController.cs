@@ -146,6 +146,11 @@ public class MenuController : MonoBehaviour {
         competitionModeService.stateEnum = StateEnum.USPSAMiniPopper;
     }
 
+    public void chooseUspsaPopper() {
+        onClearPreview();
+        competitionModeService.stateEnum = StateEnum.USPSAPopper;
+    }
+
     public void chooseWall() {
         onClearPreview();
         competitionModeService.stateEnum = StateEnum.Wall;

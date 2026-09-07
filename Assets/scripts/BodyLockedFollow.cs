@@ -10,7 +10,7 @@ public class BodyLockedFollow : MonoBehaviour {
     [Header("Spawn position")]
     [SerializeField] private float distance       = 0.45f;
     [SerializeField] private float rightOffset    = 0.6f;
-    [SerializeField] private float verticalOffset = -0.6f;
+    [SerializeField] private float verticalOffset = -0.35f;
     [SerializeField] private float rotationOffset = -52f;
 
     void Awake() {

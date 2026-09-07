@@ -29,6 +29,8 @@ public class BuilderService : MonoBehaviour {
     public GameObject barrelPrefab;
     public GameObject uspsaMiniPopperPreview;
     public GameObject uspsaMiniPopperPrefab;
+    public GameObject uspsaPopperPreview;
+    public GameObject uspsaPopperPrefab;
     public GameObject wallPreview;
     public GameObject wallPrefab;
 
@@ -92,6 +94,7 @@ public class BuilderService : MonoBehaviour {
             { uspsaLeftRightDarkPrefab.name, uspsaLeftRightDarkPrefab },
             { barrelPrefab.name,           barrelPrefab           },
             { uspsaMiniPopperPrefab.name,  uspsaMiniPopperPrefab  },
+            { uspsaPopperPrefab.name,      uspsaPopperPrefab      },
             { wallPrefab.name,             wallPrefab             },
         };
     }
@@ -134,6 +137,8 @@ public class BuilderService : MonoBehaviour {
             buildWith(barrelPreview, barrelPrefab);
         } else if (competitionModeService.stateEnum == StateEnum.USPSAMiniPopper) {
             buildWith(uspsaMiniPopperPreview, uspsaMiniPopperPrefab);
+        } else if (competitionModeService.stateEnum == StateEnum.USPSAPopper) {
+            buildWith(uspsaPopperPreview, uspsaPopperPrefab);
         } else if (competitionModeService.stateEnum == StateEnum.Wall) {
             buildWith(wallPreview, wallPrefab);
         } else if (competitionModeService.stateEnum == StateEnum.Remove) {
