@@ -7,7 +7,8 @@ public class BulletScript : MonoBehaviour {
     private double min = 0.0001;
     private double max = 0.0009;
 
-    void Start() {
+    // Awake, а не Start: столкновение может случиться в первом же шаге физики, ещё до Start
+    void Awake() {
         codeObject = GameObject.Find("codeObject");
         mainScript = codeObject.GetComponent<Main>();
     }

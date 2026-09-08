@@ -34,6 +34,10 @@ public class BuilderService : MonoBehaviour {
     public GameObject wallPreview;
     public GameObject wallPrefab;
 
+    [Header("Sounds")]
+    public AudioSource metallHitSound;    // sounds/MetallHit — попадание в поппер
+    public AudioSource popperFallSound;   // sounds/PopperFall — поппер лёг
+
     [SerializeField] private Transform readyStagesContainer;
     [SerializeField] private Transform stageRoot;
     
@@ -73,6 +77,7 @@ public class BuilderService : MonoBehaviour {
     private OVRInput.Button repeatButton = OVRInput.Button.None;
     private float nextRepeatTime;
 
+    private FloorScript floorScript;
     private GameObject currentPreview;
     private List<ObjectData> objectDataList = new List<ObjectData>();
     private bool triggerPressed;
@@ -84,6 +89,7 @@ public class BuilderService : MonoBehaviour {
 
     void Start() {
         competitionModeService = GetComponent<CompetitionModeService>();
+        floorScript = GetComponent<FloorScript>();
         prefabMap = new Dictionary<string, GameObject> {
             { ipscTargetPrefab.name,      ipscTargetPrefab      },
             { ipscTargetNoShotPrefab.name, ipscTargetNoShotPrefab },
@@ -118,6 +124,15 @@ public class BuilderService : MonoBehaviour {
         if (inZoneMode && competitionModeService.stateEnum != StateEnum.DrawShootingZone) exitZoneMode();
 
         if (competitionModeService.isShootMode()) return;
+
+        // идёт калибровка пола: курок подтверждает уровень пола, а не ставит объект.
+        // Превью прячем, а triggerPressed взводим, чтобы то же нажатие после подтверждения не поставило объект
+        if (floorScript != null && floorScript.IsCalibrating) {
+            clearPreview();
+            triggerPressed = true;
+            zoneTriggerPressed = true;   // то же для рисования зоны
+            return;
+        }
 
         if (competitionModeService.stateEnum == StateEnum.IPSC_target) {
             buildWith(ipscTargetPreview, ipscTargetPrefab);
@@ -525,6 +540,7 @@ public class BuilderService : MonoBehaviour {
                 GameObject obj = Instantiate(prefab, stageRoot);
                 obj.transform.localPosition = data.position;
                 obj.transform.localRotation = data.rotation;
+                setUpTargetSounds(obj);
                 установленныеМишени.Add(obj);
             } else {
                 Debug.LogWarning("Prefab not found in map: " + data.prefabName);
@@ -540,7 +556,17 @@ public class BuilderService : MonoBehaviour {
 
     private void placeATarget(GameObject preview, GameObject prefab) {
         triggerPressed = true;
-        установленныеМишени.Add(Object.Instantiate(prefab, preview.transform.position, preview.transform.rotation, stageRoot));
+        GameObject obj = Object.Instantiate(prefab, preview.transform.position, preview.transform.rotation, stageRoot);
+        setUpTargetSounds(obj);
+        установленныеМишени.Add(obj);
+    }
+
+    // мишень спавнится из префаба и ссылку на звуки сцены хранить не может — отдаём их ей при установке
+    private void setUpTargetSounds(GameObject obj) {
+        foreach (TargetScript target in obj.GetComponentsInChildren<TargetScript>()) {
+            target.hitSound = metallHitSound;
+            target.fallSound = popperFallSound;
+        }
     }
 
     private const float RotateStep = 3f;   // шаг поворота объекта за один шаг стика, градусы
