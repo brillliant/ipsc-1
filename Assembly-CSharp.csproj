@@ -109,8 +109,11 @@
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile-2-Pass.shader" />
     <None Include="Assets\MyShaders\MyEnvironmentDepth\Resources\DepthPreprocessing.shader" />
+    <None Include="Assets\Resources\PresetStages\On the Move.json" />
     <None Include="Assets\MyShaders\LitShader\LitGBufferPass.hlsl" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
+    <None Include="Assets\Resources\PresetStages\Its All Porta the Plan.json" />
+    <None Include="Assets\Resources\PresetStages\El Presidente.json" />
     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Oswald-Bold - OFL.txt" />
     <None Include="Assets\MyShaders\MyEnvironmentDepth\BiRP\EnvironmentOcclusionBiRP.cginc" />
     <None Include="Assets\MyShaders\LitShader\LitInput.hlsl" />
@@ -119,7 +122,9 @@
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
     <None Include="Assets\MyShaders\LitShader\ShadowCasterPass.hlsl" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
+    <None Include="Assets\Resources\PresetStages\Tres Cajas.json" />
     <None Include="Assets\TextMesh Pro\Shaders\SDFFunctions.hlsl" />
+    <None Include="Assets\Resources\PresetStages\Descent Into Madness.json" />
     <None Include="Assets\MyShaders\LitShader\DepthOnlyPass.hlsl" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
     <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
@@ -141,6 +146,7 @@
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\Resources\PresetStages\The Thrill of the Bill Drill.json" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
+    <None Include="Assets\Resources\PresetStages\Look at Me I Am the Captain Now.json" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />

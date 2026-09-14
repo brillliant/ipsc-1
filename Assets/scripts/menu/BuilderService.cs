@@ -33,6 +33,8 @@ public class BuilderService : MonoBehaviour {
     public GameObject uspsaPopperPrefab;
     public GameObject wallPreview;
     public GameObject wallPrefab;
+    public GameObject wall4Preview;
+    public GameObject wall4Prefab;
 
     [Header("Sounds")]
     public AudioSource metallHitSound;    // sounds/MetallHit — попадание в поппер
@@ -102,6 +104,7 @@ public class BuilderService : MonoBehaviour {
             { uspsaMiniPopperPrefab.name,  uspsaMiniPopperPrefab  },
             { uspsaPopperPrefab.name,      uspsaPopperPrefab      },
             { wallPrefab.name,             wallPrefab             },
+            { wall4Prefab.name,            wall4Prefab            },
         };
     }
     
@@ -156,6 +159,8 @@ public class BuilderService : MonoBehaviour {
             buildWith(uspsaPopperPreview, uspsaPopperPrefab);
         } else if (competitionModeService.stateEnum == StateEnum.Wall) {
             buildWith(wallPreview, wallPrefab);
+        } else if (competitionModeService.stateEnum == StateEnum.Wall4) {
+            buildWith(wall4Preview, wall4Prefab);
         } else if (competitionModeService.stateEnum == StateEnum.Remove) {
             updateRemoveHighlight();
             tryRemoveHovered();
@@ -196,7 +201,7 @@ public class BuilderService : MonoBehaviour {
                                                      && !hit.collider.gameObject.name.Equals("Glock17")) {
             placeToSurface(currentPreview, hit);
 
-            if (competitionModeService.stateEnum == StateEnum.Wall) {
+            if (competitionModeService.stateEnum == StateEnum.Wall || competitionModeService.stateEnum == StateEnum.Wall4) {
                 if (ThumbstickStep(OVRInput.Button.PrimaryThumbstickLeft)) rotateLeft();
                 if (ThumbstickStep(OVRInput.Button.PrimaryThumbstickRight)) rotateRight();
             } else {

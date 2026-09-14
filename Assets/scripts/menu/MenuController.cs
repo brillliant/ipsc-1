@@ -156,6 +156,11 @@ public class MenuController : MonoBehaviour {
         competitionModeService.stateEnum = StateEnum.Wall;
     }
 
+    public void chooseWall4() {
+        onClearPreview();
+        competitionModeService.stateEnum = StateEnum.Wall4;
+    }
+
     public void removeModeOn() {
         onClearPreview();
         competitionModeService.stateEnum = StateEnum.Remove;

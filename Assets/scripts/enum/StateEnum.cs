@@ -8,6 +8,7 @@ public enum StateEnum {
     USPSAMiniPopper,
     USPSAPopper,
     Wall,
+    Wall4,
     Remove,
     MoveStage,
     DrawShootingZone,
