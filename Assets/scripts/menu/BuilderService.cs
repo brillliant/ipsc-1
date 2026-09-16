@@ -36,6 +36,13 @@ public class BuilderService : MonoBehaviour {
     public GameObject wall4Preview;
     public GameObject wall4Prefab;
 
+    [Header("Inspect (лупа)")]
+    public float inspectDistance = 0.8f;      // м от глаз до копии мишени
+    public float inspectScale = 1f;           // масштаб копии: 1 = в полный рост
+    public float inspectSideAngle = 45f;      // градусы влево от прямого взгляда: 45 = «на 10:30», не перекрывает луч и мишени
+    public float inspectHaloSize = 0.112f;     // ширина ореола по контуру, доля от размера копии
+    public Material inspectHaloMaterial;      // materials/InspectHalo — полупрозрачный голубой с эмиссией
+
     [Header("Sounds")]
     public AudioSource metallHitSound;    // sounds/MetallHit — попадание в поппер
     public AudioSource popperFallSound;   // sounds/PopperFall — поппер лёг
@@ -80,6 +87,16 @@ public class BuilderService : MonoBehaviour {
     private float nextRepeatTime;
 
     private FloorScript floorScript;
+    private MenuController menuController;
+    private GameObject inspectClone;      // увеличенная копия выбранной мишени перед глазами (режим Inspect)
+    private GameObject inspectHovered;    // бумажная мишень под лучом в режиме Inspect
+    private static readonly Color InspectHighlightColor = new Color(0.4f, 0.75f, 1f, 1f);
+    private static readonly Color InspectRayColor = new Color(0.25f, 0.55f, 1f, 1f);   // луч в режиме Inspect
+    private bool inspectActive;                // режим Inspect включён: луч перекрашен, подсказка показана
+    private StateEnum hintState = StateEnum.Idle;   // режим, для которого сейчас горит подсказка в hintText
+    private string hintShownText;
+    private RayInteractorRayVisual rayVisual;  // визуал правого луча (Meta); HoverColor = его обычный цвет
+    private Color rayNormalColor;
     private GameObject currentPreview;
     private List<ObjectData> objectDataList = new List<ObjectData>();
     private bool triggerPressed;
@@ -92,6 +109,7 @@ public class BuilderService : MonoBehaviour {
     void Start() {
         competitionModeService = GetComponent<CompetitionModeService>();
         floorScript = GetComponent<FloorScript>();
+        menuController = GetComponent<MenuController>();
         prefabMap = new Dictionary<string, GameObject> {
             { ipscTargetPrefab.name,      ipscTargetPrefab      },
             { ipscTargetNoShotPrefab.name, ipscTargetNoShotPrefab },
@@ -125,6 +143,9 @@ public class BuilderService : MonoBehaviour {
     void Update() {
         // выход из режима рисования — до проверки isShootMode, иначе при старте стейджа зона «зависает»
         if (inZoneMode && competitionModeService.stateEnum != StateEnum.DrawShootingZone) exitZoneMode();
+        // вышли из лупы любым путём (другой режим, закрытие меню, старт стейджа) — копия и подсветка исчезают
+        if (competitionModeService.stateEnum != StateEnum.Inspect) clearInspect();
+        if (hintState != StateEnum.Idle && hintState != competitionModeService.stateEnum) hideModeHint();   // режим сменился
 
         if (competitionModeService.isShootMode()) return;
 
@@ -161,7 +182,15 @@ public class BuilderService : MonoBehaviour {
             buildWith(wallPreview, wallPrefab);
         } else if (competitionModeService.stateEnum == StateEnum.Wall4) {
             buildWith(wall4Preview, wall4Prefab);
+        } else if (competitionModeService.stateEnum == StateEnum.Inspect) {
+            inspectTargets();
         } else if (competitionModeService.stateEnum == StateEnum.Remove) {
+            showModeHint(StateEnum.Remove, "Click to remove object\nClick Y to exit remove mode");
+            if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.LTouch)) {   // Y на левом — выход, как в лупе
+                menuController.setTileToggle("RemoveObject", false);
+                competitionModeService.stateEnum = StateEnum.Idle;
+                return;
+            }
             updateRemoveHighlight();
             tryRemoveHovered();
         } else if (competitionModeService.stateEnum == StateEnum.MoveStage) {
@@ -289,6 +318,176 @@ public class BuilderService : MonoBehaviour {
             hoveredEdge = -1;
             hideEdgeHighlight();
         }
+    }
+
+    // ---- режим «лупа»: навёл луч на бумажную мишень, нажал курок — её копия с пробоинами висит перед глазами ----
+    private bool isPaperTarget(GameObject obj) {
+        string n = obj.name;
+        return n.StartsWith(ipscTargetPrefab.name) || n.StartsWith(ipscTargetNoShotPrefab.name) ||
+               n.StartsWith(uspsaTargetPrefab.name) || n.StartsWith(uspsaTargetNoShotPrefab.name) ||
+               n.StartsWith(uspsaRightDarkPrefab.name) || n.StartsWith(uspsaLeftDarkPrefab.name) ||
+               n.StartsWith(uspsaLeftRightDarkPrefab.name);
+    }
+
+    private void inspectTargets() {
+        if (!inspectActive) enterInspect();
+
+        // Y на левом контроллере (Button.Two, LTouch) — та же кнопка, что стирает пробоины: здесь выключает лупу
+        if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.LTouch)) {
+            menuController.setTileToggle("Inspect", false);
+            competitionModeService.stateEnum = StateEnum.Idle;
+            return;
+        }
+
+        bool overUI = rayInteractor.State != InteractorState.Normal;
+        bool overClone = false;   // луч на самой копии — клик её убирает
+        GameObject newHovered = null;
+        if (!overUI) {
+            float best = float.PositiveInfinity;
+            // RaycastAll: стены и невидимые коллайдеры не мешают выбрать мишень за ними
+            foreach (var h in Physics.RaycastAll(rayInteractor.Ray, 50f)) {
+                if (h.distance >= best) continue;
+                if (inspectClone != null && h.collider.transform.IsChildOf(inspectClone.transform)) {
+                    overClone = true; newHovered = null; best = h.distance;
+                    continue;
+                }
+                GameObject owner = findPlacedObject(h.collider.transform);
+                if (owner != null && isPaperTarget(owner)) { newHovered = owner; overClone = false; best = h.distance; }
+            }
+        }
+
+        if (newHovered != inspectHovered) {
+            if (inspectHovered != null) setHighlight(inspectHovered, false);
+            inspectHovered = newHovered;
+            if (inspectHovered != null) setHighlight(inspectHovered, true, InspectHighlightColor);
+        }
+
+        // копия меняется только по курку — случайное сползание луча на соседнюю мишень ничего не переключает;
+        // курок по самой копии убирает её, режим при этом остаётся
+        bool triggerDown = Keyboard.current.spaceKey.wasPressedThisFrame ||
+                           OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch);
+        if (!overUI && triggerDown) {
+            if (overClone) clearInspectClone();
+            else if (inspectHovered != null) showInspectClone(inspectHovered);
+        }
+    }
+
+    private void showInspectClone(GameObject original) {
+        clearInspectClone();
+        inspectClone = Instantiate(original);   // вместе с пробоинами — они дети коллайдера мишени
+        inspectClone.name = "InspectClone";
+        setHighlight(inspectClone, false);
+        // коллайдеры оставляем: по ним луч узнаёт клик по копии; пуль в этом режиме нет — при открытом меню пистолет скрыт
+
+        Transform cam = Camera.main.transform;
+        Vector3 forward = new Vector3(cam.forward.x, 0f, cam.forward.z).normalized;
+        Vector3 dir = Quaternion.AngleAxis(-inspectSideAngle, Vector3.up) * forward;   // минус — влево
+        Vector3 anchor = cam.position + dir * inspectDistance;
+
+        inspectClone.transform.localScale *= inspectScale;
+        inspectClone.transform.position = anchor;
+        inspectClone.transform.LookAt(new Vector3(cam.position.x, anchor.y, cam.position.z));   // лицом к игроку, как при расстановке
+        Bounds b = rendererBounds(inspectClone);
+        inspectClone.transform.position += anchor - b.center;   // центр копии — ровно в точке перед глазами
+        addInspectHalo(inspectClone);
+    }
+
+    // ореол по контуру: полупрозрачная увеличенная копия меша чуть позади образца —
+    // за самой мишенью её не видно, наружу выступает только светящийся край
+    private void addInspectHalo(GameObject clone) {
+        if (inspectHaloMaterial == null) return;
+        Vector3 center = clone.transform.TransformPoint(localBounds(clone).center);
+        int holeLayer = LayerMask.NameToLayer("hole");
+
+        var pivot = new GameObject("InspectHalo");
+        pivot.transform.SetPositionAndRotation(center, clone.transform.rotation);
+        pivot.transform.SetParent(clone.transform, true);
+
+        foreach (var src in clone.GetComponentsInChildren<MeshRenderer>()) {
+            if (src.gameObject.layer == holeLayer) continue;   // пробоины в ореол не входят
+            var mf = src.GetComponent<MeshFilter>();
+            if (mf == null || mf.sharedMesh == null) continue;
+            var shell = new GameObject("shell");
+            shell.transform.SetPositionAndRotation(src.transform.position, src.transform.rotation);
+            shell.transform.localScale = src.transform.lossyScale;
+            shell.transform.SetParent(pivot.transform, true);
+            shell.AddComponent<MeshFilter>().sharedMesh = mf.sharedMesh;
+            var mr = shell.AddComponent<MeshRenderer>();
+            mr.sharedMaterial = inspectHaloMaterial;
+            mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        }
+
+        pivot.transform.localScale = Vector3.one * (1f + inspectHaloSize);   // раздуваем вокруг центра
+        pivot.transform.localPosition += Vector3.back * 0.004f;   // +Z копии смотрит на игрока → back = за мишень
+    }
+
+    // границы всех мешей объекта в его собственных локальных координатах (в отличие от Renderer.bounds — world AABB)
+    private static Bounds localBounds(GameObject root) {
+        Transform rt = root.transform;
+        bool has = false;
+        Bounds b = new Bounds();
+        foreach (var mf in root.GetComponentsInChildren<MeshFilter>()) {
+            if (mf.sharedMesh == null) continue;
+            Bounds mb = mf.sharedMesh.bounds;
+            for (int i = 0; i < 8; i++) {
+                Vector3 c = new Vector3((i & 1) == 0 ? mb.min.x : mb.max.x,
+                                        (i & 2) == 0 ? mb.min.y : mb.max.y,
+                                        (i & 4) == 0 ? mb.min.z : mb.max.z);
+                Vector3 l = rt.InverseTransformPoint(mf.transform.TransformPoint(c));
+                if (!has) { b = new Bounds(l, Vector3.zero); has = true; } else b.Encapsulate(l);
+            }
+        }
+        return b;
+    }
+
+    private static Bounds rendererBounds(GameObject go) {
+        var rs = go.GetComponentsInChildren<Renderer>();
+        if (rs.Length == 0) return new Bounds(go.transform.position, Vector3.zero);
+        Bounds b = rs[0].bounds;
+        for (int i = 1; i < rs.Length; i++) b.Encapsulate(rs[i].bounds);
+        return b;
+    }
+
+    private void clearInspectClone() {
+        if (inspectClone != null) { Destroy(inspectClone); inspectClone = null; }
+    }
+
+    // вход в лупу: луч синий сразу, по центру подсказка (то же поле hintText, что и команды стейджа)
+    private void enterInspect() {
+        inspectActive = true;
+        if (rayVisual == null) rayVisual = rayInteractor.GetComponentInChildren<RayInteractorRayVisual>(true);
+        if (rayVisual != null) {
+            rayNormalColor = rayVisual.HoverColor;
+            rayVisual.HoverColor = InspectRayColor;
+        }
+        showModeHint(StateEnum.Inspect, "Click on target to inspect\nClick Y to exit inspect mode");
+    }
+
+    private void clearInspect() {
+        clearInspectClone();
+        if (inspectHovered != null) { setHighlight(inspectHovered, false); inspectHovered = null; }
+        if (!inspectActive) return;
+        inspectActive = false;
+        if (rayVisual != null) rayVisual.HoverColor = rayNormalColor;
+        hideModeHint();
+    }
+
+    // подсказка режима по центру — то же поле hintText, что и команды стейджа; показываем один раз на вход в режим
+    private void showModeHint(StateEnum state, string text) {
+        if (hintState == state) return;
+        hintState = state;
+        hintShownText = text;
+        competitionModeService.hideCommandsText();
+        competitionModeService.hintText.text = text;
+        competitionModeService.hintText.gameObject.SetActive(true);
+    }
+
+    private void hideModeHint() {
+        if (hintState == StateEnum.Idle) return;
+        hintState = StateEnum.Idle;
+        // гасим только свою подсказку: если стейдж уже успел написать своё — не трогаем
+        if (competitionModeService.hintText.text == hintShownText)
+            competitionModeService.hintText.gameObject.SetActive(false);
     }
 
     private void clearHoverHighlight() {
@@ -439,6 +638,7 @@ public class BuilderService : MonoBehaviour {
         зоныСтрельбы.Clear();
         if (currentZone != null) { Destroy(currentZone); currentZone = null; zoneLine = null; }
         inZoneMode = false;
+        clearInspectClone();   // копия могла остаться от только что удалённой мишени
 
         clearHoles();
     }
@@ -627,9 +827,9 @@ public class BuilderService : MonoBehaviour {
         go.transform.position = hit.point + n * (rN - pivotToCenterN + pad);
     }
 
-    private void setHighlight(GameObject obj, bool on) {
+    private void setHighlight(GameObject obj, bool on, Color? color = null) {
         var mpb = new MaterialPropertyBlock();
-        if (on) mpb.SetColor("_BaseColor", new Color(1f, 0.3f, 0.3f, 1f));
+        if (on) mpb.SetColor("_BaseColor", color ?? new Color(1f, 0.3f, 0.3f, 1f));
         foreach (var r in obj.GetComponentsInChildren<Renderer>())
             r.SetPropertyBlock(mpb);
     }

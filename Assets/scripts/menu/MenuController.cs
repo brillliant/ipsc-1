@@ -161,6 +161,27 @@ public class MenuController : MonoBehaviour {
         competitionModeService.stateEnum = StateEnum.Wall4;
     }
 
+    // «лупа»: тайл-переключатель, onValueChanged дёргает и при включении, и при выключении — поэтому toggle по состоянию
+    public void chooseInspect() {
+        onClearPreview();
+        competitionModeService.stateEnum = competitionModeService.stateEnum == StateEnum.Inspect
+            ? StateEnum.Idle : StateEnum.Inspect;
+    }
+
+    // выход из режима кнопкой контроллера: гасим его тайл в меню, чтобы картинка совпадала с состоянием
+    public void setTileToggle(string tileName, bool on) {
+        foreach (var toggle in menu.GetComponentsInChildren<UnityEngine.UI.Toggle>(true)) {
+            if (!hasAncestorNamed(toggle.transform, tileName)) continue;
+            toggle.SetIsOnWithoutNotify(on);
+        }
+    }
+
+    private bool hasAncestorNamed(Transform t, string name) {
+        for (; t != null && t != menu.transform; t = t.parent)
+            if (t.name == name) return true;
+        return false;
+    }
+
     public void removeModeOn() {
         onClearPreview();
         competitionModeService.stateEnum = StateEnum.Remove;
