@@ -682,6 +682,8 @@ public class BuilderService : MonoBehaviour {
 
         var toggle = btn.GetComponentInChildren<UnityEngine.UI.Toggle>();
         if (toggle != null) {
+            // группа висит на контейнере в сцене (added component), префаб на неё сослаться не может — связываем здесь
+            toggle.group = readyStagesContainer.GetComponent<UnityEngine.UI.ToggleGroup>();
             toggle.onValueChanged.AddListener(isOn => {
                 if (isOn) LoadObjects(stageName);
             });

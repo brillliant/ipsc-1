@@ -29,6 +29,7 @@ public class MenuController : MonoBehaviour {
     private GameObject rayRight;
 
     private bool _hoveringUI;
+
     
     void Start() {
         pistol = GameObject.Find("Glock17");
@@ -48,8 +49,50 @@ public class MenuController : MonoBehaviour {
         bodyLockedFollow = menu.GetComponent<BodyLockedFollow>();
         floorScript = GetComponent<FloorScript>();
         
+        // Allow Switch Off у группы тайлов включён (иначе Unity сама нажимает первый тайл при старте),
+        // поэтому отжатие активного тайла кликом должно выключать режим — обработчики choose* об этом не знают
+        foreach (var toggle in objectTiles()) {
+            var group = toggle.group;
+            if (group == null) continue;
+            toggle.onValueChanged.AddListener(on => {
+                if (on || group.AnyTogglesOn() || competitionModeService.stateEnum == StateEnum.StageRun) return;
+                onClearPreview();
+                competitionModeService.stateEnum = StateEnum.Idle;
+            });
+        }
+
         menu.SetActive(false);
         setRayStatus(false);
+    }
+
+    // тайлы секции Objects — дети одного Content (родителя тайла Inspect)
+    private List<UnityEngine.UI.Toggle> objectTiles() {
+        var result = new List<UnityEngine.UI.Toggle>();
+        Transform content = null;
+        foreach (var t in menu.GetComponentsInChildren<UnityEngine.UI.Toggle>(true))
+            if (t.gameObject.name == "Inspect") { content = t.transform.parent; break; }
+        if (content == null) return result;
+        foreach (Transform child in content) {
+            var toggle = child.GetComponent<UnityEngine.UI.Toggle>();
+            if (toggle != null) result.Add(toggle);
+        }
+        return result;
+    }
+
+    // Группа тайлов и подсветка нажатого тайла настроены в сцене (overrides: Toggle.m_Group и
+    // AnimatorOverrideLayerWeigth._toggle у каждого тайла-режима, Allow Switch Off у группы выключен).
+    // Код нужен только чтобы отжать тайл, когда режим выключается не кликом по тайлу.
+    private static void setPressedVisual(Oculus.Interaction.Samples.AnimatorOverrideLayerWeigth layer, bool on) {
+        if (layer != null && layer.isActiveAndEnabled) layer.SetOverrideLayerActive(on);
+    }
+
+    // отжать все тайлы из кода (закрытие меню): режим при этом уже сброшен снаружи
+    private void releaseTiles() {
+        foreach (var toggle in objectTiles()) {
+            if (!toggle.isOn) continue;
+            toggle.SetIsOnWithoutNotify(false);
+            setPressedVisual(toggle.GetComponent<Oculus.Interaction.Samples.AnimatorOverrideLayerWeigth>(), false);
+        }
     }
     
     private void setRayStatus(bool status) {
@@ -77,6 +120,7 @@ public class MenuController : MonoBehaviour {
 
     public void hideMenu() {
         onClearPreview();
+        releaseTiles();   // пока меню ещё активно — аниматоры тайлов живы
         // сброс в Idle — только для билдер-режимов; идущий стейдж закрытием меню не прерываем
         if (competitionModeService.stateEnum != StateEnum.StageRun)
             competitionModeService.stateEnum = StateEnum.Idle;
@@ -171,15 +215,10 @@ public class MenuController : MonoBehaviour {
     // выход из режима кнопкой контроллера: гасим его тайл в меню, чтобы картинка совпадала с состоянием
     public void setTileToggle(string tileName, bool on) {
         foreach (var toggle in menu.GetComponentsInChildren<UnityEngine.UI.Toggle>(true)) {
-            if (!hasAncestorNamed(toggle.transform, tileName)) continue;
+            if (toggle.gameObject.name != tileName) continue;
             toggle.SetIsOnWithoutNotify(on);
+            setPressedVisual(toggle.GetComponent<Oculus.Interaction.Samples.AnimatorOverrideLayerWeigth>(), on);
         }
-    }
-
-    private bool hasAncestorNamed(Transform t, string name) {
-        for (; t != null && t != menu.transform; t = t.parent)
-            if (t.name == name) return true;
-        return false;
     }
 
     public void removeModeOn() {
