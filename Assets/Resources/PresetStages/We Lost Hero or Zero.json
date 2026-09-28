@@ -1,0 +1,162 @@
+{
+  "objectDataList": [
+    {
+      "prefabName": "wallPrefub(Clone)",
+      "position": {
+        "x": -1.8288,
+        "y": 0.811,
+        "z": 0.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 1.0,
+        "z": 0.0,
+        "w": 0.0
+      }
+    },
+    {
+      "prefabName": "wallPrefub(Clone)",
+      "position": {
+        "x": -0.6096,
+        "y": 0.811,
+        "z": -1.2192
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.707107,
+        "z": 0.0,
+        "w": 0.707107
+      }
+    },
+    {
+      "prefabName": "wallPrefub(Clone)",
+      "position": {
+        "x": -0.6096,
+        "y": 0.811,
+        "z": -3.6576
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.707107,
+        "z": 0.0,
+        "w": 0.707107
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 0.8382,
+        "y": 0.002,
+        "z": -4.8768
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -0.0762,
+        "y": 0.002,
+        "z": -4.8768
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target_left_half_dark(Clone)",
+      "position": {
+        "x": -1.143,
+        "y": 0.002,
+        "z": -4.8768
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.235793,
+        "z": 0.0,
+        "w": 0.971803
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -1.8288,
+        "y": 0.002,
+        "z": -7.62
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -3.048,
+        "y": -0.61,
+        "z": -6.096
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_no_shot_target(Clone)",
+      "position": {
+        "x": -3.048,
+        "y": 0.35,
+        "z": -6.0655
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    }
+  ],
+  "shootingZones": [
+    {
+      "points": [
+        {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        {
+          "x": -3.6576,
+          "y": 0.0,
+          "z": 0.0
+        },
+        {
+          "x": -3.6576,
+          "y": 0.0,
+          "z": 1.2192
+        },
+        {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 1.2192
+        },
+        {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        }
+      ],
+      "closed": false
+    }
+  ]
+}

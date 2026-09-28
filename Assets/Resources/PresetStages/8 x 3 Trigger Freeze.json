@@ -1,0 +1,288 @@
+{
+  "objectDataList": [
+    {
+      "prefabName": "wallPrefub(Clone)",
+      "position": {
+        "x": 0.0,
+        "y": 0.811,
+        "z": -2.4384
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.707107,
+        "z": 0.0,
+        "w": 0.707107
+      }
+    },
+    {
+      "prefabName": "wallPrefub(Clone)",
+      "position": {
+        "x": -1.2192,
+        "y": 0.811,
+        "z": -1.2192
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 1.0,
+        "z": 0.0,
+        "w": 0.0
+      }
+    },
+    {
+      "prefabName": "wallPrefub(Clone)",
+      "position": {
+        "x": -4.8768,
+        "y": 0.811,
+        "z": 1.2192
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.707107,
+        "z": 0.0,
+        "w": 0.707107
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 2.8194,
+        "y": 0.002,
+        "z": -3.6576
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.372835,
+        "z": 0.0,
+        "w": 0.927898
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 2.0574,
+        "y": 0.002,
+        "z": -3.6576
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.336542,
+        "z": 0.0,
+        "w": 0.941668
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 1.2954,
+        "y": 0.002,
+        "z": -3.6576
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.294353,
+        "z": 0.0,
+        "w": 0.955697
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 0.5334,
+        "y": 0.002,
+        "z": -3.6576
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.245671,
+        "z": 0.0,
+        "w": 0.969353
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -0.8382,
+        "y": 0.002,
+        "z": -3.6576
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -1.6002,
+        "y": 0.002,
+        "z": -3.6576
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_no_shot_target(Clone)",
+      "position": {
+        "x": -1.6002,
+        "y": -0.76,
+        "z": -3.6271
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -2.3622,
+        "y": 0.002,
+        "z": -3.6576
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -3.1242,
+        "y": 0.002,
+        "z": -3.6576
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_no_shot_target(Clone)",
+      "position": {
+        "x": -3.1242,
+        "y": -0.76,
+        "z": -3.6271
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -5.4102,
+        "y": 0.002,
+        "z": 0.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.487803,
+        "z": 0.0,
+        "w": 0.872954
+      }
+    },
+    {
+      "prefabName": "USPSA_no_shot_target(Clone)",
+      "position": {
+        "x": -5.4102,
+        "y": -0.76,
+        "z": 0.0305
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -6.1722,
+        "y": 0.002,
+        "z": 0.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.529213,
+        "z": 0.0,
+        "w": 0.848489
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -6.9342,
+        "y": 0.002,
+        "z": 0.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.558212,
+        "z": 0.0,
+        "w": 0.829698
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -7.6962,
+        "y": 0.002,
+        "z": 0.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.57943,
+        "z": 0.0,
+        "w": 0.815022
+      }
+    }
+  ],
+  "shootingZones": [
+    {
+      "points": [
+        {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        {
+          "x": -4.8768,
+          "y": 0.0,
+          "z": 0.0
+        },
+        {
+          "x": -4.8768,
+          "y": 0.0,
+          "z": 3.6576
+        },
+        {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 3.6576
+        },
+        {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        }
+      ],
+      "closed": false
+    }
+  ]
+}
