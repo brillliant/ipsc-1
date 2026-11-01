@@ -26,5 +26,6 @@ namespace DefaultNamespace {
     {
         public List<ObjectData> objectDataList;
         public List<ShootingZoneData> shootingZones;
+        public List<Vector3> startMarks;   // крестики под ноги на старте, локальные относительно stageRoot (может отсутствовать)
     }
 }

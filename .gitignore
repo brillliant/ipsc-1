@@ -31,3 +31,5 @@ Recordings/
 Thumbs.db
 
 *.apk
+# локальная конфигурация MCP (пути машины)
+.mcp.json

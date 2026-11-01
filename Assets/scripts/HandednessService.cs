@@ -36,6 +36,8 @@ public class HandednessService : MonoBehaviour {
         if (cameraRig != null) cameraRig.UpdatedAnchors -= stabilizePistolPose;
     }
 
+    public bool IsLeftHanded => isLeftHandedPlayer;
+
     // перезапустить калибровку эталона (вызывается при открытии меню)
     public void Recalibrate() {
         calibrated = false;
