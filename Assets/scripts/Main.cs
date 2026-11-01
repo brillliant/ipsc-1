@@ -60,8 +60,10 @@ public class Main : MonoBehaviour {
             Keyboard.current.mKey.wasPressedThisFrame) showHideDebugMesh();
 
         if (Keyboard.current.oKey.wasPressedThisFrame || OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch)) competitionModeService.startStopRange();
+        // стик вверх — сброс прогона; работает и после финиша, пока на экране висит «Your time»
         if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickUp, OVRInput.Controller.LTouch)
-            && competitionModeService.isShootMode()) competitionModeService.interruptAttempt();
+            && (competitionModeService.isShootMode() || competitionModeService.readyText.gameObject.activeSelf))
+            competitionModeService.interruptAttempt();
 
         if (floorScript.IsCalibrating && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch))
             floorScript.ConfirmCalibration();

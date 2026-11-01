@@ -155,6 +155,8 @@ public class CompetitionModeService : MonoBehaviour {
 
         rangeIsClear.Play();
         readyText.text = "Your time: " + showTotalTime();
+        hintText.text = "Stick up - reset";   // тот же сброс, что и отмена во время прогона: убирает время и возвращает в Idle
+        hintText.gameObject.SetActive(true);
     }
 
     public void startStage() {

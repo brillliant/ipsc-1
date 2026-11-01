@@ -161,6 +161,28 @@ public class PistolScript : MonoBehaviour {
     private void LateUpdate() {
         checkIfPistolInHolster();
         applyRecoil();
+        hideWhileUntracked();
+    }
+
+    // в кобуре контроллер теряет трекинг и пистолет «прыгает» по воздуху — пока трекинга нет, просто не рисуем его
+    private readonly List<Renderer> hiddenRenderers = new();
+    private HandednessService handedness;
+    private bool handednessSearched;
+
+    private void hideWhileUntracked() {
+        if (!handednessSearched) { handedness = FindAnyObjectByType<HandednessService>(); handednessSearched = true; }
+        OVRInput.Controller controller = handedness != null && handedness.IsLeftHanded ? OVRInput.Controller.LTouch : OVRInput.Controller.RTouch;
+        bool tracked = OVRInput.GetControllerPositionTracked(controller);
+        if (!tracked && hiddenRenderers.Count == 0) {
+            foreach (var r in GetComponentsInChildren<Renderer>()) {
+                if (!r.enabled) continue;
+                r.enabled = false;
+                hiddenRenderers.Add(r);
+            }
+        } else if (tracked && hiddenRenderers.Count > 0) {
+            foreach (var r in hiddenRenderers) if (r != null) r.enabled = true;
+            hiddenRenderers.Clear();
+        }
     }
 
     public Transform findMagazine() {

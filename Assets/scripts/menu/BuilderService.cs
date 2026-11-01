@@ -70,6 +70,8 @@ public class BuilderService : MonoBehaviour {
     private const float ZonePickThreshold = 0.12f;  // радиус попадания лучом по линии в режиме Remove
 
     private readonly List<GameObject> зоныСтрельбы = new List<GameObject>();
+    private readonly List<GameObject> стартовыеМетки = new List<GameObject>();   // крестики под ноги готового стейджа
+    private List<Vector3> currentStartMarks;                                     // чтобы сохранить их вместе со стейджем
     private readonly List<Vector3> zonePoints = new List<Vector3>(); // world-space пока рисуем
     private GameObject currentZone;        // активная рисуемая
     private LineRenderer zoneLine;          // зафиксированные сегменты
@@ -146,6 +148,7 @@ public class BuilderService : MonoBehaviour {
         // вышли из лупы любым путём (другой режим, закрытие меню, старт стейджа) — копия и подсветка исчезают
         if (competitionModeService.stateEnum != StateEnum.Inspect) clearInspect();
         if (hintState != StateEnum.Idle && hintState != competitionModeService.stateEnum) hideModeHint();   // режим сменился
+        clampRayToFirstHit();
 
         if (competitionModeService.isShootMode()) return;
 
@@ -200,6 +203,30 @@ public class BuilderService : MonoBehaviour {
         } else {
             clearHoverHighlight();
         }
+    }
+
+    /// <summary>Длина луча контроллера по умолчанию, м (совпадает с настройкой RayInteractor в сцене).</summary>
+    private const float DefaultRayLength = 5f;
+
+    /// <summary>
+    /// Заканчивает луч контроллера на первом объекте, в который он упёрся: установленная мишень или стена,
+    /// копия мишени в режиме Inspect. За такой объект луч не проходит и меню позади него не достаёт.
+    /// Меню и его ручка — интерактивные объекты Meta, на них луч останавливает сам RayInteractor.
+    /// Остальные коллайдеры сцены (пол, комната, риг, невидимые боксы) на длину луча не влияют. Вызывать каждый кадр.
+    /// </summary>
+    private void clampRayToFirstHit() {
+        if (rayInteractor == null || !rayInteractor.isActiveAndEnabled) return;
+        if (rayVisual == null) rayVisual = rayInteractor.GetComponentInChildren<RayInteractorRayVisual>(true);
+        float margin = (rayVisual != null ? rayVisual.RayVisualEndOffset : 0f) + 0.005f;   // визуал короче луча на этот отступ
+        float len = DefaultRayLength;
+        foreach (RaycastHit h in Physics.RaycastAll(rayInteractor.Ray, DefaultRayLength))
+            if (stopsRay(h.collider.transform)) len = Mathf.Min(len, h.distance + margin);
+        rayInteractor.MaxRayLength = len;
+    }
+
+    /// <summary>Объекты, на которых луч должен заканчиваться: объекты стейджа и копия Inspect.</summary>
+    private bool stopsRay(Transform t) {
+        return findPlacedObject(t) != null || (inspectClone != null && t.IsChildOf(inspectClone.transform));
     }
 
     private void buildWith(GameObject preview, GameObject prefab) {
@@ -385,10 +412,9 @@ public class BuilderService : MonoBehaviour {
         Vector3 anchor = cam.position + dir * inspectDistance;
 
         inspectClone.transform.localScale *= inspectScale;
+        anchor.y = original.transform.position.y;   // копия стоит на земле, на том же уровне, что и оригинал
         inspectClone.transform.position = anchor;
         inspectClone.transform.LookAt(new Vector3(cam.position.x, anchor.y, cam.position.z));   // лицом к игроку, как при расстановке
-        Bounds b = rendererBounds(inspectClone);
-        inspectClone.transform.position += anchor - b.center;   // центр копии — ровно в точке перед глазами
         addInspectHalo(inspectClone);
     }
 
@@ -437,14 +463,6 @@ public class BuilderService : MonoBehaviour {
                 if (!has) { b = new Bounds(l, Vector3.zero); has = true; } else b.Encapsulate(l);
             }
         }
-        return b;
-    }
-
-    private static Bounds rendererBounds(GameObject go) {
-        var rs = go.GetComponentsInChildren<Renderer>();
-        if (rs.Length == 0) return new Bounds(go.transform.position, Vector3.zero);
-        Bounds b = rs[0].bounds;
-        for (int i = 1; i < rs.Length; i++) b.Encapsulate(rs[i].bounds);
         return b;
     }
 
@@ -621,7 +639,8 @@ public class BuilderService : MonoBehaviour {
             zone.transform.SetParent(stageRoot);
         ObjectDataList wrapper = new ObjectDataList {
             objectDataList = objectDataList,
-            shootingZones = CollectShootingZones()
+            shootingZones = CollectShootingZones(),
+            startMarks = currentStartMarks
         };
         File.WriteAllText(path, JsonUtility.ToJson(wrapper));
         PopulateReadyStagesMenu();
@@ -639,6 +658,7 @@ public class BuilderService : MonoBehaviour {
         if (currentZone != null) { Destroy(currentZone); currentZone = null; zoneLine = null; }
         inZoneMode = false;
         clearInspectClone();   // копия могла остаться от только что удалённой мишени
+        clearStartMarks();
 
         clearHoles();
     }
@@ -650,6 +670,10 @@ public class BuilderService : MonoBehaviour {
 
         foreach (GameObject мишень in установленныеМишени)
             мишень.GetComponentInChildren<TargetScript>()?.resetTarget();   // поднимаем упавшие попперы
+
+        // магазины, валяющиеся на полу (выброшенный магазин отвязан от родителя), — тоже мусор прогона
+        foreach (MagazineScript mag in FindObjectsByType<MagazineScript>(FindObjectsSortMode.None))
+            if (mag.transform.parent == null) Destroy(mag.gameObject);
     }
     
     public void PopulateReadyStagesMenu() {
@@ -758,7 +782,43 @@ public class BuilderService : MonoBehaviour {
             foreach (ShootingZoneData zone in wrapper.shootingZones)
                 SpawnShootingZone(zone);
 
+        currentStartMarks = wrapper.startMarks;
+        spawnStartMarks(currentStartMarks);
+
         competitionModeService.stateEnum = StateEnum.MoveStage;
+    }
+
+    // ---- стартовые метки: два крестика под ноги, как на схемах USPSA ----
+    private void spawnStartMarks(List<Vector3> marks) {
+        if (marks == null) return;
+        const float half = 0.15f;   // крестик 30 см
+        foreach (Vector3 p in marks) {
+            for (int i = 0; i < 2; i++) {
+                LineRenderer lr = makeLine("StartMark", stageRoot, null, LineWidth * 0.8f);
+                lr.positionCount = 2;
+                float sx = i == 0 ? 1f : -1f;
+                lr.SetPosition(0, new Vector3(p.x - half * sx, p.y + FloorOffset, p.z - half));
+                lr.SetPosition(1, new Vector3(p.x + half * sx, p.y + FloorOffset, p.z + half));
+                стартовыеМетки.Add(lr.gameObject);
+            }
+        }
+    }
+
+    private void clearStartMarks() {
+        foreach (GameObject m in стартовыеМетки) Destroy(m);
+        стартовыеМетки.Clear();
+        currentStartMarks = null;
+    }
+
+    private LineRenderer makeLine(string name, Transform parent, Color? color, float width) {
+        var go = new GameObject(name);
+        if (parent != null) go.transform.SetParent(parent, false);
+        var lr = go.AddComponent<LineRenderer>();
+        lr.material = color.HasValue ? new Material(shootingZoneMaterial) { color = color.Value } : shootingZoneMaterial;
+        lr.startWidth = width;
+        lr.endWidth = width;
+        lr.useWorldSpace = false;
+        return lr;
     }
 
     private void placeATarget(GameObject preview, GameObject prefab) {
