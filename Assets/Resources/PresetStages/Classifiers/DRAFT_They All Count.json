@@ -1,0 +1,233 @@
+{
+  "objectDataList": [
+    {
+      "prefabName": "wallPrefub(Clone)",
+      "position": {
+        "x": 0.0,
+        "y": 0.811,
+        "z": -2.4384
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.707107,
+        "z": 0.0,
+        "w": 0.707107
+      }
+    },
+    {
+      "prefabName": "wallPrefub(Clone)",
+      "position": {
+        "x": 1.2192,
+        "y": 0.811,
+        "z": -3.9624
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 1.0,
+        "z": 0.0,
+        "w": 0.0
+      }
+    },
+    {
+      "prefabName": "wall4Prefub(Clone)",
+      "position": {
+        "x": -2.4384,
+        "y": 0.811,
+        "z": -5.4864
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.707107,
+        "z": 0.0,
+        "w": 0.707107
+      }
+    },
+    {
+      "prefabName": "wallPrefub(Clone)",
+      "position": {
+        "x": -1.2192,
+        "y": 0.811,
+        "z": -6.096
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 1.0,
+        "z": 0.0,
+        "w": 0.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 3.2766,
+        "y": 0.002,
+        "z": -3.6576
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.357187,
+        "z": 0.0,
+        "w": 0.934033
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 3.2766,
+        "y": 0.9,
+        "z": -3.6881
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.355261,
+        "z": 0.0,
+        "w": 0.934767
+      }
+    },
+    {
+      "prefabName": "USPSA_no_shot_target(Clone)",
+      "position": {
+        "x": 3.2766,
+        "y": 1.45,
+        "z": -3.7186
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.353351,
+        "z": 0.0,
+        "w": 0.935491
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 0.2286,
+        "y": 0.002,
+        "z": -8.8392
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 0.2286,
+        "y": 0.002,
+        "z": -14.9352
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -1.6002,
+        "y": 0.002,
+        "z": -6.4008
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -3.2766,
+        "y": 0.002,
+        "z": -6.4008
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -5.9436,
+        "y": 0.002,
+        "z": -6.4008
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    }
+  ],
+  "shootingZones": [
+    {
+      "points": [
+        {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        {
+          "x": -1.2192,
+          "y": 0.0,
+          "z": 0.0
+        },
+        {
+          "x": -1.2192,
+          "y": 0.0,
+          "z": -3.6576
+        },
+        {
+          "x": -2.4384,
+          "y": 0.0,
+          "z": -3.6576
+        },
+        {
+          "x": -2.4384,
+          "y": 0.0,
+          "z": -4.8768
+        },
+        {
+          "x": 0.0,
+          "y": 0.0,
+          "z": -4.8768
+        },
+        {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        }
+      ],
+      "closed": false
+    }
+  ],
+  "startMarks": [
+    {
+      "x": -0.381,
+      "y": 0.0,
+      "z": -0.6096
+    },
+    {
+      "x": -0.8382,
+      "y": 0.0,
+      "z": -0.6096
+    }
+  ],
+  "info": {
+    "code": "CM 25-06",
+    "procedure": "START POSITION: The Handgun Start Position is standing anywhere inside of the shooting area, wrists below belt. Handgun is loaded and holstered.\nThe PCC Start Position is standing anywhere inside of the shooting area. Carbine is loaded with stock on belt.\nThe Make Ready position is at the same location as the Start Position.\n\nPROCEDURE: Upon the start signal, engage targets from within the shooting area.",
+    "scoring": "SCORING: Comstock, 14 rounds, 70 points\nTARGETS: 7 USPSA Targets\nSCORED HITS: Best 2 per USPSA Target\nSTART-STOP: Audible - Last Shot",
+    "briefing": "CM 25-06 They All Count is a 14 round, 70 point Comstock Classifier course. There are 7 USPSA targets. The best 2 hits per target will score. The start signal is audible.\nThe Handgun Start Position is standing anywhere inside of the shooting area, wrists below belt. Handgun is loaded and holstered.\nThe PCC Start Position is standing anywhere inside of the shooting area. Carbine is loaded with stock on belt.\nThe Make Ready position is at the same location as the Start Position.\nUpon the start signal, engage targets from within the shooting area.",
+    "image": "PresetStages/Classifiers/img/DRAFT_They All Count"
+  }
+}

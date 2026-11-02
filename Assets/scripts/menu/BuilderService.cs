@@ -48,6 +48,27 @@ public class BuilderService : MonoBehaviour {
     public AudioSource popperFallSound;   // sounds/PopperFall — поппер лёг
 
     [SerializeField] private Transform readyStagesContainer;
+    private string readyStagesFilter = "";   // текст из строки поиска панели Ready stages
+    [SerializeField] private Oculus.Interaction.Samples.DropDownGroup categoryDropdown;   // пункты = папки в Resources/PresetStages, плюс All и Custom
+    private const string CategoryAll = "All";
+    private const string CategoryCustom = "Custom";   // стейджи, сохранённые пользователем (persistentDataPath)
+    private string readyStagesCategory = CategoryAll;
+    private readonly Dictionary<GameObject, string> readyStageCategories = new Dictionary<GameObject, string>();   // кнопка → категория
+
+    [Header("Stage info")]
+    [SerializeField] private GameObject stageInfoPanel;        // панель описания справа от списка стейджей
+    [SerializeField] private TMP_Text stageInfoTitle;
+    [SerializeField] private TMP_Text stageInfoProcedure;
+    [SerializeField] private TMP_Text stageInfoScoring;
+    [SerializeField] private TMP_Text stageInfoBriefing;
+    [SerializeField] private UnityEngine.UI.Image stageInfoImage;
+    [SerializeField] private RectTransform stageInfoCanvas;            // CanvasRoot панели, pivot в левом верхнем углу — растёт вниз и вправо
+    [SerializeField] private RectTransform stageInfoProcedureHeader;
+    [SerializeField] private RectTransform stageInfoScoringHeader;
+    [SerializeField] private RectTransform stageInfoBriefingHeader;
+    [SerializeField] private RectTransform stageInfoLowerLimit;         // главное меню: ниже его верха панель не опускается
+    // px раскладки панели Stage info: отступы, высота подзаголовка, ширина текстовой колонки, предел ширины картинки
+    private const float InfoTop = 60f, InfoPad = 24f, InfoHeader = 24f, InfoGap = 16f, InfoTextWidth = 582f, InfoPictureMax = 620f;
     [SerializeField] private Transform stageRoot;
     
     [SerializeField] private GameObject deleteConfirmDialog;
@@ -681,6 +702,8 @@ public class BuilderService : MonoBehaviour {
         foreach (Transform child in readyStagesContainer) {
             Destroy(child.gameObject);
         }
+        readyStageCategories.Clear();
+        if (stageInfoPanel != null) stageInfoPanel.SetActive(false);   // кнопки пересозданы отжатыми — описание тоже прячем
 
         HashSet<string> userStageNames = new HashSet<string>();
 
@@ -688,21 +711,139 @@ public class BuilderService : MonoBehaviour {
         foreach (string file in files) {
             string stageName = Path.GetFileNameWithoutExtension(file);
             userStageNames.Add(stageName);
-            AddStageButton(stageName, isPreset: false);
+            AddStageButton(stageName, CategoryCustom, CategoryCustom);
         }
 
-        TextAsset[] presets = Resources.LoadAll<TextAsset>("PresetStages");
-        foreach (TextAsset preset in presets) {
-            if (userStageNames.Contains(preset.name)) continue;
-            AddStageButton(preset.name, isPreset: true);
+        foreach (string category in presetCategories())
+            foreach (TextAsset preset in Resources.LoadAll<TextAsset>("PresetStages/" + category)) {
+                if (userStageNames.Contains(preset.name)) continue;
+                StageInfoData info = JsonUtility.FromJson<ObjectDataList>(preset.text).info;
+                string subtitle = info != null && !string.IsNullOrEmpty(info.code) ? info.code : category;
+                AddStageButton(preset.name, category, subtitle);
+            }
+    }
+
+    /// <summary>Категории пресетов — названия пунктов дропдауна кроме All и Custom; каждая = папка в Resources/PresetStages.</summary>
+    private IEnumerable<string> presetCategories() {
+        foreach (UnityEngine.UI.Toggle option in categoryDropdown.GetComponentsInChildren<UnityEngine.UI.Toggle>(true)) {
+            if (option.group == null || !option.gameObject.activeSelf) continue;   // заголовок дропдауна и выключенные пункты
+            string title = optionTitle(option);
+            if (title != CategoryAll && title != CategoryCustom) yield return title;
         }
     }
 
-    private void AddStageButton(string stageName, bool isPreset) {
+    private static string optionTitle(UnityEngine.UI.Toggle option) {
+        foreach (TMP_Text text in option.GetComponentsInChildren<TMP_Text>(true))
+            if (text.gameObject.name == "Title") return text.text.Trim();
+        return "";
+    }
+
+    /// <summary>Кнопка стейджа отжата: панель описания прячется, а ещё не установленный стейдж (летает на луче) убирается.</summary>
+    private void cancelStageSelection() {
+        if (stageInfoPanel != null) stageInfoPanel.SetActive(false);
+        if (competitionModeService.stateEnum != StateEnum.MoveStage) return;
+        RemoveAllObjects();
+        competitionModeService.stateEnum = StateEnum.Idle;
+    }
+
+    /// <summary>Панель описания стейджа: картинка, процедура, скоринг и полный брифинг из JSON пресета; без описания панель скрыта.</summary>
+    private void showStageInfo(string stageName, StageInfoData info) {
+        if (stageInfoPanel == null) return;
+        bool hasInfo = info != null && (!string.IsNullOrEmpty(info.procedure) || !string.IsNullOrEmpty(info.briefing));
+        stageInfoPanel.SetActive(hasInfo);
+        if (!hasInfo) return;
+        stageInfoTitle.text = string.IsNullOrEmpty(info.code) ? stageName : info.code + "   " + stageName;
+        stageInfoProcedure.text = boldCaps(info.procedure);
+        stageInfoScoring.text = boldCaps(info.scoring);
+        stageInfoBriefing.text = boldCaps(info.briefing);
+        Sprite sprite = string.IsNullOrEmpty(info.image) ? null : Resources.Load<Sprite>(info.image);
+        stageInfoImage.sprite = sprite;
+        stageInfoImage.enabled = sprite != null;
+        layoutStageInfo();
+    }
+
+    /// <summary>Крестик на панели описания: панель прячется, выбор стейджа и его установка продолжаются.</summary>
+    public void hideStageInfo() {
+        if (stageInfoPanel != null) stageInfoPanel.SetActive(false);
+    }
+
+    /// <summary>
+    /// Панель описания подгоняется под содержимое: высота — под тексты (текстовая колонка фиксированной ширины),
+    /// ширина левой колонки — под картинку при этой высоте, общая ширина панели = картинка + текст.
+    /// </summary>
+    private void layoutStageInfo() {
+        if (stageInfoCanvas == null) return;
+        float procW = Mathf.Round((InfoTextWidth - 12f) * 0.56f);
+        float scoreW = InfoTextWidth - 12f - procW;
+        // 1. высоты текстов при их ширине (x пока условный, важна только ширина)
+        setRect(stageInfoProcedure.rectTransform, 0, 0, procW, 10);
+        setRect(stageInfoScoring.rectTransform, 0, 0, scoreW, 10);
+        setRect(stageInfoBriefing.rectTransform, 0, 0, InfoTextWidth, 10);
+        stageInfoProcedure.ForceMeshUpdate(); stageInfoScoring.ForceMeshUpdate(); stageInfoBriefing.ForceMeshUpdate();
+        float rowH = Mathf.Max(stageInfoProcedure.preferredHeight, stageInfoScoring.preferredHeight) + 4f;
+        float briefH = stageInfoBriefing.preferredHeight + 4f;
+        float rowTop = InfoTop + InfoHeader + 4f;
+        float briefTop = rowTop + rowH + InfoGap;
+        float height = briefTop + InfoHeader + 4f + briefH + InfoPad;
+        // 2. картинка: во всю высоту, ширина по пропорции, не шире предела; без картинки левой колонки нет
+        float picH = height - InfoTop - InfoPad;
+        float picW = 0f;
+        if (stageInfoImage.sprite != null)
+            picW = Mathf.Min(Mathf.Round(picH * stageInfoImage.sprite.rect.width / stageInfoImage.sprite.rect.height), InfoPictureMax);
+        float cx = InfoPad + (picW > 0 ? picW + 36f : 0f);
+        float width = cx + InfoTextWidth + InfoPad;
+        // 3. расстановка
+        setRect(stageInfoImage.rectTransform, InfoPad, InfoTop, picW, picH);
+        setRect(stageInfoProcedureHeader, cx, InfoTop, procW, InfoHeader);
+        setRect(stageInfoProcedure.rectTransform, cx, rowTop, procW, rowH);
+        setRect(stageInfoScoringHeader, cx + procW + 12f, InfoTop, scoreW, InfoHeader);
+        setRect(stageInfoScoring.rectTransform, cx + procW + 12f, rowTop, scoreW, rowH);
+        setRect(stageInfoBriefingHeader, cx, briefTop, InfoTextWidth, InfoHeader);
+        setRect(stageInfoBriefing.rectTransform, cx, briefTop + InfoHeader + 4f, InfoTextWidth, briefH);
+        stageInfoCanvas.sizeDelta = new Vector2(width, height);
+        // 4. верх по верху панели Stages; если низ наезжает на главное меню — приподнять ровно на перекрытие
+        stageInfoCanvas.localPosition = Vector3.zero;
+        if (stageInfoLowerLimit != null) {
+            Vector3[] ic = new Vector3[4]; stageInfoCanvas.GetWorldCorners(ic);
+            Vector3[] mc = new Vector3[4]; stageInfoLowerLimit.GetWorldCorners(mc);
+            float limit = Mathf.Max(mc[1].y, mc[2].y) + 0.01f;
+            float bottom = Mathf.Min(ic[0].y, ic[3].y);
+            if (bottom < limit) stageInfoCanvas.position += Vector3.up * (limit - bottom);
+        }
+    }
+
+    /// <summary>Прямоугольник от левого верхнего угла панели: x, y — отступы, w, h — размер (якоря элемента в верхнем левом углу).</summary>
+    private static void setRect(RectTransform rt, float x, float y, float w, float h) {
+        rt.anchorMin = rt.anchorMax = new Vector2(0, 1);
+        rt.pivot = new Vector2(0, 1);
+        rt.offsetMin = new Vector2(x, -(y + h));
+        rt.offsetMax = new Vector2(x + w, -y);
+    }
+
+    /// <summary>Подписи капсом с двоеточием (START POSITION:, SCORING: …) выделяются жирным через rich text TMP.</summary>
+    private static string boldCaps(string text) {
+        if (string.IsNullOrEmpty(text)) return text;
+        return System.Text.RegularExpressions.Regex.Replace(text, @"(?<![A-Za-z])[A-Z][A-Z0-9 \-/&]*[A-Z]:", "<b>$0</b>");
+    }
+
+    /// <summary>Пресет по имени — ищется во всех папках-категориях Resources/PresetStages.</summary>
+    private TextAsset loadPreset(string fileName) {
+        foreach (string category in presetCategories()) {
+            TextAsset preset = Resources.Load<TextAsset>("PresetStages/" + category + "/" + fileName);
+            if (preset != null) return preset;
+        }
+        return Resources.Load<TextAsset>("PresetStages/" + fileName);
+    }
+
+    private void AddStageButton(string stageName, string category, string subtitle) {
         GameObject btn = Instantiate(loadStageButtonPrefub, readyStagesContainer);
+        readyStageCategories[btn] = category;
 
         var label = btn.GetComponentInChildren<TMP_Text>();
         if (label != null) label.text = stageName;
+        var secondary = btn.transform.Find("Content/Background/Elements/Label (1)")?.GetComponent<TMP_Text>();
+        if (secondary != null) secondary.text = subtitle;   // код классифаера или категория
+        btn.SetActive(isReadyStageVisible(stageName, category));
 
         var toggle = btn.GetComponentInChildren<UnityEngine.UI.Toggle>();
         if (toggle != null) {
@@ -710,12 +851,13 @@ public class BuilderService : MonoBehaviour {
             toggle.group = readyStagesContainer.GetComponent<UnityEngine.UI.ToggleGroup>();
             toggle.onValueChanged.AddListener(isOn => {
                 if (isOn) LoadObjects(stageName);
+                else cancelStageSelection();
             });
         }
 
         var deleteBtn = btn.transform.Find("DeleteButton")?.GetComponent<UnityEngine.UI.Button>();
         if (deleteBtn != null) {
-            if (isPreset) {
+            if (category != CategoryCustom) {
                 deleteBtn.gameObject.SetActive(false);
             } else {
                 deleteBtn.onClick.AddListener(() => RequestDeleteStage(stageName));
@@ -723,6 +865,35 @@ public class BuilderService : MonoBehaviour {
         }
     }
     
+    /// <summary>Фильтр списка готовых стейджей по подстроке имени (без учёта регистра); пустая строка — показать все.</summary>
+    public void filterReadyStages(string query) {
+        readyStagesFilter = query.Trim();
+        applyReadyStagesFilter();
+    }
+
+    /// <summary>Смена категории в дропдауне панели Ready stages (событие WhenSelectionChanged).</summary>
+    public void setReadyStagesCategory() {
+        UnityEngine.UI.Toggle selected = categoryDropdown.SelectedToggle;
+        readyStagesCategory = selected != null ? optionTitle(selected) : CategoryAll;
+        applyReadyStagesFilter();
+    }
+
+    private void applyReadyStagesFilter() {
+        foreach (Transform child in readyStagesContainer) {
+            var label = child.GetComponentInChildren<TMP_Text>(true);
+            string category;
+            readyStageCategories.TryGetValue(child.gameObject, out category);
+            child.gameObject.SetActive(label == null || isReadyStageVisible(label.text, category));
+        }
+    }
+
+    private bool isReadyStageVisible(string stageName, string category) {
+        bool categoryOk = readyStagesCategory == CategoryAll || category == readyStagesCategory;
+        bool nameOk = readyStagesFilter.Length == 0 ||
+                      stageName.IndexOf(readyStagesFilter, System.StringComparison.OrdinalIgnoreCase) >= 0;
+        return categoryOk && nameOk;
+    }
+
     public void RequestDeleteStage(string fileName) {
         stageToDelete = fileName;
         deleteConfirmDialog.SetActive(true);
@@ -750,7 +921,7 @@ public class BuilderService : MonoBehaviour {
         if (File.Exists(path)) {
             json = File.ReadAllText(path);
         } else {
-            TextAsset preset = Resources.Load<TextAsset>("PresetStages/" + fileName);
+            TextAsset preset = loadPreset(fileName);
             if (preset == null) {
                 Debug.LogWarning($"Файл '{fileName}' не найден");
                 return;
@@ -762,6 +933,7 @@ public class BuilderService : MonoBehaviour {
 
         ObjectDataList wrapper = JsonUtility.FromJson<ObjectDataList>(json);
         if (wrapper.objectDataList != null) objectDataList = wrapper.objectDataList;
+        showStageInfo(fileName, wrapper.info);
 
         foreach (ObjectData data in objectDataList) {
             string baseName = data.prefabName.EndsWith("(Clone)")

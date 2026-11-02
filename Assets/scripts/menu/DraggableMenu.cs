@@ -1,12 +1,12 @@
 using Oculus.Interaction;
 using UnityEngine;
 
-// Перетаскивание меню за ручку (CoinPointer) лучом правого контроллера.
-// Наводишь луч на ручку, зажимаешь grip → меню виснет на конце луча,
-// развёрнутое перпендикулярно лучу (лицом к игроку), и едет за контроллером.
-// Ручка и меню связаны жёстко: тащим за ручку — меню следует, сохраняя свою
-// позу относительно неё. BodyLockedFollow на время драга отключается, чтобы не
-// возвращал меню на место; обратно включается при переоткрытии меню (в MenuController).
+/// <summary>
+/// Перетаскивание меню за ручку (CoinPointer) лучом правого контроллера: навёл луч на ручку, зажал grip или курок —
+/// меню висит на конце луча и едет за контроллером. Поворачивается только вокруг вертикали, вслед за
+/// горизонтальным направлением луча; наклон и крен меню остаются такими, как при открытии.
+/// Ручка и меню связаны жёстко. BodyLockedFollow на время драга отключается, обратно включается при переоткрытии меню.
+/// </summary>
 public class DraggableMenu : MonoBehaviour {
     private const string HandleName = "CoinPointer";           // имя объекта-ручки в сцене
 
@@ -21,6 +21,7 @@ public class DraggableMenu : MonoBehaviour {
     private Vector3 menuToHandleAtGrab;        // world-вектор «меню → ручка» в момент захвата
     private Quaternion menuRotAtGrab;
     private Quaternion rayToMenuAtGrab;        // ориентация меню относительно луча в момент захвата (само-калибровка)
+    private Quaternion lastRayYaw = Quaternion.identity;   // последний горизонтальный поворот луча — на случай вертикального луча
 
     void Awake() {
         menuRoot = transform;
@@ -52,13 +53,16 @@ public class DraggableMenu : MonoBehaviour {
     }
 
     void Update() {
-        bool grip = OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.RTouch);
+        // тащить можно и grip'ом, и курком — любой из них
+        bool held = OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.RTouch) ||
+                    OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch);
+        bool pressed = OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.RTouch) ||
+                       OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch);
 
         if (!dragging) {
-            if (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.RTouch))
-                tryStartDrag();
-        } else if (!grip) {
-            dragging = false;                  // отпустил grip — бросили (позиция остаётся)
+            if (pressed) tryStartDrag();
+        } else if (!held) {
+            dragging = false;                  // отпустил — бросили (позиция остаётся)
         } else {
             drag();
         }
@@ -90,14 +94,13 @@ public class DraggableMenu : MonoBehaviour {
         if (bodyLockedFollow != null) bodyLockedFollow.enabled = false;   // на случай, если follow ещё где-то активен
     }
 
-    // поворот вдоль полного направления луча (с наклоном вверх/вниз)
+    /// <summary>Поворот луча только вокруг вертикали (yaw); у почти вертикального луча — предыдущее значение.</summary>
     private Quaternion RayRotation(Ray ray) {
         Vector3 dir = ray.direction;
-        if (dir.sqrMagnitude < 0.0001f) dir = menuRoot.forward;
-        dir.Normalize();
-        // up-подсказка: у почти вертикального луча берём up самого меню, чтобы LookRotation не вырождался
-        Vector3 up = Mathf.Abs(Vector3.Dot(dir, Vector3.up)) > 0.99f ? menuRoot.up : Vector3.up;
-        return Quaternion.LookRotation(dir, up);
+        dir.y = 0f;
+        if (dir.sqrMagnitude < 0.0001f) return lastRayYaw;
+        lastRayYaw = Quaternion.LookRotation(dir.normalized, Vector3.up);
+        return lastRayYaw;
     }
 
     private void drag() {

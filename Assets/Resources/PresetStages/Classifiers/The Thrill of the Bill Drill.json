@@ -1,0 +1,97 @@
+{
+  "objectDataList": [
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 1.0668,
+        "y": 0.002,
+        "z": -6.858
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 0.0,
+        "y": 0.002,
+        "z": -6.858
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -1.0668,
+        "y": 0.002,
+        "z": -6.858
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    }
+  ],
+  "shootingZones": [
+    {
+      "points": [
+        {
+          "x": -0.4572,
+          "y": 0.0,
+          "z": -0.4572
+        },
+        {
+          "x": 0.4572,
+          "y": 0.0,
+          "z": -0.4572
+        },
+        {
+          "x": 0.4572,
+          "y": 0.0,
+          "z": 0.4572
+        },
+        {
+          "x": -0.4572,
+          "y": 0.0,
+          "z": 0.4572
+        },
+        {
+          "x": -0.4572,
+          "y": 0.0,
+          "z": -0.4572
+        }
+      ],
+      "closed": false
+    }
+  ],
+  "startMarks": [
+    {
+      "x": 0.2286,
+      "y": 0.0,
+      "z": 0.0
+    },
+    {
+      "x": -0.2286,
+      "y": 0.0,
+      "z": 0.0
+    }
+  ],
+  "info": {
+    "code": "CM 24-04",
+    "procedure": "START POSITION: Inside shooting area. Handgun loaded and holstered, wrists above respective shoulders. PCC loaded, safety applied, stock touching belt, strong side wrist above shoulder, weak hand holding PCC.\n\nPROCEDURE: Upon audible start signal from within the shooting area:\nString 1: Engage T1 with only 6 rounds.\nString 2: Engage T2 with only 3 rounds, then perform a mandatory reload and re-engage T2 with only 3 rounds.\nString 3: Engage T3 with only 3 rounds, then perform a mandatory reload and re-engage T3 with only 3 rounds Strong Hand/Shoulder Only.",
+    "scoring": "SCORING: Virginia Count, 18 rounds\nTARGETS: 3 USPSA cardboard targets\nSCORED HITS: Best 6 per target\nCONDITION: Loaded and holstered",
+    "briefing": "The Thrill of the Bill Drill is an 18 round, Virginia Count Standard Exercise. There are 3 USPSA targets. The best 6 hits per target will score.\nStart Position: Inside shooting area. Handgun loaded and holstered, wrists above respective shoulders. PCC loaded, safety applied, stock touching belt, strong side wrist above shoulder, weak hand holding PCC.\nUpon audible start signal from within the shooting area:\nString 1: Engage T1 with only 6 rounds.\nString 2: Engage T2 with only 3 rounds, then perform a mandatory reload and re-engage T2 with only 3 rounds.\nString 3: Engage T3 with only 3 rounds, then perform a mandatory reload and re-engage T3 with only 3 rounds Strong Hand/Shoulder Only.",
+    "image": "PresetStages/Classifiers/img/The Thrill of the Bill Drill"
+  }
+}

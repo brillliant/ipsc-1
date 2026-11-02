@@ -1,0 +1,153 @@
+{
+  "objectDataList": [
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 0.3048,
+        "y": 0.002,
+        "z": -9.7536
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -0.3048,
+        "y": 0.002,
+        "z": -9.7536
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_no_shot_target(Clone)",
+      "position": {
+        "x": 0.0,
+        "y": 0.002,
+        "z": -9.7231
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "wallPrefub(Clone)",
+      "position": {
+        "x": 1.2954,
+        "y": 0.811,
+        "z": -5.4864
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.749678,
+        "z": 0.0,
+        "w": -0.661803
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 1.9812,
+        "y": 0.002,
+        "z": -6.7056
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.143147,
+        "z": 0.0,
+        "w": 0.989701
+      }
+    },
+    {
+      "prefabName": "wallPrefub(Clone)",
+      "position": {
+        "x": -1.2954,
+        "y": 0.811,
+        "z": -5.4864
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.661803,
+        "z": 0.0,
+        "w": 0.749678
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -1.9812,
+        "y": 0.002,
+        "z": -6.7056
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.143147,
+        "z": 0.0,
+        "w": 0.989701
+      }
+    }
+  ],
+  "shootingZones": [
+    {
+      "points": [
+        {
+          "x": -1.2192,
+          "y": 0.0,
+          "z": -0.6096
+        },
+        {
+          "x": 1.2192,
+          "y": 0.0,
+          "z": -0.6096
+        },
+        {
+          "x": 1.2192,
+          "y": 0.0,
+          "z": 0.6096
+        },
+        {
+          "x": -1.2192,
+          "y": 0.0,
+          "z": 0.6096
+        },
+        {
+          "x": -1.2192,
+          "y": 0.0,
+          "z": -0.6096
+        }
+      ],
+      "closed": false
+    }
+  ],
+  "startMarks": [
+    {
+      "x": 1.143,
+      "y": 0.0,
+      "z": 0.0
+    },
+    {
+      "x": 0.6858,
+      "y": 0.0,
+      "z": 0.0
+    }
+  ],
+  "info": {
+    "code": "CM 03-09",
+    "procedure": "START POSITION: String 1 - Standing at either end of shooting area with heels touching X marks, hands hanging naturally at sides. String 2 - Standing at opposite end with heels touching X marks, hands hanging at sides. Handgun is loaded and holstered as per ready condition in rule 8.1.1 and 8.1.2.\n\nPROCEDURE:\nString 1. Upon start signal, engage T1-T4 with two rounds each as they become visible.\nString 2. Upon start signal, engage T1-T4 with two rounds each as they become visible.",
+    "scoring": "SCORING: Virginia Count, 16 rounds, 80 points\nTARGETS: 4 Metric\nSCORED HITS: Best 4/paper\nSTART-STOP: Audible - Last shot\nPENALTIES: Per current edition USPSA Handgun Competition Rules",
+    "briefing": "On the Move is a 16 round, 80 point Virginia Count classifier course. There are 4 metric targets. The best 4 hits per target will score. The start signal is audible. The start position for string 1 is standing at either end of the shooting area with heels on Xs, facing down range with hands relaxed at sides. The start position for string 2 is standing at the opposite end of the shooting area from string 1 with heels on Xs, facing down range with hands relaxed at sides. Handgun is loaded and holstered.\nPCC start position for string one is standing at either end of the box with heels on Xs, facing downrange, stock on belt, muzzle downrange, loaded carbine held in both hands with safety on. Start position for string two is standing at the opposite end of the box with heels on Xs, facing downrange, stock on belt, muzzle downrange, loaded carbine held in both hands with safety on.\nFor strings 1 and 2, on the audible start signal, engage each target with two rounds each from within the fault lines.",
+    "image": "PresetStages/Classifiers/img/On the Move"
+  }
+}

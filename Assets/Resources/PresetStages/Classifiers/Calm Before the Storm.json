@@ -1,0 +1,111 @@
+{
+  "objectDataList": [
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 0.9144,
+        "y": 0.002,
+        "z": -7.62
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -0.9144,
+        "y": 0.002,
+        "z": -7.62
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_no_shot_target(Clone)",
+      "position": {
+        "x": 0.0,
+        "y": 0.002,
+        "z": -7.5895
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 0.0,
+        "y": -0.2,
+        "z": -7.62
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    }
+  ],
+  "shootingZones": [
+    {
+      "points": [
+        {
+          "x": 0.4572,
+          "y": 0.0,
+          "z": 0.9144
+        },
+        {
+          "x": -0.4572,
+          "y": 0.0,
+          "z": 0.9144
+        },
+        {
+          "x": -0.4572,
+          "y": 0.0,
+          "z": -0.0
+        },
+        {
+          "x": 0.4572,
+          "y": 0.0,
+          "z": -0.0
+        },
+        {
+          "x": 0.4572,
+          "y": 0.0,
+          "z": 0.9144
+        }
+      ],
+      "closed": false
+    }
+  ],
+  "startMarks": [
+    {
+      "x": 0.2286,
+      "y": 0.0,
+      "z": 0.762
+    },
+    {
+      "x": -0.2286,
+      "y": 0.0,
+      "z": 0.762
+    }
+  ],
+  "info": {
+    "code": "CM 22-04",
+    "procedure": "START POSITION: Completely outside the shooting area, seated in chair, hands on knees, toes touching rear fault line. Firearm is loaded and lying flat on table, not propped, muzzle generally downrange. All loading devices to be used must be staged on table.\n\nPROCEDURE: On audible start signal, engage any two targets with four rounds each, then perform a mandatory reload, and engage the remaining two targets with four rounds each from within the shooting area.",
+    "scoring": "SCORING: Virginia Count, 16 rounds, Speed Shoot\nTARGETS: 4 USPSA cardboard targets\nSCORED HITS: Best 4 per target\nSTART-STOP: Audible - Last shot",
+    "briefing": "Calm Before the Storm is a 16 round Virginia Count, Speed Shoot. There are 4 USPSA cardboard targets. The best 4 hits per target will score. The start position is completely outside the shooting area, seated in chair, hands on knees, toes touching rear fault line. Firearm is loaded and lying flat on table, not propped, muzzle generally downrange. All loading devices to be used must be staged on table. On audible start signal, engage any two targets with four rounds each, then perform a mandatory reload, and engage the remaining two targets with four rounds each from within the shooting area.",
+    "image": "PresetStages/Classifiers/img/Calm Before the Storm"
+  }
+}

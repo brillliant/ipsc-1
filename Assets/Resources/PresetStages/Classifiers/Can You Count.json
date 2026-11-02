@@ -1,0 +1,139 @@
+{
+  "objectDataList": [
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 0.5334,
+        "y": 0.002,
+        "z": -3.048
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -0.5334,
+        "y": 0.002,
+        "z": -3.048
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 1.4478,
+        "y": -0.3,
+        "z": -1.8288
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.382683,
+        "z": 0.0,
+        "w": 0.92388
+      }
+    },
+    {
+      "prefabName": "USPSA_no_shot_target(Clone)",
+      "position": {
+        "x": 1.143,
+        "y": -0.3,
+        "z": -1.8745
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.382683,
+        "z": 0.0,
+        "w": 0.92388
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -1.4478,
+        "y": -0.3,
+        "z": -1.8288
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.382683,
+        "z": 0.0,
+        "w": 0.92388
+      }
+    },
+    {
+      "prefabName": "USPSA_no_shot_target(Clone)",
+      "position": {
+        "x": -1.143,
+        "y": -0.3,
+        "z": -1.8745
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.382683,
+        "z": 0.0,
+        "w": 0.92388
+      }
+    }
+  ],
+  "shootingZones": [
+    {
+      "points": [
+        {
+          "x": 0.4572,
+          "y": 0.0,
+          "z": 0.9144
+        },
+        {
+          "x": -0.4572,
+          "y": 0.0,
+          "z": 0.9144
+        },
+        {
+          "x": -0.4572,
+          "y": 0.0,
+          "z": -0.0
+        },
+        {
+          "x": 0.4572,
+          "y": 0.0,
+          "z": -0.0
+        },
+        {
+          "x": 0.4572,
+          "y": 0.0,
+          "z": 0.9144
+        }
+      ],
+      "closed": false
+    }
+  ],
+  "startMarks": [
+    {
+      "x": 0.2286,
+      "y": 0.0,
+      "z": 0.0
+    },
+    {
+      "x": -0.2286,
+      "y": 0.0,
+      "z": 0.0
+    }
+  ],
+  "info": {
+    "code": "CM 06-03",
+    "procedure": "START POSITION: Standing erect in Box A, arms hanging naturally at sides. Handgun is loaded and holstered as per ready condition in rule 8.1.1 and 8.1.2.\n\nPROCEDURE: On signal, from Box A only:\nString 1: Engage T1 with five rounds only. Perform a mandatory reload and engage T2 with five rounds only.\nString 2: Engage T3 with five rounds only. Perform a mandatory reload and engage T4 with five rounds only.\nTargets within a string may be engaged in any order without penalty.",
+    "scoring": "SCORING: Virginia Count, 20 rounds, 100 points\nTARGETS: 4 Metric\nSCORED HITS: Best 5/paper\nSTART-STOP: Audible - Last shot\nPENALTIES: Per current edition of USPSA Handgun Competition Rules. Failure to perform reload is per-shot-fired penalty.",
+    "briefing": "Can You Count is a 20 round, 100 point Virginia count classifier course. There are 4 metric targets. The best 5 hits per paper will score. The start signal is audible. The start position is standing in Box A, facing downrange, hands naturally at your side. Your handgun is loaded and holstered.\nPCC start position is standing in Box A, facing downrange, stock on belt, muzzle downrange, loaded carbine held in both hands with safety on.\nOn the audible start signal from within the fault lines:\nString 1: Engage T1 with 5 rounds only, perform a mandatory reload and engage T2 with 5 rounds only.\nString 2: Engage T3 with 5 rounds only, perform a mandatory reload and engage T4 with 5 rounds only.",
+    "image": "PresetStages/Classifiers/img/Can You Count"
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "objectDataList": [
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 0.0,
+        "y": 0.45,
+        "z": -6.4618
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 0.381,
+        "y": -0.3,
+        "z": -6.4313
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -0.381,
+        "y": -0.3,
+        "z": -6.4313
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 0.0,
+        "y": -1.2,
+        "z": -6.4008
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_no_shot_target(Clone)",
+      "position": {
+        "x": 0.0,
+        "y": -0.15,
+        "z": -6.3703
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    }
+  ],
+  "shootingZones": [
+    {
+      "points": [
+        {
+          "x": 0.4572,
+          "y": 0.0,
+          "z": 0.9144
+        },
+        {
+          "x": -0.4572,
+          "y": 0.0,
+          "z": 0.9144
+        },
+        {
+          "x": -0.4572,
+          "y": 0.0,
+          "z": -0.0
+        },
+        {
+          "x": 0.4572,
+          "y": 0.0,
+          "z": -0.0
+        },
+        {
+          "x": 0.4572,
+          "y": 0.0,
+          "z": 0.9144
+        }
+      ],
+      "closed": false
+    }
+  ],
+  "startMarks": [
+    {
+      "x": 0.2286,
+      "y": 0.0,
+      "z": 0.5791
+    },
+    {
+      "x": -0.2286,
+      "y": 0.0,
+      "z": 0.5791
+    }
+  ],
+  "info": {
+    "code": "CM 13-05",
+    "procedure": "START POSITION: Standing outside the fault lines, toes touching marks, facing downrange, wrists above respective shoulders. Gun is unloaded, flat and unpropped on table, muzzle downrange, trigger guard centered on mark. All magazines to be used on the stage must be on the table.\n\nPROCEDURE: Upon start signal, engage each target with only two rounds, perform a mandatory reload using the magazines/ammo on the table, and then engage each target with only two rounds, from within the fault lines.",
+    "scoring": "SCORING: Virginia Count, 16 rounds, 80 points\nTARGETS: 4 Metric\nSCORED HITS: Best 4/paper\nSTART-STOP: Audible - Last Shot\nPENALTIES: Per current edition of USPSA Handgun Competition Rules",
+    "briefing": "Tick-Tock is a 16 round, 80 point Virginia Count Classifier course. There are four Metric targets. The best four hits per target will score. The Start signal is audible The start position is standing outside the fault lines, toes touching marks, facing downrange, wrists above respective shoulders. Your gun will be unloaded, flat and unpropped on table, muzzle downrange, trigger guard centered on mark. All magazines to be used on the stage must be placed on the table.\nPCC: No change.\nUpon start signal, from within the fault lines, engage T1-T4 with only two rounds each, make a mandatory reload using a magazine from the table only, then engage T1-T4 with only two rounds each. All reloads must be made using a magazine from the table only. Using magazines from mag pouches is not allowed.",
+    "image": "PresetStages/Classifiers/img/Tick Tock"
+  }
+}

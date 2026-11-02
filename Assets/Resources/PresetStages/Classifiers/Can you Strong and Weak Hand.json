@@ -1,0 +1,139 @@
+{
+  "objectDataList": [
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 0.5334,
+        "y": 0.002,
+        "z": -3.048
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -0.5334,
+        "y": 0.002,
+        "z": -3.048
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_no_shot_target(Clone)",
+      "position": {
+        "x": 0.5334,
+        "y": -0.76,
+        "z": -3.0175
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_no_shot_target(Clone)",
+      "position": {
+        "x": -0.5334,
+        "y": -0.76,
+        "z": -3.0175
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 1.4478,
+        "y": 0.002,
+        "z": -1.8288
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.278551,
+        "z": 0.0,
+        "w": 0.960422
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -1.4478,
+        "y": 0.002,
+        "z": -1.8288
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.278551,
+        "z": 0.0,
+        "w": 0.960422
+      }
+    }
+  ],
+  "shootingZones": [
+    {
+      "points": [
+        {
+          "x": 0.4572,
+          "y": 0.0,
+          "z": 0.9144
+        },
+        {
+          "x": -0.4572,
+          "y": 0.0,
+          "z": 0.9144
+        },
+        {
+          "x": -0.4572,
+          "y": 0.0,
+          "z": -0.0
+        },
+        {
+          "x": 0.4572,
+          "y": 0.0,
+          "z": -0.0
+        },
+        {
+          "x": 0.4572,
+          "y": 0.0,
+          "z": 0.9144
+        }
+      ],
+      "closed": false
+    }
+  ],
+  "startMarks": [
+    {
+      "x": 0.2286,
+      "y": 0.0,
+      "z": 0.0
+    },
+    {
+      "x": -0.2286,
+      "y": 0.0,
+      "z": 0.0
+    }
+  ],
+  "info": {
+    "code": "CM 24-01",
+    "procedure": "START POSITION: Inside shooting area. Handgun loaded and holstered, wrists below belt. PCC loaded, safety applied, stock on belt, held with both hands.\n\nPROCEDURE: Upon audible start signal, from within the shooting area:\nString 1: Engage each target with 2 rounds each, then perform a mandatory reload and engage each target with only 1 round each Strong Hand/Shoulder Only.\nString 2: Engage each target with 2 rounds each, then perform a mandatory reload and engage each target with only 1 round each Weak Hand/Shoulder Only.",
+    "scoring": "SCORING: Virginia Count, 24 rounds\nTARGETS: 4 USPSA cardboard targets\nSCORED HITS: Best 6 per target\nCONDITION: Loaded and holstered",
+    "briefing": "Can You Strong or Weak Hand is a 24 round, Virginia Count Standard Exercise. There are 4 USPSA targets. The best 6 hits per target will score.\nStart Position: Inside shooting area. Handgun loaded and holstered, wrists below belt. PCC loaded, safety applied, stock on belt, held with both hands.\nUpon audible start signal, from within the shooting area:\nString 1: Engage each target with 2 rounds each, then perform a mandatory reload and engage each target with only 1 round each Strong Hand/Shoulder Only.\nString 2: Engage each target with 2 rounds each, then perform a mandatory reload and engage each target with only 1 round each Weak Hand/Shoulder Only.",
+    "image": "PresetStages/Classifiers/img/Can you Strong and Weak Hand"
+  }
+}
