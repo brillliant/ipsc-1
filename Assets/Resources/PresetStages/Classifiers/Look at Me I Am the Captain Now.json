@@ -1,0 +1,177 @@
+{
+  "objectDataList": [
+    {
+      "prefabName": "wallPrefub(Clone)",
+      "position": {
+        "x": 0.0,
+        "y": 0.811432957649231,
+        "z": 1.2192
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.7071067811865476,
+        "z": 0.0,
+        "w": 0.7071067811865476
+      }
+    },
+    {
+      "prefabName": "wallPrefub(Clone)",
+      "position": {
+        "x": 0.0,
+        "y": 0.811432957649231,
+        "z": -1.2192
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.7071067811865476,
+        "z": 0.0,
+        "w": 0.7071067811865476
+      }
+    },
+    {
+      "prefabName": "wall4Prefub(Clone)",
+      "position": {
+        "x": 1.524,
+        "y": 0.811432957649231,
+        "z": -2.538984
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 2.7432,
+        "y": 0.0020000338554382324,
+        "z": -9.0983
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.050062,
+        "z": 0.0,
+        "w": 0.998746
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 1.524,
+        "y": 0.0020000338554382324,
+        "z": -2.8956
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.312205,
+        "z": 0.0,
+        "w": 0.950015
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": 0.3048,
+        "y": 0.0020000338554382324,
+        "z": -3.9624
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target_right_half_dark(Clone)",
+      "position": {
+        "x": -0.3048,
+        "y": 0.0020000338554382324,
+        "z": -2.4384
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -1.2192,
+        "y": 0.0020000338554382324,
+        "z": -2.4384
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    }
+  ],
+  "shootingZones": [
+    {
+      "points": [
+        {
+          "x": 3.6576000000000004,
+          "y": 0.005000114440917969,
+          "z": 0.0
+        },
+        {
+          "x": 0.0,
+          "y": 0.005000114440917969,
+          "z": 0.0
+        },
+        {
+          "x": 0.0,
+          "y": 0.005000114440917969,
+          "z": 3.6576000000000004
+        },
+        {
+          "x": 1.2192,
+          "y": 0.005000114440917969,
+          "z": 3.6576000000000004
+        },
+        {
+          "x": 1.2192,
+          "y": 0.005000114440917969,
+          "z": 1.2192
+        },
+        {
+          "x": 3.6576000000000004,
+          "y": 0.005000114440917969,
+          "z": 1.2192
+        },
+        {
+          "x": 3.6576000000000004,
+          "y": 0.005000114440917969,
+          "z": 0.0
+        }
+      ],
+      "closed": false
+    }
+  ],
+  "startMarks": [
+    {
+      "x": 2.0574,
+      "y": 0.0,
+      "z": 0.6096
+    },
+    {
+      "x": 1.6002,
+      "y": 0.0,
+      "z": 0.6096
+    }
+  ],
+  "info": {
+    "code": "CM 25-02",
+    "procedure": "START POSITION: The Handgun Start Position is standing anywhere inside of the shooting area, wrists below belt. Handgun is loaded and holstered.\nThe PCC Start Position is standing anywhere inside of the shooting area. Carbine is loaded with stock on belt.\nThe Make Ready position is at the same location as the Start Position.\n\nPROCEDURE: Upon the start signal, engage the targets from within the shooting area.",
+    "scoring": "SCORING: Comstock, 10 rounds, 50 points\nTARGETS: 5 USPSA Targets\nSCORED HITS: Best 2 per USPSA Target\nSTART-STOP: Audible - Last Shot",
+    "briefing": "CM 25-02 Look at Me I am the Captain Now is a 10 round, 50 point Comstock Classifier course. There are 5 USPSA targets. The best 2 hits per target will score. The start signal is audible.\nThe Handgun Start Position is standing anywhere inside of the shooting area, wrists below belt. Handgun is loaded and holstered.\nThe PCC Start Position is standing anywhere inside of the shooting area. Carbine is loaded with stock on belt.\nThe Make Ready position is at the same location as the Start Position.\nUpon the start signal, engage the targets from within the shooting area.",
+    "image": "PresetStages/Classifiers/img/Look at Me I Am the Captain Now"
+  }
+}

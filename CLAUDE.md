@@ -8,7 +8,7 @@ Unity 6000.3, Meta XR SDK (OpenXR, MR/passthrough, MRUK), Interaction SDK. По�
 - `Assets/scripts/menu/` — `BuilderService` (расстановка, зоны, загрузка/сохранение стейджей, лупа Inspect), `MenuController` (кнопки меню, стейты), `CompetitionModeService` (прогон: команды, таймер, hintText/readyText), `ReadyStagesMenu`.
 - `Assets/scripts/enum/StateEnum.cs` — режимы: расстановка объектов, Remove, MoveStage, DrawShootingZone, Inspect, StageRun.
 - `Assets/prefubs/` — модели (имя префаба = ключ в prefabMap и в JSON стейджей, с суффиксом `(Clone)`): USPSA_target, USPSA_no_shot_target, USPSA_target_left/right/left_right_half_dark, ipsc_target_prefub, ipsc_target_noShot_prefub, USPSAMiniPopperPrefub, USPSAPopperPrefub, barrel2prefub, wallPrefub (8 ft), wall4Prefub (4 ft). Для каждого есть *Preview-префаб.
-- `Assets/Resources/PresetStages/*.json` — готовые классифаеры (20 шт.), кнопка в меню появляется по имени файла. Префикс `DRAFT_` = черновик.
+- `Assets/Resources/PresetStages/<Категория>/*.json` — готовые стейджи, кнопка в меню появляется по имени файла. Папка = пункт дропдауна категорий в панели Ready stages (сейчас `Classifiers`, 20 шт.); новая категория = новая папка + активированный пункт дропдауна с тем же названием в сцене. Пункты `All` и `Custom` (стейджи игрока из persistentDataPath) зашиты. Префикс `DRAFT_` = черновик.
 - `Assets/Scenes/GameScene.unity` — единственная сцена. Меню — инстанс семплового префаба Meta (см. ниже).
 
 ## Конвенции кода (пользователь на них настаивает)
@@ -25,7 +25,7 @@ Unity 6000.3, Meta XR SDK (OpenXR, MR/passthrough, MRUK), Interaction SDK. По�
 - Подробности и id — в памяти агента (`menu-meta-sample-prefab`).
 
 ## Стейджи и классифаеры
-- JSON: `objectDataList` (prefabName, position, rotation — локально к stageRoot), `shootingZones` (полилинии), `startMarks` (две точки под ноги). Вниз по стрельбищу −Z, влево от стрелка +X, мишени y=0.002, стены y=0.811.
+- JSON: `objectDataList` (prefabName, position, rotation — локально к stageRoot), `shootingZones` (полилинии), `startMarks` (две точки под ноги). Необязательный блок `info` (code, procedure, scoring, briefing, image — путь в Resources без расширения) — панель Stage info справа от списка стейджей; у пользовательских стейджей его нет, панель скрыта. Картинки классифаеров: `Resources/PresetStages/Classifiers/img/<Имя>.png` (Sprite, из PDF-брифингов uspsa.org; скрипт сборки info — scratchpad build_info.py). Вниз по стрельбищу −Z, влево от стрелка +X, мишени y=0.002, стены y=0.811.
 - Схемы: реальные PDF `https://uspsa.org/viewer/pdf/<код>.pdf` (с Referer `uspsa.org/viewer/<код>.pdf`); рендер страниц PyMuPDF (`import fitz`). На новых Build Diagram сетка 1 клетка = 1 фут — считать клетки, не пиксели.
 - Зоны стрелка могут быть не соединены — перебегать вне зоны нормально по правилам USPSA.
 - Нет моделей: диагональный хардкавер, мишень с чёрным низом, перевёрнутый/низкий no-shoot, стол/стул, низкая стена (пользователь отказался).

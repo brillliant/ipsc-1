@@ -1,0 +1,191 @@
+{
+  "objectDataList": [
+    {
+      "prefabName": "wallPrefub(Clone)",
+      "position": {
+        "x": -1.2192,
+        "y": 0.811,
+        "z": -1.2192
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 1.0,
+        "z": 0.0,
+        "w": 0.0
+      }
+    },
+    {
+      "prefabName": "wallPrefub(Clone)",
+      "position": {
+        "x": -2.4384,
+        "y": 0.811,
+        "z": -4.8768
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.707107,
+        "z": 0.0,
+        "w": 0.707107
+      }
+    },
+    {
+      "prefabName": "wallPrefub(Clone)",
+      "position": {
+        "x": -2.4384,
+        "y": 0.811,
+        "z": -7.3152
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 1.0,
+        "z": 0.0,
+        "w": 0.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -0.381,
+        "y": 0.002,
+        "z": -6.096
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -1.143,
+        "y": 0.002,
+        "z": -6.096
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -1.905,
+        "y": 0.002,
+        "z": -6.096
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -1.3716,
+        "y": 0.002,
+        "z": -7.62
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -2.286,
+        "y": 0.002,
+        "z": -8.2296
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    },
+    {
+      "prefabName": "USPSA_target(Clone)",
+      "position": {
+        "x": -3.3528,
+        "y": 0.002,
+        "z": -8.5344
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      }
+    }
+  ],
+  "shootingZones": [
+    {
+      "points": [
+        {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        {
+          "x": -3.6576,
+          "y": 0.0,
+          "z": 0.0
+        },
+        {
+          "x": -3.6576,
+          "y": 0.0,
+          "z": -6.096
+        },
+        {
+          "x": -2.4384,
+          "y": 0.0,
+          "z": -6.096
+        },
+        {
+          "x": -2.4384,
+          "y": 0.0,
+          "z": -1.2192
+        },
+        {
+          "x": 0.0,
+          "y": 0.0,
+          "z": -1.2192
+        },
+        {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        }
+      ],
+      "closed": false
+    }
+  ],
+  "startMarks": [
+    {
+      "x": -1.6002,
+      "y": 0.0,
+      "z": -0.6096
+    },
+    {
+      "x": -2.0574,
+      "y": 0.0,
+      "z": -0.6096
+    }
+  ],
+  "info": {
+    "code": "CM 23-02",
+    "procedure": "START POSITION: Anywhere in the shooting area. Handgun is loaded and holstered, wrists below belt. PCC loaded, stock on belt, safety on.\n\nPROCEDURE: Upon audible start signal, engage targets from within the shooting area.",
+    "scoring": "SCORING: Comstock course of fire, 12 rounds, 60 points\nTARGETS: 6 USPSA cardboard targets\nCONDITION: Loaded and holstered",
+    "briefing": "This could be the Greatest Night of Our Lives is a 12 round, 60-point, Comstock Classifier course. There are 6 USPSA targets.\nThe handgun start position is anywhere in shooting area with handgun loaded and holstered and wrists below belt.\nThe PCC start position is anywhere in shooting area, PCC loaded with safety on, stock on belt, muzzle generally downrange.\nOn the audible start signal, engage targets as they become available from within the shooting area.",
+    "image": "PresetStages/Classifiers/img/DRAFT_This could be the Greatest Night of Our Lives"
+  }
+}
